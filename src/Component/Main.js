@@ -4,6 +4,7 @@ import { Dropbox } from 'dropbox';
 import { Helmet, HelmetProvider } from 'react-helmet-async';
 import {CLIENT_ID} from './clientId';
 import {token$, updateToken} from '../store';
+import './Main.css'
 
 export default function Main () {
     const [token, setToken] = useState(token$.value);
@@ -21,21 +22,24 @@ export default function Main () {
 
             dbx.usersGetCurrentAccount(null)
                 .then((result) => {
-                   setName(result.name.given_name);
-                   console.log(name);
+                    setName(result.name.given_name);
+                    console.log(name);
                 });
         }
     }, [token]);
 
     return(
         <div>
-            <div>
-                <Helmet>
-                    <title>Main</title>
-                </Helmet>
-            </div>
-            <div>
-                <h1>HEJ {name}</h1>
+            <Helmet>
+                <title>Main</title>
+            </Helmet>
+            <div className='container'>
+                <header>
+                    <h1>Cloudberry</h1>
+                    <h1>HEJ {name}</h1>
+                </header>
+
+                
                 
             </div>
         </div>
