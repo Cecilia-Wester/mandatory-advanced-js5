@@ -1,0 +1,11 @@
+.container{
+    display: flex;
+    flex-direction: column;
+}
+
+.dialogbox{
+    width: 400px;
+    height: 250px;
+    background-color: #FFA300;
+    margin: auto;
+}

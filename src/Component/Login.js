@@ -4,7 +4,7 @@ import { Dropbox } from 'dropbox';
 import { Helmet, HelmetProvider } from 'react-helmet-async';
 import {CLIENT_ID} from './clientId';
 import {token$} from '../store';
-
+import './Login.css'
 
 export default class Login extends Component {
     constructor(props) {
@@ -26,7 +26,7 @@ export default class Login extends Component {
     }
 
     onClickConnect(e) {
-       e.preventDefault();
+        e.preventDefault();
 
         const dbx = new Dropbox({clientId: CLIENT_ID});
         
@@ -43,15 +43,19 @@ export default class Login extends Component {
 
             return (
                 <div>
-                <div>
                     <Helmet>
                         <title>Login</title>
                     </Helmet>
-                </div>
-                <div>
-                    <h1>Something</h1>
-                    <button
-                     onClick = {this.onClickConnect}>Connect to DropBox</button>
+                <div className= 'container'>
+                    <header>
+                        <h1>Cloudberry</h1>
+                    </header>
+                    <div className='dialogbox'>
+                        <p>Välkommen! <br /> Detta är en enkel molntjänst som är lätt att använda. Du sparar, förvarar och hanterar lätt dina filer och mappar i en lagringsplats utanför din dator.</p>
+                        <button
+                            onClick = {this.onClickConnect}>Connect to DropBox
+                        </button>
+                    </div>
                 </div>
             </div>
         )}
