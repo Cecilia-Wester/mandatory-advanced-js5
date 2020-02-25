@@ -42,7 +42,7 @@ export default function Main () {
             <Helmet>
                 <title>Main</title>
             </Helmet>
-            <div className='container'>
+            <div className='main'>
                 <header>
                     <h1>Cloudberry</h1>
                     <h1>HEJ {name}</h1>
@@ -52,6 +52,6 @@ export default function Main () {
 
             </div>
         </div>
-      
+
     );
 }

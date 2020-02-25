@@ -1,11 +1,29 @@
-.container{
+.login{
     display: flex;
     flex-direction: column;
+    background-color: #F2F2F2;
+    height: 100vh;
 }
 
 .dialogbox{
-    width: 400px;
-    height: 250px;
+    width: 600px;
+    height: 400px;
     background-color: #FFA300;
     margin: auto;
+    border-radius: 7px;
+    opacity: 0.7;
+    margin-top: 20px;
+    text-align: center;
+}
+
+.dialogbox button {
+
+  border: none;
+  cursor:pointer;
+  outline:none;
+  background-color: #F2F2F2;
+}
+
+img {
+  margin: 20px;
 }

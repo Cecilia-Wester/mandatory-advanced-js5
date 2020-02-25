@@ -5,6 +5,7 @@ import { Helmet, HelmetProvider } from 'react-helmet-async';
 import {CLIENT_ID} from './clientId';
 import {token$} from '../store';
 import './Login.css'
+import CloudBerry from "./CloudBerry.jpg";
 
 export default class Login extends Component {
     constructor(props) {
@@ -14,7 +15,7 @@ export default class Login extends Component {
         }
         this.onClickConnect = this.onClickConnect.bind(this);
     }
-    
+
     componentDidMount() {
         this.subscription = token$.subscribe(token => {
             this.setState({token});
@@ -29,9 +30,9 @@ export default class Login extends Component {
         e.preventDefault();
 
         const dbx = new Dropbox({clientId: CLIENT_ID});
-        
+
         let dbxUrl = dbx.getAuthenticationUrl('http://localhost:3000/auth');
-        
+
         window.location.href = dbxUrl; //will open the new URL in your current window.
     }
 
@@ -46,9 +47,9 @@ export default class Login extends Component {
                     <Helmet>
                         <title>Login</title>
                     </Helmet>
-                <div className= 'container'>
+                <div className= 'login'>
                     <header>
-                        <h1>Cloudberry</h1>
+                        <img src={CloudBerry}  alt="cloudberry" width="150px" />
                     </header>
                     <div className='dialogbox'>
                         <p>Välkommen! <br /> Detta är en enkel molntjänst som är lätt att använda. Du sparar, förvarar och hanterar lätt dina filer och mappar i en lagringsplats utanför din dator.</p>
@@ -59,7 +60,6 @@ export default class Login extends Component {
                 </div>
             </div>
         )}
-    }      
-    
-}
+    }
 
+}
