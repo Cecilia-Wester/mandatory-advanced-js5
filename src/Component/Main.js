@@ -6,38 +6,32 @@ import {CLIENT_ID} from './clientId';
 import {token$, updateToken} from '../store';
 
 export default function Main () {
-    const [token, setToken] = useState(token$.value);
+  const [token, setToken] = useState(token$.value);
+  const [name, setName] = useState('');
 
-    const [name, setName] = useState('');
+  useEffect(() => {
+    const subscription = token$.subscribe(setToken);
+    return () => subscription.unsubscribe();
+  }, []);
 
-    useEffect(() => {
-        const subscription = token$.subscribe(setToken);
-        return () => subscription.unsubscribe();
-    }, []);
+  useEffect(() => {
+    if (token) {
+    const dbx = new Dropbox({ accessToken: token });
+    dbx.usersGetCurrentAccount(null)
+      .then((result) => {
+        setName(result.name.given_name);
+      });
+    }
+  }, [token]);
 
-    useEffect(() => {
-        if (token) {
-            const dbx = new Dropbox({ accessToken: token });
-
-            dbx.usersGetCurrentAccount(null)
-                .then((result) => {
-                   setName(result.name.given_name);
-                   console.log(name);
-                });
-        }
-    }, [token]);
-
-    return(
+  return(
         <div>
-            <div>
-                <Helmet>
-                    <title>Main</title>
-                </Helmet>
-            </div>
-            <div>
-                <h1>HEJ {name}</h1>
-                
-            </div>
+          <Helmet>
+            <title>Main</title>
+          </Helmet>
+        <div>
+            <h1>HEJ {name}</h1>
         </div>
+      </div>
     );
 }

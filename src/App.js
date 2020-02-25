@@ -8,20 +8,16 @@ import Main from './Component/Main';
 import Navbar from './Component/Navbar';
 import './App.css';
 
-function App() {
+export default function App() {
   return (
-
     <HelmetProvider>
       <Router>
-        <div className="App"> 
+        <div className="App">
           <Route exact path= '/' component = {Login}/>
           <Route path = '/auth' component = {Auth} />
-          <Route path = '/main' component = {Main}/> 
+          <Route path = '/main' component = {Main}/>
         </div>
       </Router>
     </HelmetProvider>
-
   );
 }
-
-export default App;
