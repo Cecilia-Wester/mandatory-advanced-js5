@@ -33,7 +33,7 @@ export default function Header () {
         <div className='header'>
             <header>
                 <img src={CloudBerry}  alt="cloudberry" width="150px" />
-                 {name}
+                {token ? name : null}
             </header>
         </div>
     </div>
