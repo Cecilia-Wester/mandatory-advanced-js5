@@ -8,10 +8,10 @@ export default function Auth(props) {
     const [redirect, updateRedirect] = useState(false);
 
     function getAccessTokenFromUrl (){ //Parses the url and gets the access token if it is in the urls hash
-        let parsed = queryString.parse(window.location.hash); //hash return the part of the URL that follows the # symbol
-        console.log(parsed);
+        let parseUrl = queryString.parse(window.location.hash); //hash return the part of the URL that follows the # symbol
+        console.log(parseUrl);
         
-        let tokenAccess = parsed.access_token;
+        let tokenAccess = parseUrl.access_token;
         updateToken(tokenAccess);
 
         updateRedirect(true);

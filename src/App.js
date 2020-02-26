@@ -5,7 +5,6 @@ import FontAwesome from 'react-fontawesome';
 import Login from './Component/Login';
 import Auth from './Component/Auth';
 import Main from './Component/Main';
-import Navbar from './Component/Navbar';
 import './App.css';
 
 function App() {
