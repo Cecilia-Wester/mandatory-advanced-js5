@@ -5,6 +5,7 @@ import { Helmet, HelmetProvider } from 'react-helmet-async';
 import {CLIENT_ID} from './clientId';
 import {token$, updateToken} from '../store';
 import './Main.css'
+import CloudBerry from "./CloudBerry.jpg";
 
 export default function Main () {
   const [token, setToken] = useState(token$.value);
@@ -44,8 +45,8 @@ export default function Main () {
             </Helmet>
             <div className='main'>
                 <header>
-                    <h1>Cloudberry</h1>
-                    <h1>HEJ {name}</h1>
+                    <img src={CloudBerry}  alt="cloudberry" width="150px" />
+                     {name}
                 </header>
 
 

@@ -1,4 +1,11 @@
-.main header{
+.main {
     display: flex;
-    justify-content: space-evenly;
+    flex-direction: column;
+    background-color: #F2F2F2;
+    height: 100vh;
+}
+
+.main header {
+  
+
 }
