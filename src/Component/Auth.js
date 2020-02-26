@@ -4,9 +4,17 @@ import queryString from 'query-string';
 import {updateToken} from '../store';
 
 export default function Auth(props) {
+  const [redirect, updateRedirect] = useState(false);
 
-    const [redirect, updateRedirect] = useState(false);
+function getAccessTokenFromUrl (){ //Parses the url and gets the access token if it is in the urls hash
+  let parsed = queryString.parse(window.location.hash); //hash return the part of the URL that follows the # symbol
+  console.log(parsed);
+  let tokenAccess = parsed.access_token;
+  updateToken(tokenAccess);
+  updateRedirect(true);
+}
 
+<<<<<<< HEAD
     function getAccessTokenFromUrl (){ //Parses the url and gets the access token if it is in the urls hash
         let parseUrl = queryString.parse(window.location.hash); //hash return the part of the URL that follows the # symbol
         console.log(parseUrl);
@@ -25,3 +33,12 @@ export default function Auth(props) {
         return <h3>Redirecting...</h3>
     }
 }
+=======
+useEffect(getAccessTokenFromUrl, []);
+  if(redirect) {
+    return <Redirect to= '/Main' />
+  } else {
+    return <h3>Redirecting...</h3>
+  }
+}
+>>>>>>> 692e067a628fb4c49e923f2d558c7db1ba3dda74

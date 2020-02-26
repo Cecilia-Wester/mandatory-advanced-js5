@@ -1,0 +1,11 @@
+.main {
+    display: flex;
+    flex-direction: column;
+    background-color: #F2F2F2;
+    height: 100vh;
+}
+
+.main header {
+  
+
+}
