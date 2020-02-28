@@ -1,8 +1,4 @@
-import React, {Component} from 'react';
-import { Dropbox } from 'dropbox';
-import { Helmet} from 'react-helmet-async';
-import {CLIENT_ID} from '../clientId';
-import {token$, updateToken} from '../../store';
+import React from 'react';
 import UploadFile from './UploadFile';
 import CreateFolder from './CreateFolder';
 
@@ -12,7 +8,7 @@ export default function SideBar(props) {
         <div className="sidebar">
             <p>Sidebar title?</p>
             <div>
-                <UploadFile/>
+                <UploadFile onClick ={props.onUpploadFile}/>
                 <CreateFolder/>
             </div>
         </div>

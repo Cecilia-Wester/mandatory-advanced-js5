@@ -17,9 +17,10 @@ export default function Auth(props) {
   }
 
   useEffect(getAccessTokenFromUrl, []);
-    if(redirect) {
-      return <Redirect to= '/Main' />
-    } else {
-      return <h3>Redirecting...</h3>
-    }
+
+
+  if(redirect) {
+    return <Redirect to= '/Main' />
+  }
+  return null;
 }
