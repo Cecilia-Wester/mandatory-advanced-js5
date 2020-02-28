@@ -13,7 +13,6 @@ export default function Main (props) {
     console.log(props.location.pathname);
    
 
-<<<<<<< HEAD
 
     useEffect(() => {
         const subscription = token$.subscribe(setToken);
@@ -38,24 +37,6 @@ export default function Main (props) {
     <div className="main">
     </div>
   </div>
-=======
-    return(
-        <div>
-            <Helmet>
-                <title>Main</title>
-            </Helmet>
-            <div>
-                <Header/>
-            </div>
-            <div>
-                <div>
-                    <SideBar/>
-                    
-                </div>
-                
-            </div>
-        </div>
->>>>>>> ce3976c46318a32d6e331c280621cf78d62305b1
 
     );
 }
