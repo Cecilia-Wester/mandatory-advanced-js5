@@ -7,24 +7,21 @@ import {token$, updateToken} from '../store';
 import Header from './Header';
 import SideBar from './Sidebar/SideBar';
 
-
-
 export default function Main () {
-    const [token, setToken] = useState(token$.value);
-
+    
     return(
         <div>
-                <Helmet>
-                    <title>Main</title>
-                </Helmet>
+            <Helmet>
+                <title>Main</title>
+            </Helmet>
             <div>
                 <Header/>
             </div>
             <div>
                 <div>
                     <SideBar/>
+                    
                 </div>
-
             </div>
         </div>
 
