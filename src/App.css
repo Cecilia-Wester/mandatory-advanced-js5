@@ -1,0 +1,78 @@
+.App {
+  display: flex;
+  flex-direction: column;
+  background-color: #F2F2F2;
+  height: 100vh;
+}
+
+.main {
+   float: left;
+   width: 178vh;
+   background-color: #FFA300;
+   opacity: 0.7;
+   height: 78vh;
+}
+
+
+
+.login{
+
+}
+
+.name {
+  margin-right: 100px;
+  margin-top: 20px;
+}
+
+.header img {
+  margin-top: 20px;
+  margin-right: 50px;
+}
+
+.header {
+  height: 160px;
+  display: flex;
+  justify-content: space-between;
+
+}
+
+.sidebar {
+  float: left;
+  width: 25vh;
+  height: 77vh;
+
+
+}
+
+.dialogbox{
+    width: 600px;
+    height: 400px;
+    background-color: #FFA300;
+    margin: auto;
+    border-radius: 7px;
+    opacity: 0.7;
+    margin-top: 20px;
+    text-align: center;
+}
+
+.dialogbox button {
+
+  border: none;
+  cursor:pointer;
+  outline:none;
+  background-color: #F2F2F2;
+}
+
+.logOutButton {
+  border: none;
+  cursor:pointer;
+  outline:none;
+
+  opacity: 0.7;
+  border: 1px solid #eee;
+  border-radius: 5px;
+  transition: border-color .5s ease-out;
+  height: 30px;
+  width: 300px;
+
+}

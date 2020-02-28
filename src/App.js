@@ -7,6 +7,7 @@ import Auth from './Component/Auth';
 import Main from './Component/Main';
 import './App.css';
 
+
 export default function App() {
   return (
     <HelmetProvider>

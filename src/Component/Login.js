@@ -4,7 +4,7 @@ import { Dropbox } from 'dropbox';
 import { Helmet } from 'react-helmet-async';
 import {CLIENT_ID} from './clientId';
 import {token$, updateToken} from '../store';
-import Header from './Header';
+import Header from './Header/Header';
 
 
 export default function Login(){
@@ -34,8 +34,10 @@ export default function Login(){
                     <Helmet>
                         <title>Login</title>
                     </Helmet>
-                    <div className = 'login'>
-                       <Header/>
+                    <Header />
+
+                    <div className ='login'>
+
                     </div>
                     <div className='dialogbox'>
                         <p>Välkommen! <br /> Detta är en enkel molntjänst som är lätt att använda. Du sparar, förvarar och hanterar lätt dina filer och mappar i en lagringsplats utanför din dator.</p>
@@ -44,5 +46,5 @@ export default function Login(){
                         </button>
                     </div>
             </div>
-        )}     
+        )}
 }

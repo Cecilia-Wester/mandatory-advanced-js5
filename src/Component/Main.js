@@ -4,7 +4,7 @@ import { Dropbox } from 'dropbox';
 import { Helmet, HelmetProvider } from 'react-helmet-async';
 import {CLIENT_ID} from './clientId';
 import {token$, updateToken} from '../store';
-import Header from './Header';
+import Header from './Header/Header';
 import SideBar from './Sidebar/SideBar';
 
 
@@ -12,21 +12,30 @@ import SideBar from './Sidebar/SideBar';
 export default function Main () {
     const [token, setToken] = useState(token$.value);
 
-    return(
-        <div>
-                <Helmet>
-                    <title>Main</title>
-                </Helmet>
-            <div>
-                <Header/>
-            </div>
-            <div>
-                <div>
-                    <SideBar/>
-                </div>
 
-            </div>
-        </div>
+    useEffect(() => {
+        const subscription = token$.subscribe(setToken);
+        return () => subscription.unsubscribe();
+    }, []);
+
+    if (!token) {
+      return <Redirect to="/" />;
+    }
+
+  return(
+  <div>
+      <Helmet>
+        <title>Main</title>
+      </Helmet>
+    <div>
+      <Header/>
+    </div>
+    <div>
+      <SideBar/>
+    </div>
+    <div className="main">
+    </div>
+  </div>
 
     );
 }

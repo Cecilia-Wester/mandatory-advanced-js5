@@ -9,7 +9,7 @@ import CreateFolder from './CreateFolder';
 
 export default function SideBar(props) {
     return(
-        <div>
+        <div className="sidebar">
             <p>Sidebar title?</p>
             <div>
                 <UploadFile/>
