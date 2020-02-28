@@ -6,7 +6,7 @@ import CreateFolder from './CreateFolder';
 export default function SideBar(props) {
     return(
         <div className="sidebar">
-            <p>Sidebar title?</p>
+            <p>Skapa</p>
             <div>
                 <UploadFile onClick ={props.onUpploadFile}/>
                 <CreateFolder/>

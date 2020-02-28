@@ -42,7 +42,7 @@ export default function Login(){
                     <div className='dialogbox'>
                         <p>Välkommen! <br /> Detta är en enkel molntjänst som är lätt att använda. Du sparar, förvarar och hanterar lätt dina filer och mappar i en lagringsplats utanför din dator.</p>
                         <button
-                            onClick = {onClickConnect}>Connect to DropBox
+                            onClick = {onClickConnect}>Logga in med DropBox
                         </button>
                     </div>
             </div>

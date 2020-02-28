@@ -1,8 +1,5 @@
 import React, {useEffect, useState} from 'react';
-import { BrowserRouter as Router, Route, Link, Redirect } from "react-router-dom";
 import { Dropbox } from 'dropbox';
-import FontAwesome from 'react-fontawesome';
-import {CLIENT_ID} from './../clientId';
 import {token$, updateToken} from '../../store';
 import CloudBerry from '../../CloudBerry.jpg';
 
@@ -37,10 +34,12 @@ export default function Header () {
         <img src={CloudBerry}  alt="cloudberry" width="175px" />
       </div>
 
-    
 
-      <div className="name">
-      {token ? name : null}
+
+      <div className="nameContainer">
+        <div className="name">
+      {token ? `Välkommen ${name}` : null}
+       </div>
       {!token?<button style={{display:"none"}}></button> : <button className="logOutButton" style={{display:"block"}} onClick={logout}>Logga ut</button>}
       </div>
     </div>
