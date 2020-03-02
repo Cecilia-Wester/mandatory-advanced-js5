@@ -19,13 +19,13 @@ export default function UploadFile(props) {
         console.log(file);
         
         const dbx = new Dropbox({
-             accessToken: token, 
-             fetch: fetch
-            });
+            accessToken: token, 
+            fetch: fetch
+        });
         dbx.filesUpload({
-             path: '/' + file.name ,
-             contents: file
-            }) 
+            path: '/' + file.name ,
+            contents: file
+        }) 
         .then(response => {
             console.log(response);
             updatefile([...file, response.data]);
@@ -36,7 +36,7 @@ export default function UploadFile(props) {
         .catch (error => {
             console.error(error)
         });
-        }
+    }
     
     function onChangeUploadFile(e) {
         e.preventDefault();
@@ -50,8 +50,7 @@ export default function UploadFile(props) {
                     type = 'file'
                     name = 'file'
                     onChange = {onChangeUploadFile}
-                    
-                    />
+                />
             </form>
         </div>
     );

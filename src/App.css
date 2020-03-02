@@ -74,5 +74,17 @@
   transition: border-color .5s ease-out;
   height: 30px;
   width: 300px;
+}
 
+.createFolderModal{
+  width: 300px;
+  height: 200px;
+  top: 50%;
+  left: 500px;
+  background-color: aliceblue;
+  z-index: 1000;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
 }
