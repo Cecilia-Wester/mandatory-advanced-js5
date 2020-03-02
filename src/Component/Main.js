@@ -1,16 +1,16 @@
 import React, { useEffect, useState} from 'react';
 import { BrowserRouter as Router, Route, Link, Redirect } from "react-router-dom";
-import { Dropbox } from 'dropbox';
-import { Helmet, HelmetProvider } from 'react-helmet-async';
+import { Helmet} from 'react-helmet-async';
 import {token$, updateToken} from '../store';
 import Header from './Header/Header';
 import SideBar from './Sidebar/SideBar';
-//import RenderTable from './RenderTable';
+import RenderTable from './RenderTable';
 
 export default function Main (props) {
-    console.log(props.location.pathname);
-    const [token, setToken] = useState(token$.value);
 
+  const [token, setToken] = useState(token$.value);
+    const currentLocation = props.location.pathname.substring(5);
+    
     useEffect(() => {
         const subscription = token$.subscribe(setToken);
         return () => subscription.unsubscribe();
@@ -20,19 +20,21 @@ export default function Main (props) {
         return <Redirect to="/" />;
     }
 
-    return(
-        <div>
-            <Helmet>
-                <title>Main</title>
-            </Helmet>
-            <div>
-                <Header/>
-            </div>
-            <div>
-                <SideBar location={props.location}/>
-            </div>
-            <div className="main">
-            </div>
-        </div>
+  return(
+  <div>
+      <Helmet>
+        <title>Main</title>
+      </Helmet>
+    <div>
+      <Header/>
+    </div>
+    <div>
+      <SideBar location = {props.location} />
+    </div>
+    <div className="main">
+      <RenderTable location = {props.location}/>
+    </div>
+  </div>
+
     );
 }

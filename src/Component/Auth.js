@@ -1,4 +1,4 @@
-import React, {useEffect, useState, lazy, Suspense} from 'react';
+import React, {useEffect, useState} from 'react';
 import {Redirect} from 'react-router-dom';
 import queryString from 'query-string';
 import {updateToken} from '../store';

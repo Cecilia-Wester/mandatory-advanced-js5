@@ -4,6 +4,7 @@ import CreateFolder from './CreateFolder';
 
 
 export default function SideBar(props) {
+    
     return(
         <div className="sidebar">
             <p>Sidebar title?</p>
