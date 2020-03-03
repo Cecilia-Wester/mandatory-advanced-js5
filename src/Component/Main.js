@@ -8,7 +8,7 @@ import RenderTable from './RenderTable';
 
 export default function Main (props) {
 
-  const [token, setToken] = useState(token$.value);
+    const [token, setToken] = useState(token$.value);
     const currentLocation = props.location.pathname.substring(5);
     
     useEffect(() => {
@@ -20,21 +20,20 @@ export default function Main (props) {
         return <Redirect to="/" />;
     }
 
-  return(
-  <div>
-      <Helmet>
-        <title>Main</title>
-      </Helmet>
-    <div>
-      <Header/>
-    </div>
-    <div>
-      <SideBar location = {props.location} />
-    </div>
-    <div className="main">
-      <RenderTable location = {props.location}/>
-    </div>
-  </div>
-
+    return(
+        <div>
+            <Helmet>
+                <title>Main</title>
+            </Helmet>
+            <div>
+                <Header/>
+            </div>
+            <div>
+                <SideBar location = {props.location} />
+            </div>
+            <div className="main">
+                <RenderTable location = {props.location}/>
+            </div>
+        </div>
     );
 }

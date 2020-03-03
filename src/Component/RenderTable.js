@@ -75,7 +75,7 @@ export default function RenderTable(props) {
                                 ): file.name}
                             </td>
                             <td></td>
-                            <td>...</td>
+                            <td><button>...</button></td>
                         </tr>
                     )
                    })} 

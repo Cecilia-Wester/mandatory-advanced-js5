@@ -23,9 +23,9 @@ export default function UploadFile(props) {
             fetch: fetch
         });
         dbx.filesUpload({
-             path: currentLocation + file.name,
-             contents: file
-            }) 
+            path: currentLocation + file.name,
+            contents: file
+        }) 
         .then(response => {
             //console.log(response);
             updatefile([file, response.data]);
