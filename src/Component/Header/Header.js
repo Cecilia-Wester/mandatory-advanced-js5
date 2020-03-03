@@ -33,9 +33,11 @@ export default function Header () {
       <div>
         <img src={CloudBerry}  alt="cloudberry" width="175px" />
       </div>
+      <div className="nameContainer">
       <div className="name">
         {token ? name : null}
         {!token?<button style={{display:"none"}}></button> : <button className="logOutButton" style={{display:"block"}} onClick={logout}>Logga ut</button>}
+      </div>
       </div>
     </div>
  );
