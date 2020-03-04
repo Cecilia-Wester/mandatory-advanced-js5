@@ -10,31 +10,26 @@ export default function UploadFile(props) {
 
     const currentLocation = props.location.pathname.substring(5);
     console.log(currentLocation);
-    
-    
+
+
     useEffect(() => {
         const subscription = token$.subscribe(setToken);
         return () => subscription.unsubscribe();
     },[]);
 
-    
+
     function handleUploadFile(file) {
-        
+
         const dbx = new Dropbox({
-            accessToken: token, 
+            accessToken: token,
             fetch: fetch
         });
         dbx.filesUpload({
-<<<<<<< HEAD
              path: currentLocation + '/' + file.name,
              contents: file
-            }) 
-=======
-            path: currentLocation + file.name,
-            contents: file
-        }) 
->>>>>>> 47471e3245f0826f0d1097cd5f4f33eda9a7a7fe
-        .then(response => {
+            })
+
+          .then(response => {
             console.log(response);
             updatefile([file, response.data]);
             updatefile(0);
@@ -43,7 +38,7 @@ export default function UploadFile(props) {
             console.error(error)
         });
     }
-    
+
     function onChangeUploadFile(e) {
         e.preventDefault();
         handleUploadFile(e.target.files[0]);
@@ -56,9 +51,9 @@ export default function UploadFile(props) {
             <form >
                 <input
                     type = 'file'
-                    name = 'file'                  
+                    name = 'file'
                     onChange = {onChangeUploadFile}
-                /> 
+                />
             </form>
         </div>
     );
