@@ -9,6 +9,8 @@ export default function UploadFile(props) {
     const [file, updatefile] = useState(0);
 
     const currentLocation = props.location.pathname.substring(5);
+    console.log(currentLocation);
+    
     
     useEffect(() => {
         const subscription = token$.subscribe(setToken);
@@ -23,11 +25,11 @@ export default function UploadFile(props) {
             fetch: fetch
         });
         dbx.filesUpload({
-             path: currentLocation + file.name,
+             path: currentLocation + '/' + file.name,
              contents: file
             }) 
         .then(response => {
-            //console.log(response);
+            console.log(response);
             updatefile([file, response.data]);
             updatefile(0);
         })
@@ -41,14 +43,16 @@ export default function UploadFile(props) {
         handleUploadFile(e.target.files[0]);
     }
 
+
+
     return(
         <div>
             <form >
                 <input
                     type = 'file'
-                    name = 'file'
+                    name = 'file'                  
                     onChange = {onChangeUploadFile}
-                />
+                /> 
             </form>
         </div>
     );

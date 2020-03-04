@@ -9,7 +9,7 @@ export default function SideBar(props) {
         <div className="sidebar">
             <p>Sidebar title?</p>
             <div>
-                <UploadFile location={props.location} folder={props.file} />
+                <UploadFile location={props.location} file={props.file} />
                 <CreateFolder location={props.location} />
             </div>
         </div>
