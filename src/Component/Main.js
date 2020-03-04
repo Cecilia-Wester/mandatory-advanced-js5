@@ -8,9 +8,9 @@ import RenderTable from './RenderTable';
 
 export default function Main (props) {
 
-  const [token, setToken] = useState(token$.value);
+    const [token, setToken] = useState(token$.value);
     const currentLocation = props.location.pathname.substring(5);
-    
+
     useEffect(() => {
         const subscription = token$.subscribe(setToken);
         return () => subscription.unsubscribe();
@@ -33,6 +33,7 @@ export default function Main (props) {
     </div>
     <div className="main">
       <RenderTable location = {props.location}/>
+      
     </div>
   </div>
 
