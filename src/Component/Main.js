@@ -20,6 +20,7 @@ export default function Main (props) {
         return <Redirect to="/" />;
     }
 
+<<<<<<< HEAD
   return(
   <div>
       <Helmet>
@@ -37,5 +38,22 @@ export default function Main (props) {
     </div>
   </div>
 
+=======
+    return(
+        <div>
+            <Helmet>
+                <title>Main</title>
+            </Helmet>
+            <div>
+                <Header/>
+            </div>
+            <div>
+                <SideBar location = {props.location} />
+            </div>
+            <div className="main">
+                <RenderTable location = {props.location}/>
+            </div>
+        </div>
+>>>>>>> bd9dd697f0d7afc7e08f8f876adeb8bd9214bde4
     );
 }
