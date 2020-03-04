@@ -1,13 +1,10 @@
 import React, { useEffect, useState} from 'react';
 import {Link} from "react-router-dom";
 import { Dropbox } from 'dropbox';
-<<<<<<< HEAD
 import {token$, updateToken} from '../store';
 import {Thumbnail, FileSize} from './init';
-=======
 import {token$, updateToken, searchQuery$} from '../store';
 import SideBar from './Sidebar/SideBar';
->>>>>>> 47471e3245f0826f0d1097cd5f4f33eda9a7a7fe
 
 export default function RenderTable(props) {
 
@@ -17,14 +14,9 @@ export default function RenderTable(props) {
     const [thumbnails, updateThumbnails] = useState({});
 
     const currentLocation = props.location.pathname.substring(5);
-<<<<<<< HEAD
     //console.log(currentLocation);
     
     
-=======
-    console.log(currentLocation);
-
->>>>>>> 47471e3245f0826f0d1097cd5f4f33eda9a7a7fe
     function handleDownloadFile(files){
        // console.log(props);
 
@@ -42,7 +34,6 @@ export default function RenderTable(props) {
             path,
         })
         .then(response => {
-<<<<<<< HEAD
             //console.log(response);
             const files = response.entries;
             const entries = response.entries.map(file=>(
@@ -67,8 +58,6 @@ export default function RenderTable(props) {
 
                 updateThumbnails(thumbnails);
             })
-=======
->>>>>>> 47471e3245f0826f0d1097cd5f4f33eda9a7a7fe
             updateFiles(response.entries);
         })
         .catch(error => {
@@ -106,21 +95,14 @@ export default function RenderTable(props) {
         return () => subscriptions.forEach((subscription) => subscription.unsubscribe());
     }, [currentLocation, searchQuery]);
 
-<<<<<<< HEAD
-        return () => subscription.unsubscribe();
-    }, [currentLocation]);
-
-=======
     useEffect(() => {
       if (searchQuery.length === 0) {
         handleDownloadFile();
       }
->>>>>>> 47471e3245f0826f0d1097cd5f4f33eda9a7a7fe
 
       filesSearch();
     }, [searchQuery]);
 
-<<<<<<< HEAD
     //console.log(files);
     
     return(
@@ -153,37 +135,6 @@ export default function RenderTable(props) {
                     )
                    })} 
             </tbody>
-=======
-    return(
-      <div>
-      <h3>Hem{currentLocation}</h3>
-      <table>
-        <thead>
-          <tr>
-
-            <th>Namn</th>
-            <th>Modified</th>
-            <th>...</th>
-          </tr>
-        </thead>
-        <tbody>
-          {files.map(file => {
-              return (
-                <tr key = {file.id}>
-                  <td>{file[".tag"]}</td>
-                  <td>
-                    {file[".tag"] === "folder" ? (
-                      <Link to={"/main" + file.path_lower}>{file.name}</Link>
-                    ): file.name}
-                  </td>
-                  <td></td>
-                  <td>...</td>
-                </tr>
-              )
-            })}
-          </tbody>
->>>>>>> 47471e3245f0826f0d1097cd5f4f33eda9a7a7fe
         </table>
-      </div>
     );
 }

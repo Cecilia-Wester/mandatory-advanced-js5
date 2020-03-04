@@ -39,10 +39,11 @@ export function FileSize(props, decimals){
     const dm = decimals < 0 ? 0 : decimals ;
     if (bytes === 0){
         return '0 Bytes';
-    }
+    } else {
 
     const i = Math.floor(Math.log(bytes)/ Math.log(k));
     return parseFloat((bytes / Math.pow(k, i)).toFixed(dm)) + ' ' + sizes[i];
+}
 }
 
 console.log(FileSize(123450));
