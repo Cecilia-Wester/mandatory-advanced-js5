@@ -3,8 +3,8 @@
   flex-direction: column;
   height: 100vh;
   background-color: #F2F2F2;
-
 }
+
 
 .main {
    float: left;
@@ -14,16 +14,24 @@
    height: 100vh;
 }
 
-
-
-.login{
+.search input {
+  border: 1px solid #eee;
+  border-radius: 20px;
+  transition: border-color .5s ease-out;
+  height: 28px;
+  width: 300px;
+  background-color: #DCDCDC;
+  font-size: 16px;
+  margin-top: 120px;
 
 }
 
+.searchIcon {
+  position: relative;
+}
 
 .header img {
   margin-left: 60px;
-
 }
 
 .header {
@@ -31,8 +39,6 @@
   display: flex;
   justify-content: space-between;
   background-color: #F2F2F2;
-
-
 }
 
 .sidebar {
@@ -40,10 +46,9 @@
   width: 20%;
   height: 100vh;
   background-color: #DCDCDC;
-
 }
 
-.dialogbox{
+.dialogbox {
     width: 600px;
     height: 400px;
     background-color: #DCDCDC;
@@ -51,8 +56,8 @@
     border-radius: 7px;
     margin-top: 20px;
     text-align: center;
-
 }
+
 .dialogbox p{
   padding-top: 50px;
   margin: 20px;
@@ -84,16 +89,16 @@
 
 .nameContainer {
   margin-right: 60px;
-  margin-top: 75px;
+  margin-top: 95px;
 }
 
-.name{
+.name {
   font-size: 20px;
   text-align: center;
 }
 
 
-.createFolderModal{
+.createFolderModal {
   width: 300px;
   height: 200px;
   top: 50%;
