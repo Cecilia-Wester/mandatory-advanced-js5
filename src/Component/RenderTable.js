@@ -3,31 +3,28 @@ import { BrowserRouter as Router, Route, Link, Redirect } from "react-router-dom
 import { Dropbox } from 'dropbox';
 import {token$, updateToken} from '../store';
 import SideBar from './Sidebar/SideBar';
+import HandleFileDots from './HandleFileDots';
+import DeleteModal from './DeleteModal';
 
 
 export default function RenderTable(props) {
-
     const [token, setToken] = useState(token$.value);
     const [files, updateFiles] = useState([]);
-
+    const [dropdown, setDropdown] = useState(false);
+    const [deleteModal, setDeleteModal] = useState(false);
+    const [fileToDelete, setFileToDelete] = useState(null)
     const currentLocation = props.location.pathname.substring(5);
-    console.log(currentLocation);
-    
+
     
     function handleDownloadFile(files){
-        console.log(props);
-
         const dbx = new Dropbox({
             accessToken: token,
             fetch: fetch
             });
-
         let path = currentLocation;
-
         if(path === '/') {
-           path = '';
+            path = '';
         }
-
         dbx.filesListFolder({
             path, 
         })
@@ -41,22 +38,46 @@ export default function RenderTable(props) {
 
     }
 
+    function onConfirmDelete(file) { 
+        const dbx = new Dropbox({
+            accessToken: token,
+            //fetch: fetch
+        });
+        console.log("DELETE FILE");
+        dbx.filesDeleteV2({ path: file.path_lower })
+            .then(() => {
+                updateFiles(files.filter(x => x.id !== file.id));
+                console.log("FILE DELETED");
+                setDeleteModal(false);
+            })
+            .catch((error)=>{
+                console.log(error)
+            });
+    }
+
+    function onClickDelete() {
+        setDeleteModal(true)
+    }
+
     useEffect(() => {
         const subscription = token$.subscribe(setToken);
-
         handleDownloadFile();
 
         
         return () => subscription.unsubscribe();
     }, [currentLocation]);
 
-
-
-    console.log(files);
+    
+    function onCreateFolder(file){
+        console.log(file)
+        return(
+            <SideBar file= {props.file} />
+        )
+    }
     
     return(
         <table>
-             <thead>
+            <thead>
                 <tr>
                     <th>File Type</th> 
                     <th>Name</th>
@@ -64,9 +85,9 @@ export default function RenderTable(props) {
                     <th>...</th>
                 </tr>
             </thead>
-           <tbody>
-               {files.map(file => {
-                   return (
+            <tbody>
+                {files.map(file => {
+                    return (
                         <tr key = {file.id}>
                             <td>{file[".tag"]}</td>
                             <td>
@@ -75,11 +96,25 @@ export default function RenderTable(props) {
                                 ): file.name}
                             </td>
                             <td></td>
-                            <td><button>...</button></td>
+                            <td>
+                                <button 
+                                    onClick={() => {
+                                        if (dropdown !== file.id) {
+                                            setDropdown(file.id)
+                                        } else {
+                                            setDropdown(false);
+                                        }
+                                    }}>...</button>
+                                    {dropdown === file.id && <HandleFileDots onClickDelete={() => {
+                                        setDeleteModal(true);
+                                        setFileToDelete(file);
+                                    }}  />}
+                                </td>
                         </tr>
                     )
-                   })} 
+                })} 
             </tbody>
+            {deleteModal && <DeleteModal file={fileToDelete} setDeleteModal={setDeleteModal} onConfirmDelete={() => onConfirmDelete(fileToDelete)}  />}
         </table>
     );
 }

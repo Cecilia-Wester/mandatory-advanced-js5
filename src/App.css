@@ -7,11 +7,11 @@
 }
 
 .main {
-   float: left;
-   width: 80%;
-   background-color: #FFA300;
-   opacity: 0.7;
-   height: 100vh;
+  float: left;
+  width: 80%;
+  background-color: #FFA300;
+  opacity: 0.7;
+  height: 100vh;
 }
 
 
@@ -94,6 +94,19 @@
 
 
 .createFolderModal{
+  width: 300px;
+  height: 200px;
+  top: 50%;
+  left: 500px;
+  background-color: aliceblue;
+  z-index: 1000;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+}
+
+.DeleteModal{
   width: 300px;
   height: 200px;
   top: 50%;

@@ -19,16 +19,19 @@ function CreateFolderModal({ onClose, folderName, onChangeFolderName, onSubmit, 
                 <button type='Submit'>Skapa mapp</button>
                 <button onClick={onClose}>Avsluta</button>
             </form>
-            {error ? <p>Det finns redan en mapp med detta namnet, testa ett annat namn</p> : null}
+            {error ? <p>Någonting blev fel, testa ett annat namn</p> : null}
         </div>
     ), document.body);
 }
 
-export default function CreateFolder( {location} ) {
+export default function CreateFolder( {location }, props ) {
     const [token, setToken] = useState(token$.value);
     const [modal, setModal] = useState(false); 
     const [folderName, setFolderName] = useState("");
     const [error, setError] = useState(false);
+    const [list, updateList] = useState(null);
+    console.log(props.file)
+    
     let currentLocation = location.pathname.substring(5);
     if(currentLocation.charAt(currentLocation.length-1) !== '/'){
         currentLocation = currentLocation + '/';
@@ -37,16 +40,17 @@ export default function CreateFolder( {location} ) {
     useEffect(() => {
         const subscription = token$.subscribe(setToken);
         return () => subscription.unsubscribe();
-    });
+    }, []);
 
     function createFolder(e) {
         e.preventDefault();
-        console.log(error)
         const dbx = new Dropbox({ accessToken: token });
         dbx.filesCreateFolder({ path: currentLocation + folderName})
-            .then(() => {
+            .then((response) => {
+                console.log(response);
+                currentLocation=currentLocation + '/' + folderName.path_lower;
+               
                 
-                console.log('created folder');
             })
             .catch((error2) =>{
                 setError(true);
@@ -63,7 +67,8 @@ export default function CreateFolder( {location} ) {
     return(
         <div className='containerCreateFolder'>
             <button onClick={() => setModal(true)}>Skapa ny mapp</button>
-    {modal && <CreateFolderModal folderName={folderName} onChangeFolderName={onChangeFolderName} onSubmit={createFolder} onClose={() => setModal(false)} error={error}/>}
+            {modal && <CreateFolderModal folderName={folderName} onChangeFolderName={onChangeFolderName} onSubmit={createFolder} onClose={() => setModal(false)} error={error}/>}
+
         </div>
     );
 }

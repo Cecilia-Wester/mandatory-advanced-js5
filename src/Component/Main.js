@@ -7,17 +7,17 @@ import SideBar from './Sidebar/SideBar';
 import RenderTable from './RenderTable';
 
 export default function Main (props) {
-
+    const [listItem , updateFile] = useState(props)
     const [token, setToken] = useState(token$.value);
     const currentLocation = props.location.pathname.substring(5);
-    
+    console.log(props.location)
     useEffect(() => {
         const subscription = token$.subscribe(setToken);
         return () => subscription.unsubscribe();
     }, []);
 
     if (!token) {
-        return <Redirect to="/" />;
+        return <Redirect to="/" />
     }
 
     return(
@@ -32,7 +32,7 @@ export default function Main (props) {
                 <SideBar location = {props.location} />
             </div>
             <div className="main">
-                <RenderTable location = {props.location}/>
+                <RenderTable location = {props.location} />
             </div>
         </div>
     );
