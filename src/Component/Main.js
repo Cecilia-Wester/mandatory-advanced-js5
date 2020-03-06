@@ -9,7 +9,6 @@ import HandleFileDots from './HandleFileDots';
 import DeleteModal from './DeleteModal';
 import {Thumbnail, FileSize, Modified} from './init';
 
-
 export default function Main(props) {
     const [token, setToken] = useState(token$.value);
     const [searchQuery, setSearchQuery] = useState(searchQuery$.value);
@@ -19,11 +18,19 @@ export default function Main(props) {
     const [deleteModal, setDeleteModal] = useState(false);
     const [fileToDelete, setFileToDelete] = useState(null);
     const currentLocation = props.location.pathname.substring(5);
+<<<<<<< HEAD
 
     function onUpload(){
       if(currentLocation === '/favorites') {
         return currentLocation === '';
       }
+=======
+
+    function onUpload(file){
+        if (!files.find(x => x.id === file.id)) {
+            updateFiles([...files, file]);
+        }
+>>>>>>> 95546e3054f891bd256e2b6a95836b6bef372779
     }
 
     function handleFilesList(files){
@@ -35,6 +42,7 @@ export default function Main(props) {
         if(path === '/') {
             path = '';
         }
+<<<<<<< HEAD
       dbx.filesListFolder({
         path,
       })
@@ -70,10 +78,48 @@ export default function Main(props) {
             //fetch: fetch
       });
         console.log("DELETE FILE");
+=======
+        dbx.filesListFolder({
+            path,
+        })
+        .then(response => {
+            //const files = response.entries; ska denna bort?
+            //console.log(response);
+
+            const entries = response.entries.map(file=>(
+                {
+                    path: file.path_lower,
+                    size: 'w32h32'
+                }
+            ))
+            dbx.filesGetThumbnailBatch({
+                entries
+            })
+            .then(response => {
+                const thumbnails = {};
+                response.entries.forEach((entry) => {
+                    if (entry.metadata) {
+                        thumbnails[entry.metadata.id] = entry.thumbnail;
+                    }
+                });
+                updateThumbnails(thumbnails);
+            })
+            updateFiles(response.entries.reverse());
+        })
+        .catch(error => {
+            console.error(error);
+        });
+    }
+
+    function onConfirmDelete(file) {
+        const dbx = new Dropbox({
+            accessToken: token,
+            fetch: fetch
+        });
+>>>>>>> 95546e3054f891bd256e2b6a95836b6bef372779
         dbx.filesDeleteV2({ path: file.path_lower })
             .then(() => {
                 updateFiles(files.filter(x => x.id !== file.id));
-                console.log("FILE DELETED");
                 setDeleteModal(false);
             })
             .catch((error)=>{
@@ -94,7 +140,6 @@ export default function Main(props) {
 
 
     function onCreateFolder(file){
-        console.log(file)
         return(
             <SideBar file= {props.file} />
         )
@@ -115,8 +160,19 @@ export default function Main(props) {
         .catch(error => {
             console.error(error);
         });
-      }
+    }
 
+    const onClickFileDownload = (path) => {
+        let dropbox = new Dropbox({accessToken: token});
+        dropbox
+        .filesGetTemporaryLink  ({path: path})
+        .then((response)=>{
+            window.location.href = response.link;
+        })
+        .catch((error)=>{
+            console.log(error)
+        });
+    }
 
 
     useEffect(() => {
@@ -172,7 +228,7 @@ export default function Main(props) {
                                     <td>
                                         {file[".tag"] === "folder" ? (
                                             <Link to={"/main" + file.path_lower}>{file.name}</Link>
-                                        ): file.name}
+                                        ) : <a onClick= {onClickFileDownload(file.path_lower)}>{file.name}</a>}
                                     </td>
                                     <td><Modified file = {file}/></td>
                                     <td><FileSize file = {file}/></td>

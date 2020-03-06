@@ -49,6 +49,7 @@ h2 {
   position: relative;
   padding-right: 580px;
 }
+
 .material-icons{
   position: absolute;
   left: 4px;
@@ -76,12 +77,14 @@ h2 {
   margin-left: 60px;
   margin-top: 10px;
 }
+
 .header {
   height: 21.5vh;
   display: flex;
   justify-content: space-between;
   background-color: #F2F2F2;
 }
+
 .sidebar {
   float: left;
   width: 20%;
@@ -91,6 +94,7 @@ h2 {
 a{
   color: #4B4B4B;
 }
+
 .dialogbox {
     width: 600px;
     height: 400px;
@@ -103,6 +107,7 @@ a{
   padding-top: 50px;
   margin: 20px;
 }
+
 .dialogbox button {
   cursor:pointer;
   border: none;
@@ -113,6 +118,7 @@ a{
   font-size: 16px;
   background-color:  #FFA300;
 }
+
 .logOutButton {
   cursor:pointer;
   border: none;
@@ -122,12 +128,14 @@ a{
   background-color: #DCDCDC;
   font-size: 16px;
 }
+
 .nameContainer {
   margin-right: 20px;
   margin-top: 100px;
   font-size: 16px;
   text-align: center;
 }
+
 .createFolderModal {
   width: 300px;
   height: 200px;
