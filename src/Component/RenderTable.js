@@ -1,140 +1,120 @@
 import React, { useEffect, useState} from 'react';
-import {Link} from "react-router-dom";
+import { BrowserRouter as Router, Route, Link, Redirect } from "react-router-dom";
 import { Dropbox } from 'dropbox';
-import {Thumbnail, FileSize} from './init';
-import {token$, updateToken, searchQuery$} from '../store';
-
+import {token$, updateToken} from '../store';
+import SideBar from './Sidebar/SideBar';
+import HandleFileDots from './HandleFileDots';
+import DeleteModal from './DeleteModal';
 
 
 export default function RenderTable(props) {
-
     const [token, setToken] = useState(token$.value);
-    const [searchQuery, setSearchQuery] = useState(searchQuery$.value);
     const [files, updateFiles] = useState([]);
-    const [thumbnails, updateThumbnails] = useState({});
-
+    const [dropdown, setDropdown] = useState(false);
+    const [deleteModal, setDeleteModal] = useState(false);
+    const [fileToDelete, setFileToDelete] = useState(null)
     const currentLocation = props.location.pathname.substring(5);
 
-
+    
     function handleDownloadFile(files){
-
         const dbx = new Dropbox({
             accessToken: token,
             fetch: fetch
             });
-
         let path = currentLocation;
         if(path === '/') {
-           path = '';
+            path = '';
         }
-
         dbx.filesListFolder({
-            path,
+            path, 
         })
         .then(response => {
-            //console.log(response);
-            const files = response.entries;
-            const entries = response.entries.map(file=>(
-                {
-                    path: file.path_lower,
-                size: 'w32h32'
-                }
-            ))
-
-            dbx.filesGetThumbnailBatch({
-                entries
-            })
-            .then(response => {
-                const thumbnails = {};
-
-                response.entries.forEach((entry) => {
-                    if (entry.metadata) {
-                        thumbnails[entry.metadata.id] = entry.thumbnail;
-                    }
-                });
-
-                updateThumbnails(thumbnails);
-            })
+            console.log(response);
             updateFiles(response.entries);
         })
         .catch(error => {
-            console.error(error);
+            console.error(error); 
         });
-    }
-
-
-    function filesSearch(files){
-      const dbx = new Dropbox({
-           accessToken: token,
-           fetch: fetch,
-          });
-
-          dbx.filesSearch({
-            path: "",
-            query: searchQuery,
-          })
-          .then(response => {
-            updateFiles(response.matches.map(x => x.metadata));
-          })
-          .catch(error => {
-              console.error(error);
-          });
 
     }
 
+    function onConfirmDelete(file) { 
+        const dbx = new Dropbox({
+            accessToken: token,
+            //fetch: fetch
+        });
+        console.log("DELETE FILE");
+        dbx.filesDeleteV2({ path: file.path_lower })
+            .then(() => {
+                updateFiles(files.filter(x => x.id !== file.id));
+                console.log("FILE DELETED");
+                setDeleteModal(false);
+            })
+            .catch((error)=>{
+                console.log(error)
+            });
+    }
+
+    function onClickDelete() {
+        setDeleteModal(true)
+    }
+
     useEffect(() => {
-        const subscriptions = [
-          token$.subscribe(setToken),
-          searchQuery$.subscribe(setSearchQuery),
-        ];
-
+        const subscription = token$.subscribe(setToken);
         handleDownloadFile();
-        return () => subscriptions.forEach((subscription) => subscription.unsubscribe());
-    }, [currentLocation, searchQuery]);
 
-    useEffect(() => {
-      if (searchQuery.length === 0) {
-        handleDownloadFile();
-      }
+        
+        return () => subscription.unsubscribe();
+    }, [currentLocation]);
 
-      filesSearch();
-    }, [searchQuery]);
-  console.log(searchQuery);
-
+    
+    function onCreateFolder(file){
+        console.log(file)
+        return(
+            <SideBar file= {props.file} />
+        )
+    }
+    
     return(
-      <div className="main">
-      <h2>Hem{currentLocation}</h2>
-
-        <table className="table">
-             <thead>
+        <table>
+            <thead>
                 <tr>
-                <th></th>
-                    <th>Namn</th>
-                    <th>Senast ändring</th>
-                    <th>Storlek</th>
-                    <th></th>
-
+                    <th>File Type</th> 
+                    <th>Name</th>
+                    <th>Modified</th>
+                    <th>...</th>
                 </tr>
             </thead>
-           <tbody>
-               {files.map(file => {
-                   return (
+            <tbody>
+                {files.map(file => {
+                    return (
                         <tr key = {file.id}>
-                            <td><Thumbnail file = {file} thumbnail={thumbnails[file.id]}/></td>
-
+                            <td>{file[".tag"]}</td>
                             <td>
                                 {file[".tag"] === "folder" ? (
                                     <Link to={"/main" + file.path_lower}>{file.name}</Link>
                                 ): file.name}
                             </td>
-                            <td>{file.client_modified}</td>
-                            <td><FileSize file = {file.size}/></td>
-                            <td>...</td>
+                            <td></td>
+                            <td>
+                                <button 
+                                    onClick={() => {
+                                        if (dropdown !== file.id) {
+                                            setDropdown(file.id)
+                                        } else {
+                                            setDropdown(false);
+                                        }
+                                    }}>...</button>
+                                    {dropdown === file.id && <HandleFileDots onClickDelete={() => {
+                                        setDeleteModal(true);
+                                        setFileToDelete(file);
+                                    }}  />}
+                                </td>
                         </tr>
                     )
-                   })}
+                })} 
             </tbody>
+            {deleteModal && <DeleteModal file={fileToDelete} setDeleteModal={setDeleteModal} onConfirmDelete={() => onConfirmDelete(fileToDelete)}  />}
         </table>
-      </div>
     );
 }

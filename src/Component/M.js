@@ -13,7 +13,6 @@ export default function M(props) {
     const [files, updateFiles] = useState([]);
     const currentLocation = props.location.pathname.substring(5);
     
-    
     useEffect(() => {
         const subscription = token$.subscribe(setToken);
         return () => subscription.unsubscribe();

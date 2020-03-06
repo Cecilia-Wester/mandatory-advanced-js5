@@ -9,7 +9,6 @@ import {Thumbnail, FileSize, Modified} from './init';
 
 
 export default function Main(props) {
-
     const [token, setToken] = useState(token$.value);
     const [searchQuery, setSearchQuery] = useState(searchQuery$.value);
     const [files, updateFiles] = useState([]);
@@ -24,19 +23,14 @@ export default function Main(props) {
     }
 
     function handleFilesList(files){
-       // console.log(props);
-        
-       
         const dbx = new Dropbox({
             accessToken: token,
             fetch: fetch
             });
-
         let path = currentLocation;
         if(path === '/') {
-           path = '';
+            path = '';
         }
-
         dbx.filesListFolder({
             path,
         })
@@ -48,9 +42,7 @@ export default function Main(props) {
                     path: file.path_lower,
                 size: 'w32h32'
                 }
-            ))
-            //console.log(entries);
-            
+            ))            
             dbx.filesGetThumbnailBatch({
                 entries
             })
@@ -74,28 +66,27 @@ export default function Main(props) {
 
 
     function filesSearch(files){
-      const dbx = new Dropbox({
-           accessToken: token,
-           fetch: fetch,
-          });
-
-          dbx.filesSearch({
+        const dbx = new Dropbox({
+            accessToken: token,
+            fetch: fetch,
+        });
+        dbx.filesSearch({
             path: "",
             query: searchQuery,
-          })
-          .then(response => {
+        })
+        .then(response => {
             updateFiles(response.matches.map(x => x.metadata));
-          })
-          .catch(error => {
-              console.error(error);
-          });
+        })
+        .catch(error => {
+            console.error(error);
+        });
 
     }
 
     useEffect(() => {
         const subscriptions = [
-          token$.subscribe(setToken),
-          searchQuery$.subscribe(setSearchQuery),
+            token$.subscribe(setToken),
+            searchQuery$.subscribe(setSearchQuery),
         ];
         
         handleFilesList();
@@ -103,17 +94,16 @@ export default function Main(props) {
     }, [currentLocation, searchQuery]);
 
     useEffect(() => {
-      if (searchQuery.length === 0) {
-        handleFilesList();
-      }
-
-      filesSearch();
+        if (searchQuery.length === 0) {
+            handleFilesList();
+        }
+        filesSearch();
     }, [searchQuery]);
 
     console.log(files);
     
     if (!token) {
-        return <Redirect to="/" />;
+        return <Redirect to="/" />
     }
 
     return(

@@ -2,6 +2,10 @@
   font-family: 'Merriweather Sans', sans-serif;
   color: #4B4B4B;
 }
+<<<<<<< HEAD
+=======
+
+>>>>>>> c06598d0b8d86226e7478514b8c0c684aaccf3da
 .App {
   display: flex;
   flex-direction: column;
@@ -12,6 +16,10 @@
   background-color:  #FFA300;
   height: 75.6vh;
 }
+<<<<<<< HEAD
+=======
+
+>>>>>>> c06598d0b8d86226e7478514b8c0c684aaccf3da
 .table {
   margin: auto;
   margin-top: 90px;
@@ -23,16 +31,19 @@ tr,th{
 tr,td{
   padding-right: 60px;
 }
+
 .main {
-   float: left;
-   width: 80%;
-   background-color: #FFA300;
-   height: 100vh;
+  float: left;
+  width: 80%;
+  background-color: #FFA300;
+  height: 100vh;
 }
+
 h2 {
   margin-left: 24px;
   margin-top: 20px;
 }
+
 .search input {
   border: none;
   border-radius: 10px;
@@ -51,10 +62,27 @@ h2 {
   bottom: -1px;
   user-select: none;
 }
+
+.search {
+  position: relative;
+  padding-right: 580px;
+}
+
+.material-icons{
+  position: absolute;
+  left: 4px;
+  bottom: -1px;
+  user-select: none;
+}
+
 .files {
   margin-top: 130px;
   padding-left: 50px;
 }
+<<<<<<< HEAD
+=======
+
+>>>>>>> c06598d0b8d86226e7478514b8c0c684aaccf3da
 .header img {
   margin-left: 60px;
   margin-top: 10px;
@@ -111,6 +139,10 @@ a{
   font-size: 16px;
   text-align: center;
 }
+<<<<<<< HEAD
+=======
+
+>>>>>>> c06598d0b8d86226e7478514b8c0c684aaccf3da
 .createFolderModal {
   width: 300px;
   height: 200px;
@@ -124,9 +156,24 @@ a{
   justify-content: center;
 }
 
+<<<<<<< HEAD
 
 
 
 
 
 
+=======
+.DeleteModal{
+  width: 300px;
+  height: 200px;
+  top: 50%;
+  left: 500px;
+  background-color: aliceblue;
+  z-index: 1000;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+}
+>>>>>>> c06598d0b8d86226e7478514b8c0c684aaccf3da
