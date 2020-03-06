@@ -1,17 +1,18 @@
 import React, { useState, useEffect } from 'react';
 import { Dropbox } from 'dropbox';
 import {token$} from '../../store';
+import { FaFileUpload } from "react-icons/fa";
 
 
 export default function UploadFile(props) {
 
     const [token, setToken] = useState(token$.value);
-    const [file, updatefile] = useState(0);
+    const [file, updateFile] = useState(0);
 
     const currentLocation = props.location.pathname.substring(5);
-    console.log(currentLocation);
-
-
+    //console.log(currentLocation);
+    
+    
     useEffect(() => {
         const subscription = token$.subscribe(setToken);
         return () => subscription.unsubscribe();
@@ -27,12 +28,10 @@ export default function UploadFile(props) {
         dbx.filesUpload({
              path: currentLocation + '/' + file.name,
              contents: file
-            })
-
-          .then(response => {
-            console.log(response);
-            updatefile([file, response.data]);
-            updatefile(0);
+            }) 
+        .then(response => {
+            updateFile([file, response.data]);
+            updateFile(0);
         })
         .catch (error => {
             console.error(error)
@@ -49,12 +48,27 @@ export default function UploadFile(props) {
     return(
         <div>
             <form >
+                <label htmlFor = 'file-input'>
+                    <FaFileUpload size = {22} color = {'#F2F2F2'}/>
+                </label>
                 <input
+                    id= 'file-input'
                     type = 'file'
-                    name = 'file'
+                    name = 'file' 
+                    file = {file} 
+                    style = {styles.input}           
                     onChange = {onChangeUploadFile}
-                />
+                /> Upload
             </form>
         </div>
     );
 }
+
+const styles = {
+    input: {
+        display: 'none',
+        cursor: 'pointer',
+    }
+}
+
+
