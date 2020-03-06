@@ -5,6 +5,8 @@ import { Dropbox } from 'dropbox';
 import {token$, updateToken, searchQuery$} from '../store';
 import Header from './Header/Header';
 import SideBar from './Sidebar/SideBar';
+import HandleFileDots from './HandleFileDots';
+import DeleteModal from './DeleteModal';
 import {Thumbnail, FileSize, Modified} from './init';
 
 
@@ -13,6 +15,9 @@ export default function Main(props) {
     const [searchQuery, setSearchQuery] = useState(searchQuery$.value);
     const [files, updateFiles] = useState([]);
     const [thumbnails, updateThumbnails] = useState({});
+    const [dropdown, setDropdown] = useState(false);
+    const [deleteModal, setDeleteModal] = useState(false);
+    const [fileToDelete, setFileToDelete] = useState(null);
     const currentLocation = props.location.pathname.substring(5);
     //console.log(currentLocation);
     
@@ -64,6 +69,42 @@ export default function Main(props) {
         });
     }
 
+    function onConfirmDelete(file) { 
+        const dbx = new Dropbox({
+            accessToken: token,
+            //fetch: fetch
+        });
+        console.log("DELETE FILE");
+        dbx.filesDeleteV2({ path: file.path_lower })
+            .then(() => {
+                updateFiles(files.filter(x => x.id !== file.id));
+                console.log("FILE DELETED");
+                setDeleteModal(false);
+            })
+            .catch((error)=>{
+                console.log(error)
+            });
+    }
+
+    function onClickDelete() {
+        setDeleteModal(true)
+    }
+
+    useEffect(() => {
+        const subscription = token$.subscribe(setToken);
+        handleFilesList();
+
+        
+        return () => subscription.unsubscribe();
+    }, [currentLocation]);
+
+    
+    function onCreateFolder(file){
+        console.log(file)
+        return(
+            <SideBar file= {props.file} />
+        )
+    }
 
     function filesSearch(files){
         const dbx = new Dropbox({
@@ -106,7 +147,7 @@ export default function Main(props) {
         return <Redirect to="/" />
     }
 
-    return(
+    return (
         <div>
             <Helmet>
                 <title>Main</title>
@@ -133,7 +174,6 @@ export default function Main(props) {
                         return (
                                 <tr key = {file.id}>
                                     <td><Thumbnail file = {file} thumbnail={thumbnails[file.id]}/></td>
-                                    <td>{file[".tag"]}</td>
                                     <td>
                                         {file[".tag"] === "folder" ? (
                                             <Link to={"/main" + file.path_lower}>{file.name}</Link>
@@ -141,11 +181,26 @@ export default function Main(props) {
                                     </td>
                                     <td><Modified file = {file}/></td>
                                     <td><FileSize file = {file}/></td>
-                                    <td>...</td>
+                                    <td></td>
+                                    <td>
+                                        <button 
+                                        onClick={() => {
+                                            if (dropdown !== file.id) {
+                                                setDropdown(file.id)
+                                            } else {
+                                                setDropdown(false);
+                                            }
+                                        }}>...</button>
+                                        {dropdown === file.id && <HandleFileDots onClickDelete={() => {
+                                            setDeleteModal(true);
+                                            setFileToDelete(file);
+                                        }} /> }
+                                    </td>
                                 </tr>
                             )
                         })} 
                     </tbody>
+                    {deleteModal && <DeleteModal file={fileToDelete} setDeleteModal={setDeleteModal} onConfirmDelete={() => onConfirmDelete(fileToDelete)}  />}
                 </table>
             </div>
         </div>

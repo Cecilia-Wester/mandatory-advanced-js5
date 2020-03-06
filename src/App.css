@@ -2,10 +2,6 @@
   font-family: 'Merriweather Sans', sans-serif;
   color: #4B4B4B;
 }
-<<<<<<< HEAD
-=======
-
->>>>>>> c06598d0b8d86226e7478514b8c0c684aaccf3da
 .App {
   display: flex;
   flex-direction: column;
@@ -16,10 +12,6 @@
   background-color:  #FFA300;
   height: 75.6vh;
 }
-<<<<<<< HEAD
-=======
-
->>>>>>> c06598d0b8d86226e7478514b8c0c684aaccf3da
 .table {
   margin: auto;
   margin-top: 90px;
@@ -79,10 +71,6 @@ h2 {
   margin-top: 130px;
   padding-left: 50px;
 }
-<<<<<<< HEAD
-=======
-
->>>>>>> c06598d0b8d86226e7478514b8c0c684aaccf3da
 .header img {
   margin-left: 60px;
   margin-top: 10px;
@@ -139,10 +127,6 @@ a{
   font-size: 16px;
   text-align: center;
 }
-<<<<<<< HEAD
-=======
-
->>>>>>> c06598d0b8d86226e7478514b8c0c684aaccf3da
 .createFolderModal {
   width: 300px;
   height: 200px;
@@ -156,14 +140,6 @@ a{
   justify-content: center;
 }
 
-<<<<<<< HEAD
-
-
-
-
-
-
-=======
 .DeleteModal{
   width: 300px;
   height: 200px;
@@ -176,4 +152,3 @@ a{
   align-items: center;
   justify-content: center;
 }
->>>>>>> c06598d0b8d86226e7478514b8c0c684aaccf3da
