@@ -18,19 +18,11 @@ export default function Main(props) {
     const [deleteModal, setDeleteModal] = useState(false);
     const [fileToDelete, setFileToDelete] = useState(null);
     const currentLocation = props.location.pathname.substring(5);
-<<<<<<< HEAD
-
-    function onUpload(){
-      if(currentLocation === '/favorites') {
-        return currentLocation === '';
-      }
-=======
 
     function onUpload(file){
         if (!files.find(x => x.id === file.id)) {
             updateFiles([...files, file]);
         }
->>>>>>> 95546e3054f891bd256e2b6a95836b6bef372779
     }
 
     function handleFilesList(files){
@@ -42,43 +34,7 @@ export default function Main(props) {
         if(path === '/') {
             path = '';
         }
-<<<<<<< HEAD
-      dbx.filesListFolder({
-        path,
-      })
-      .then(response => {
-        const entries = response.entries.map(file=>(
-        {
-          path: file.path_lower,
-          size: 'w32h32'
-        }
-      ))
-      dbx.filesGetThumbnailBatch({
-        entries
-      })
-      .then(response => {
-        const thumbnails = {};
-        response.entries.forEach((entry) => {
-          if (entry.metadata) {
-              thumbnails[entry.metadata.id] = entry.thumbnail;
-          }
-      });
-        updateThumbnails(thumbnails);
-      })
-        updateFiles(response.entries.reverse());
-      })
-      .catch(error => {
-        console.error(error);
-      });
-    }
 
-    function onConfirmDelete(file) {
-      const dbx = new Dropbox({
-        accessToken: token,
-            //fetch: fetch
-      });
-        console.log("DELETE FILE");
-=======
         dbx.filesListFolder({
             path,
         })
@@ -116,7 +72,7 @@ export default function Main(props) {
             accessToken: token,
             fetch: fetch
         });
->>>>>>> 95546e3054f891bd256e2b6a95836b6bef372779
+
         dbx.filesDeleteV2({ path: file.path_lower })
             .then(() => {
                 updateFiles(files.filter(x => x.id !== file.id));
