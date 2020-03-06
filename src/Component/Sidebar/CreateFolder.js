@@ -2,6 +2,8 @@ import React, { useEffect, useState } from 'react';
 import ReactDOM from "react-dom";
 import { token$, updateToken} from '../../store';
 import { Dropbox } from 'dropbox';
+import { FaFileUpload, FaFolderPlus } from "react-icons/fa";
+
 
 function CreateFolderModal({ onClose, folderName, onChangeFolderName, onSubmit, error }) {
     return ReactDOM.createPortal((
@@ -62,8 +64,22 @@ export default function CreateFolder( {location} ) {
 
     return(
         <div className='containerCreateFolder'>
-            <button onClick={() => setModal(true)}>Skapa ny mapp</button>
+            <label htmlFor = 'folder-input' >
+                <FaFolderPlus size = {22} color = {'#F2F2F2'}/>
+            </label>
+            <input 
+                id ='folder-input'
+                style = {styles.folder}
+                onClick={() => setModal(true)}/>
+               Skapa ny mapp
     {modal && <CreateFolderModal folderName={folderName} onChangeFolderName={onChangeFolderName} onSubmit={createFolder} onClose={() => setModal(false)} error={error}/>}
         </div>
     );
+}
+
+const styles = {
+    folder : {
+        display: 'none',
+        cursor: 'pointer',
+    }
 }

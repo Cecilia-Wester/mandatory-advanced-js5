@@ -1,7 +1,5 @@
-import React, { useEffect, useState } from 'react';
-import { token$, updateToken} from '../store';
-import { MdFolderOpen } from "react-icons/md";
-import { FiFileText } from "react-icons/fi";
+import React from 'react';
+import { FaFileAlt, FaFolder } from "react-icons/fa";
 
 
 export function Thumbnail(props) {
@@ -17,13 +15,13 @@ export function Thumbnail(props) {
     } else if(file['.tag'] === 'folder') {
         return (
             <div>
-                <MdFolderOpen size = {32}/>
+                <FaFolder size = {32}  />
             </div>
         )
     } else if (file['.tag'] === 'file') {
         return (
             <div>
-                <FiFileText size = {32}/>
+                <FaFileAlt size = {32} color = {'#F2F2F2'}/>
             </div>
         );
     }
@@ -32,21 +30,43 @@ export function Thumbnail(props) {
     }
 }
 
+
+export function Modified(props) {
+
+    const file = props.file;
+
+
+    if(file['.tag'] === 'file') {
+    const date = file.client_modified;
+    
+    let currentDate = new Date(date);
+    return currentDate.toString().split(' ', 5).join(' '); 
+    } else {
+        return null;
+    }
+    // varför funkar inte toLocalSting här? 
+}
+
+
 export function FileSize(props, decimals){
-    const bytes = props.file;
+    
+    const file = props.file;
+    const bytes = file.size;
+
+    if(file['.tag'] === 'file') {
     const sizes = ['Bytes', 'KB', 'MB', 'GB', 'TB', 'PB', 'EB', 'ZB', 'YB'];
     const k = 1024;
     const dm = decimals < 0 ? 0 : decimals ;
-    if (bytes === 0){
-        return '0 Bytes';
-    } else {
-
     const i = Math.floor(Math.log(bytes)/ Math.log(k));
     return parseFloat((bytes / Math.pow(k, i)).toFixed(dm)) + ' ' + sizes[i];
-}
+    } else if ( bytes === 0 ){
+        return '0 Bytes';
+    } else {
+        return null;
+    }
 }
 
-console.log(FileSize(123450));
+
 
 
 
