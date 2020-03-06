@@ -20,7 +20,7 @@ export default function Auth(props) {
 
 
   if(redirect) {
-    return <Redirect to= '/Main' />
+    return <Redirect to= '/main' />
   }
   return null;
 }

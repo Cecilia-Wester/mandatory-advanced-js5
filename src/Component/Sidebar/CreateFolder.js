@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import ReactDOM from "react-dom";
 import { token$, updateToken} from '../../store';
 import { Dropbox } from 'dropbox';
+import { Redirect } from 'react-router-dom';
 
 function CreateFolderModal({ onClose, folderName, onChangeFolderName, onSubmit, error }) {
     return ReactDOM.createPortal((
@@ -29,8 +30,7 @@ export default function CreateFolder( {location }, props ) {
     const [modal, setModal] = useState(false); 
     const [folderName, setFolderName] = useState("");
     const [error, setError] = useState(false);
-    const [list, updateList] = useState(null);
-    console.log(props.file)
+    const [responseRedirect, setResponseRedirect] = useState(false)
     
     let currentLocation = location.pathname.substring(5);
     if(currentLocation.charAt(currentLocation.length-1) !== '/'){
@@ -47,10 +47,8 @@ export default function CreateFolder( {location }, props ) {
         const dbx = new Dropbox({ accessToken: token });
         dbx.filesCreateFolder({ path: currentLocation + folderName})
             .then((response) => {
-                console.log(response);
-                currentLocation=currentLocation + '/' + folderName.path_lower;
-               
-                
+                setResponseRedirect("/main" + response.path_lower);
+                //currentLocation=currentLocation + '/'+ response.pathname;
             })
             .catch((error2) =>{
                 setError(true);
@@ -68,7 +66,7 @@ export default function CreateFolder( {location }, props ) {
         <div className='containerCreateFolder'>
             <button onClick={() => setModal(true)}>Skapa ny mapp</button>
             {modal && <CreateFolderModal folderName={folderName} onChangeFolderName={onChangeFolderName} onSubmit={createFolder} onClose={() => setModal(false)} error={error}/>}
-
+            {responseRedirect && <Redirect to={responseRedirect} />}    
         </div>
     );
 }
