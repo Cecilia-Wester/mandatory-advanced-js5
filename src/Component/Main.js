@@ -21,9 +21,9 @@ export default function Main(props) {
     const currentLocation = props.location.pathname.substring(5);
     //console.log(currentLocation);
     
-    function onUpload(){
-        if(currentLocation === '/favorites') {
-            return currentLocation === ''; 
+    function onUpload(file){
+        if (!files.find(x => x.id === file.id)) {
+            updateFiles([...files, file]);
         }
     }
 
@@ -41,7 +41,7 @@ export default function Main(props) {
         })
         .then(response => {
             //console.log(response);
-            //const files = response.entries; ska denna bort?
+        
             const entries = response.entries.map(file=>(
                 {
                     path: file.path_lower,
