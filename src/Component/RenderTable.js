@@ -1,17 +1,10 @@
 import React, { useEffect, useState} from 'react';
 import {Link} from "react-router-dom";
 import { Dropbox } from 'dropbox';
-<<<<<<< HEAD
 import {Thumbnail, FileSize} from './init';
 import {token$, updateToken, searchQuery$} from '../store';
-import SideBar from './Sidebar/SideBar';
 
-=======
-import {token$, updateToken} from '../store';
-import {Thumbnail, FileSize} from './init';
-import {token$, updateToken, searchQuery$} from '../store';
-import SideBar from './Sidebar/SideBar';
->>>>>>> 695b0bffa69d6cfcbabba19ac4e8c2e4693823fb
+
 
 export default function RenderTable(props) {
 
@@ -21,15 +14,11 @@ export default function RenderTable(props) {
     const [thumbnails, updateThumbnails] = useState({});
 
     const currentLocation = props.location.pathname.substring(5);
-<<<<<<< HEAD
 
 
 
-=======
-    //console.log(currentLocation);
-    
-    
->>>>>>> 695b0bffa69d6cfcbabba19ac4e8c2e4693823fb
+
+
     function handleDownloadFile(files){
 
         const dbx = new Dropbox({
@@ -46,10 +35,7 @@ export default function RenderTable(props) {
             path,
         })
         .then(response => {
-<<<<<<< HEAD
-=======
             //console.log(response);
->>>>>>> 695b0bffa69d6cfcbabba19ac4e8c2e4693823fb
             const files = response.entries;
             const entries = response.entries.map(file=>(
                 {
@@ -109,11 +95,6 @@ export default function RenderTable(props) {
         return () => subscriptions.forEach((subscription) => subscription.unsubscribe());
     }, [currentLocation, searchQuery]);
 
-<<<<<<< HEAD
-
-
-=======
->>>>>>> 695b0bffa69d6cfcbabba19ac4e8c2e4693823fb
     useEffect(() => {
       if (searchQuery.length === 0) {
         handleDownloadFile();
@@ -121,26 +102,21 @@ export default function RenderTable(props) {
 
       filesSearch();
     }, [searchQuery]);
+  console.log(searchQuery);
 
-<<<<<<< HEAD
-
-=======
-    //console.log(files);
-    
->>>>>>> 695b0bffa69d6cfcbabba19ac4e8c2e4693823fb
     return(
-      <div>
-      <h3>Hem{currentLocation}</h3>
+      <div className="main">
+      <h2>Hem{currentLocation}</h2>
 
-        <table>
+        <table className="table">
              <thead>
                 <tr>
-                    <th>Thumbnail</th>
-                    <th>File Type</th>
-                    <th>Name</th>
-                    <th>Modified</th>
-                    <th>Size</th>
-                    <th>...</th>
+                <th></th>
+                    <th>Namn</th>
+                    <th>Senast ändring</th>
+                    <th>Storlek</th>
+                    <th></th>
+
                 </tr>
             </thead>
            <tbody>
@@ -148,7 +124,7 @@ export default function RenderTable(props) {
                    return (
                         <tr key = {file.id}>
                             <td><Thumbnail file = {file} thumbnail={thumbnails[file.id]}/></td>
-                            <td>{file[".tag"]}</td>
+
                             <td>
                                 {file[".tag"] === "folder" ? (
                                     <Link to={"/main" + file.path_lower}>{file.name}</Link>
@@ -162,5 +138,6 @@ export default function RenderTable(props) {
                    })}
             </tbody>
         </table>
+      </div>
     );
 }

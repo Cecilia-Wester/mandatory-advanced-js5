@@ -8,8 +8,8 @@ function CreateFolderModal({ onClose, folderName, onChangeFolderName, onSubmit, 
         <div className='createFolderModal' style={{position: "absolute"}}>
             <form onSubmit={onSubmit}>
                 <div><p>Skapa ny mapp</p></div>
-                <label> Mapp: 
-                    <input 
+                <label> Mapp:
+                    <input
                         type='text'
                         onChange={onChangeFolderName}
                         value={folderName}
@@ -26,18 +26,18 @@ function CreateFolderModal({ onClose, folderName, onChangeFolderName, onSubmit, 
 
 export default function CreateFolder( {location} ) {
     const [token, setToken] = useState(token$.value);
-    const [modal, setModal] = useState(false); 
+    const [modal, setModal] = useState(false);
     const [folderName, setFolderName] = useState("");
     const [error, setError] = useState(false);
     let currentLocation = location.pathname.substring(5);
     if(currentLocation.charAt(currentLocation.length-1) !== '/'){
         currentLocation = currentLocation + '/';
     }
-    
+
     useEffect(() => {
         const subscription = token$.subscribe(setToken);
         return () => subscription.unsubscribe();
-    });
+    },[]);
 
     function createFolder(e) {
         e.preventDefault();
@@ -45,7 +45,7 @@ export default function CreateFolder( {location} ) {
         const dbx = new Dropbox({ accessToken: token });
         dbx.filesCreateFolder({ path: currentLocation + folderName})
             .then(() => {
-                
+
                 console.log('created folder');
             })
             .catch((error2) =>{

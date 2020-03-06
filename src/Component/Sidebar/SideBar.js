@@ -5,11 +5,10 @@ import CreateFolder from './CreateFolder';
 export default function SideBar(props) {
     return(
         <div className="sidebar">
-            <p></p>
-            <div>
-                <UploadFile location={props.location} file={props.file} />
-                <CreateFolder location={props.location} />
-            </div>
+         <div className="files">
+          <UploadFile location={props.location} file={props.file} />
+          <CreateFolder location={props.location} />
+         </div>
         </div>
     );
 }

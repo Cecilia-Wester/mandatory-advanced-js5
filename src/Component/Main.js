@@ -1,5 +1,5 @@
 import React, { useEffect, useState} from 'react';
-import { BrowserRouter as Router, Route, Link, Redirect } from "react-router-dom";
+import { Redirect } from "react-router-dom";
 import { Helmet} from 'react-helmet-async';
 import {token$, updateToken} from '../store';
 import Header from './Header/Header';
@@ -25,15 +25,10 @@ export default function Main (props) {
             <Helmet>
                 <title>Main</title>
             </Helmet>
-            <div>
-                <Header/>
-            </div>
-            <div>
-                <SideBar location = {props.location} />
-            </div>
-            <div className="main">
-                <RenderTable location = {props.location}/>
-            </div>
+            <Header/>
+            <SideBar location = {props.location} />
+            <RenderTable location = {props.location}/>
+
         </div>
     );
 }
