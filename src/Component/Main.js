@@ -16,17 +16,17 @@ export default function Main(props) {
     const [thumbnails, updateThumbnails] = useState({});
     const currentLocation = props.location.pathname.substring(5);
     //console.log(currentLocation);
-    
+
     function onUpload(){
         if(currentLocation === '/favorites') {
-            return currentLocation === ''; 
+            return currentLocation === '';
         }
     }
 
     function handleFilesList(files){
        // console.log(props);
-        
-       
+
+
         const dbx = new Dropbox({
             accessToken: token,
             fetch: fetch
@@ -50,7 +50,7 @@ export default function Main(props) {
                 }
             ))
             //console.log(entries);
-            
+
             dbx.filesGetThumbnailBatch({
                 entries
             })
@@ -97,7 +97,7 @@ export default function Main(props) {
           token$.subscribe(setToken),
           searchQuery$.subscribe(setSearchQuery),
         ];
-        
+
         handleFilesList();
         return () => subscriptions.forEach((subscription) => subscription.unsubscribe());
     }, [currentLocation, searchQuery]);
@@ -111,7 +111,7 @@ export default function Main(props) {
     }, [searchQuery]);
 
     console.log(files);
-    
+
     if (!token) {
         return <Redirect to="/" />;
     }
@@ -123,22 +123,23 @@ export default function Main(props) {
                     <title>Main</title>
                 </Helmet>
             </div>
-        <div>
+
             <Header/>
-        </div>
-        <div>
-            <SideBar 
-                
+
+
+            <SideBar
+
                 onUpload={onUpload}
-                //onCreateFolder 
-                location = {props.location} 
+                //onCreateFolder
+                location = {props.location}
                 />
-        </div>
+      
+        <div className="main">
         <table>
              <thead>
                 <tr>
                     <th>Thumbnail</th>
-                    <th>File Type</th> 
+                    <th>File Type</th>
                     <th>Name</th>
                     <th>Modified</th>
                     <th>Size</th>
@@ -161,9 +162,10 @@ export default function Main(props) {
                             <td>...</td>
                         </tr>
                     )
-                   })} 
+                   })}
             </tbody>
         </table>
+        </div>
         </div>
     );
 }
