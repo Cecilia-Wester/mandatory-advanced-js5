@@ -42,7 +42,7 @@ export function Modified(props) {
     } else {
         return null;
     }
-    // varför funkar inte toLocalSting här? 
+    // varför funkar inte toLocaleSting här? 
 }
 
 

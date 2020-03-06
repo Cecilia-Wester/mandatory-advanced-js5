@@ -19,9 +19,9 @@ export default function Main(props) {
     const [fileToDelete, setFileToDelete] = useState(null);
     const currentLocation = props.location.pathname.substring(5);
     
-    function onUpload(){
-        if(currentLocation === '/favorites') {
-            return currentLocation === ''; 
+    function onUpload(file){
+        if (!files.find(x => x.id === file.id)) {
+            updateFiles([...files, file]);
         }
     }
 
@@ -39,6 +39,8 @@ export default function Main(props) {
         })
         .then(response => {
             //const files = response.entries; ska denna bort?
+            //console.log(response);
+        
             const entries = response.entries.map(file=>(
                 {
                     path: file.path_lower,
