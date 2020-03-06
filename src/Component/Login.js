@@ -3,7 +3,7 @@ import { Redirect } from "react-router-dom";
 import { Dropbox } from 'dropbox';
 import { Helmet } from 'react-helmet-async';
 import {CLIENT_ID} from './clientId';
-import {token$, updateToken} from '../store';
+import {token$} from '../store';
 import Header from './Header/Header';
 
 

@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from 'react';
 import ReactDOM from "react-dom";
-import { token$, updateToken} from '../../store';
+import { token$} from '../../store';
 import { Dropbox } from 'dropbox';
 import { Redirect } from 'react-router-dom';
-import { FaFileUpload, FaFolderPlus } from "react-icons/fa";
+import { FaFolderPlus } from "react-icons/fa";
 
 
 function CreateFolderModal({ onClose, folderName, onChangeFolderName, onSubmit, error }) {

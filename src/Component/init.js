@@ -8,7 +8,7 @@ export function Thumbnail(props) {
     //console.log(props);
 
     if(typeof thumbnail !== 'undefined') {
-        return <img src={"data:image/png;base64," + thumbnail} />
+        return <img src={"data:image/png;base64," + thumbnail} alt = {'base64'} />
         //console.log(thumbnail);
     } else if(file['.tag'] === 'folder') {
         return (

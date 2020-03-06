@@ -1,8 +1,8 @@
 import React, { useEffect, useState} from 'react';
-import { BrowserRouter as Router, Route, Link, Redirect } from "react-router-dom";
+import { Link, Redirect } from "react-router-dom";
 import { Helmet} from 'react-helmet-async'
 import { Dropbox } from 'dropbox';
-import {token$, updateToken, searchQuery$} from '../store';
+import {token$, searchQuery$} from '../store';
 import Header from './Header/Header';
 import SideBar from './Sidebar/SideBar';
 import HandleFileDots from './HandleFileDots';
@@ -23,7 +23,8 @@ export default function Main(props) {
     
     function onUpload(file){
         if (!files.find(x => x.id === file.id)) {
-            updateFiles([...files, file]);
+            updateFiles([...files, file].reverse());
+            
         }
     }
 
@@ -41,7 +42,7 @@ export default function Main(props) {
         })
         .then(response => {
             //console.log(response);
-        
+            
             const entries = response.entries.map(file=>(
                 {
                     path: file.path_lower,
@@ -62,7 +63,7 @@ export default function Main(props) {
 
                 updateThumbnails(thumbnails);
             })
-            updateFiles(response.entries.reverse());
+            updateFiles(response.entries);
         })
         .catch(error => {
             console.error(error);
@@ -94,7 +95,6 @@ export default function Main(props) {
         const subscription = token$.subscribe(setToken);
         handleFilesList();
 
-        
         return () => subscription.unsubscribe();
     }, [currentLocation]);
 
@@ -145,7 +145,7 @@ export default function Main(props) {
     
     if (!token) {
         return <Redirect to="/" />
-    }
+    } 
 
     return (
         <div>
@@ -155,7 +155,7 @@ export default function Main(props) {
             <Header/>
             <SideBar 
                 onUpload={onUpload}
-                //onCreateFolder 
+                onCreateFolder = {onCreateFolder}
                 location = {props.location} 
                 />
             <div className = 'main'>
