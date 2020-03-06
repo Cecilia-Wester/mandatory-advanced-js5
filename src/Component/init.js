@@ -3,10 +3,8 @@ import { FaFileAlt, FaFolder } from "react-icons/fa";
 
 
 export function Thumbnail(props) {
-   
     const file = props.file;
     const thumbnail = props.thumbnail;
-
     //console.log(props);
 
     if(typeof thumbnail !== 'undefined') {
@@ -25,7 +23,7 @@ export function Thumbnail(props) {
             </div>
         );
     }
-     else {
+    else {
         return null;
     }
 }
