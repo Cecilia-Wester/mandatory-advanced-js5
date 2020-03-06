@@ -51,14 +51,25 @@ h2 {
   background-color: #DCDCDC;
 
 }
+
+.search {
+  position: relative;
+  padding-right: 580px;
+}
+
+.material-icons{
+  position: absolute;
+  left: 4px;
+  bottom: -1px;
+  user-select: none;
+}
+
 .files {
   margin-top: 130px;
   padding-left: 50px;
 }
 
-.search {
-  margin-right: 280px;
-}
+
 
 .header img {
   margin-left: 60px;

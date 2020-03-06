@@ -19,7 +19,7 @@ export default function Search() {
 
   return(
     <div className="search">
-
+      <i className="material-icons">search</i>
     <DebounceInput
      minLength={1}
      debounceTimeout={100}

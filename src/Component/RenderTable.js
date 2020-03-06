@@ -15,10 +15,6 @@ export default function RenderTable(props) {
 
     const currentLocation = props.location.pathname.substring(5);
 
-
-
-
-
     function handleDownloadFile(files){
 
         const dbx = new Dropbox({
@@ -35,13 +31,12 @@ export default function RenderTable(props) {
             path,
         })
         .then(response => {
-            //console.log(response);
             const files = response.entries;
             const entries = response.entries.map(file=>(
-                {
-                    path: file.path_lower,
+              {
+                path: file.path_lower,
                 size: 'w32h32'
-                }
+              }
             ))
 
             dbx.filesGetThumbnailBatch({
@@ -102,7 +97,10 @@ export default function RenderTable(props) {
 
       filesSearch();
     }, [searchQuery]);
-  console.log(searchQuery);
+
+     function navigationCurrentLocation(){
+       
+     }
 
     return(
       <div className="main">
