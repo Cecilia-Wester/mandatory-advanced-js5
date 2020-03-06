@@ -118,52 +118,46 @@ export default function Main(props) {
 
     return(
         <div>
-            <div>
-                <Helmet>
-                    <title>Main</title>
-                </Helmet>
-            </div>
-        <div>
+            <Helmet>
+                <title>Main</title>
+            </Helmet>
             <Header/>
-        </div>
-        <div>
             <SideBar 
-                
                 onUpload={onUpload}
                 //onCreateFolder 
                 location = {props.location} 
                 />
-        </div>
-        <table>
-             <thead>
-                <tr>
-                    <th>Thumbnail</th>
-                    <th>File Type</th> 
-                    <th>Name</th>
-                    <th>Modified</th>
-                    <th>Size</th>
-                    <th>...</th>
-                </tr>
-            </thead>
-           <tbody>
-               {files.map(file => {
-                   return (
-                        <tr key = {file.id}>
-                            <td><Thumbnail file = {file} thumbnail={thumbnails[file.id]}/></td>
-                            <td>{file[".tag"]}</td>
-                            <td>
-                                {file[".tag"] === "folder" ? (
-                                    <Link to={"/main" + file.path_lower}>{file.name}</Link>
-                                ): file.name}
-                            </td>
-                            <td><Modified file = {file}/></td>
-                            <td><FileSize file = {file}/></td>
-                            <td>...</td>
+            <div className = 'main'>
+                <table className = 'table'>
+                    <thead>
+                        <tr>
+                            <th></th>
+                            <th>Fil Name</th> 
+                            <th>Senaste ändring</th>
+                            <th>storlek</th>
+                            <th></th>
                         </tr>
-                    )
-                   })} 
-            </tbody>
-        </table>
+                    </thead>
+                <tbody>
+                    {files.map(file => {
+                        return (
+                                <tr key = {file.id}>
+                                    <td><Thumbnail file = {file} thumbnail={thumbnails[file.id]}/></td>
+                                    <td>{file[".tag"]}</td>
+                                    <td>
+                                        {file[".tag"] === "folder" ? (
+                                            <Link to={"/main" + file.path_lower}>{file.name}</Link>
+                                        ): file.name}
+                                    </td>
+                                    <td><Modified file = {file}/></td>
+                                    <td><FileSize file = {file}/></td>
+                                    <td>...</td>
+                                </tr>
+                            )
+                        })} 
+                    </tbody>
+                </table>
+            </div>
         </div>
     );
 }
