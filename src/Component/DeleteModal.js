@@ -1,6 +1,5 @@
-import React, {useState,useEffect} from 'react';
+import React, { useState,useEffect } from 'react';
 import ReactDOM from "react-dom";
-import { Dropbox } from 'dropbox';
 
 export default function DeleteModal({ file, onConfirmDelete, setDeleteModal }) {
     return ReactDOM.createPortal((

@@ -26,11 +26,11 @@ export default function Main(props) {
     }
 
     function handleFilesList(files){
-      const dbx = new Dropbox({
-        accessToken: token,
-        fetch: fetch
-      });
-      let path = currentLocation;
+        const dbx = new Dropbox({
+            accessToken: token,
+            fetch: fetch
+        });
+        let path = currentLocation;
         if(path === '/') {
             path = '';
         }
@@ -87,7 +87,6 @@ export default function Main(props) {
         setDeleteModal(true)
     }
 
-
     useEffect(() => {
         const subscription = token$.subscribe(setToken);
         handleFilesList();
@@ -130,7 +129,6 @@ export default function Main(props) {
         });
     }
 
-
     useEffect(() => {
         const subscriptions = [
             token$.subscribe(setToken),
@@ -147,8 +145,6 @@ export default function Main(props) {
         }
         filesSearch();
     }, [searchQuery]);
-
-   console.log(files)
 
     if (!token) {
         return <Redirect to="/" />
@@ -184,7 +180,7 @@ export default function Main(props) {
                                     <td>
                                         {file[".tag"] === "folder" ? (
                                             <Link to={"/main" + file.path_lower}>{file.name}</Link>
-                                        ) : <a onClick= {onClickFileDownload(file.path_lower)}>{file.name}</a>}
+                                        ) : <a onClick= {() => onClickFileDownload(file.path_lower)}>{file.name}</a>}
                                     </td>
                                     <td><Modified file = {file}/></td>
                                     <td><FileSize file = {file}/></td>

@@ -8,7 +8,6 @@ import RenderTable from './Main';
 import { Dropbox } from 'dropbox';
 
 export default function M(props) {
-
     const [token, setToken] = useState(token$.value);
     const [files, updateFiles] = useState([]);
     const currentLocation = props.location.pathname.substring(5);
