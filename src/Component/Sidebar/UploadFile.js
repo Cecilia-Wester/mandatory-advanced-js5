@@ -18,11 +18,11 @@ export default function UploadFile(props) {
         return () => subscription.unsubscribe();
     },[]);
 
-    
+
     function handleUploadFile(file) {
-        
+
         const dbx = new Dropbox({
-            accessToken: token, 
+            accessToken: token,
             fetch: fetch
         });
         dbx.filesUpload({
@@ -37,7 +37,7 @@ export default function UploadFile(props) {
             console.error(error)
         });
     }
-    
+
     function onChangeUploadFile(e) {
         e.preventDefault();
         handleUploadFile(e.target.files[0]);

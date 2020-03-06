@@ -33,15 +33,19 @@ export default function Header () {
     <div className='header'>
       <div>
         <img src={CloudBerry}  alt="cloudberry" width="175px" />
-      </div>
-        {token? <Search /> :null}
 
+      </div>
+      <div className="search">
+      {token? <Search /> :null}
+</div>
         <div className="nameContainer">
 
-          <div className="name">
-            {token ? name : null}
-            {!token?<button style={{display:"none"}}></button> : <button className="logOutButton" style={{display:"block"}} onClick={logout}>Logga ut</button>}
-          </div>
+
+            {token ? `Välkommen ${name}`: null}
+
+{!token?<button style={{display:"none"}}></button> : <button className="logOutButton" style={{display:"block"}} onClick={logout}>Logga ut</button>}
+
+
         </div>
     </div>
  );
