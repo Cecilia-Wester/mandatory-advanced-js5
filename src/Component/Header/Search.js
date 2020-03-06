@@ -20,8 +20,8 @@ export default function Search() {
     <div className="search">
       <i className = 'material-icons'>search</i>
     <DebounceInput
-     minLength={1}
-     debounceTimeout={100}
+     minLength={2}
+     debounceTimeout={200}
         type= "text"
         value={search}
         onChange={updateSearch}

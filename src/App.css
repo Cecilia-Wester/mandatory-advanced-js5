@@ -43,6 +43,7 @@ h2 {
   width: 260px;
   margin-top: 120px;
   background-color: #DCDCDC;
+
 }
 .search {
   position: relative;
@@ -62,8 +63,8 @@ h2 {
 
 .material-icons{
   position: absolute;
-  left: 4px;
-  bottom: -1px;
+  left: 5px;
+  bottom: 1px;
   user-select: none;
 }
 

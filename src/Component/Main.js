@@ -19,73 +19,56 @@ export default function Main(props) {
     const [deleteModal, setDeleteModal] = useState(false);
     const [fileToDelete, setFileToDelete] = useState(null);
     const currentLocation = props.location.pathname.substring(5);
-    //console.log(currentLocation);
 
     function onUpload(){
-        if(currentLocation === '/favorites') {
-            return currentLocation === '';
-        }
+      if(currentLocation === '/favorites') {
+        return currentLocation === '';
+      }
     }
 
     function handleFilesList(files){
-<<<<<<< HEAD
-       // console.log(props);
-
-
-=======
->>>>>>> dadaf41e9b529005d434e34d802d38e422c3e173
-        const dbx = new Dropbox({
-            accessToken: token,
-            fetch: fetch
-            });
-        let path = currentLocation;
+      const dbx = new Dropbox({
+        accessToken: token,
+        fetch: fetch
+      });
+      let path = currentLocation;
         if(path === '/') {
             path = '';
         }
-        dbx.filesListFolder({
-            path,
-        })
-        .then(response => {
-            //console.log(response);
-            //const files = response.entries; ska denna bort?
-            const entries = response.entries.map(file=>(
-                {
-                    path: file.path_lower,
-                size: 'w32h32'
-                }
-<<<<<<< HEAD
-            ))
-            //console.log(entries);
-
-=======
-            ))
->>>>>>> dadaf41e9b529005d434e34d802d38e422c3e173
-            dbx.filesGetThumbnailBatch({
-                entries
-            })
-            .then(response => {
-                const thumbnails = {};
-
-                response.entries.forEach((entry) => {
-                    if (entry.metadata) {
-                        thumbnails[entry.metadata.id] = entry.thumbnail;
-                    }
-                });
-
-                updateThumbnails(thumbnails);
-            })
-            updateFiles(response.entries.reverse());
-        })
-        .catch(error => {
-            console.error(error);
-        });
+      dbx.filesListFolder({
+        path,
+      })
+      .then(response => {
+        const entries = response.entries.map(file=>(
+        {
+          path: file.path_lower,
+          size: 'w32h32'
+        }
+      ))
+      dbx.filesGetThumbnailBatch({
+        entries
+      })
+      .then(response => {
+        const thumbnails = {};
+        response.entries.forEach((entry) => {
+          if (entry.metadata) {
+              thumbnails[entry.metadata.id] = entry.thumbnail;
+          }
+      });
+        updateThumbnails(thumbnails);
+      })
+        updateFiles(response.entries.reverse());
+      })
+      .catch(error => {
+        console.error(error);
+      });
     }
 
     function onConfirmDelete(file) {
-        const dbx = new Dropbox({
-            accessToken: token,
+      const dbx = new Dropbox({
+        accessToken: token,
             //fetch: fetch
-        });
+      });
         console.log("DELETE FILE");
         dbx.filesDeleteV2({ path: file.path_lower })
             .then(() => {
@@ -102,11 +85,10 @@ export default function Main(props) {
         setDeleteModal(true)
     }
 
+
     useEffect(() => {
         const subscription = token$.subscribe(setToken);
         handleFilesList();
-
-
         return () => subscription.unsubscribe();
     }, [currentLocation]);
 
@@ -133,8 +115,9 @@ export default function Main(props) {
         .catch(error => {
             console.error(error);
         });
+      }
 
-    }
+
 
     useEffect(() => {
         const subscriptions = [
@@ -153,12 +136,11 @@ export default function Main(props) {
         filesSearch();
     }, [searchQuery]);
 
-    console.log(files);
+   console.log(files)
 
     if (!token) {
         return <Redirect to="/" />
     }
-
     return (
         <div>
             <Helmet>
@@ -171,13 +153,14 @@ export default function Main(props) {
                 location = {props.location}
                 />
             <div className = 'main'>
+            <h2><Link to={"/main"}>Hem</Link>{currentLocation}</h2>
                 <table className = 'table'>
                     <thead>
                         <tr>
                             <th></th>
-                            <th>Fil Name</th>
+                            <th>Fil Namn</th>
                             <th>Senaste ändring</th>
-                            <th>storlek</th>
+                            <th>Storlek</th>
                             <th></th>
                         </tr>
                     </thead>
@@ -216,6 +199,6 @@ export default function Main(props) {
                 </table>
             </div>
         </div>
-        </div>
+
     );
 }
