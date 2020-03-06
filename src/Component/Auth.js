@@ -9,7 +9,7 @@ export default function Auth(props) {
   function getAccessTokenFromUrl (){ //Parses the url and gets the access token if it is in the urls hash
     let parseUrl = queryString.parse(window.location.hash); //hash return the part of the URL that follows the # symbol
     console.log(parseUrl);
-        
+
     let tokenAccess = parseUrl.access_token;
     updateToken(tokenAccess);
 

@@ -1,7 +1,6 @@
 import React from 'react';
-import { BrowserRouter as Router, Route, Link, Redirect } from "react-router-dom";
+import { BrowserRouter as Router, Route} from "react-router-dom";
 import { HelmetProvider } from 'react-helmet-async';
-import FontAwesome from 'react-fontawesome';
 import Login from './Component/Login';
 import Auth from './Component/Auth';
 import Main from './Component/Main';

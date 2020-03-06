@@ -2,6 +2,7 @@ import React, {useEffect, useState} from 'react';
 import { Dropbox } from 'dropbox';
 import {token$, updateToken} from '../../store';
 import CloudBerry from '../../CloudBerry.jpg';
+import Search from "./Search";
 
 
 export default function Header () {
@@ -32,13 +33,20 @@ export default function Header () {
     <div className='header'>
       <div>
         <img src={CloudBerry}  alt="cloudberry" width="175px" />
+
       </div>
-      <div className="nameContainer">
-      <div className="name">
-        {token ? name : null}
-        {!token?<button style={{display:"none"}}></button> : <button className="logOutButton" style={{display:"block"}} onClick={logout}>Logga ut</button>}
-      </div>
-      </div>
+      <div>
+      {token? <Search /> :null}
+</div>
+        <div className="nameContainer">
+
+
+            {token ? `Välkommen ${name}`: null}
+
+{!token?<button style={{display:"none"}}></button> : <button className="logOutButton" style={{display:"block"}} onClick={logout}>Logga ut</button>}
+
+
+        </div>
     </div>
  );
 }
