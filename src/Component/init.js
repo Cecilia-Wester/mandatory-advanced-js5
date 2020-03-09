@@ -3,6 +3,7 @@ import { FaFileAlt, FaFolder } from "react-icons/fa";
 
 
 export function Thumbnail(props) {
+  console.log(props);
     const file = props.file;
     const thumbnail = props.thumbnail;
     //console.log(props);
@@ -36,18 +37,18 @@ export function Modified(props) {
 
     if(file['.tag'] === 'file') {
     const date = file.client_modified;
-    
+
     let currentDate = new Date(date);
-    return currentDate.toString().split(' ', 5).join(' '); 
+    return currentDate.toString().split(' ', 5).join(' ');
     } else {
         return null;
     }
-    // varför funkar inte toLocaleSting här? 
+    // varför funkar inte toLocaleSting här?
 }
 
 
 export function FileSize(props, decimals){
-    
+
     const file = props.file;
     const bytes = file.size;
 
@@ -63,8 +64,3 @@ export function FileSize(props, decimals){
         return null;
     }
 }
-
-
-
-
-

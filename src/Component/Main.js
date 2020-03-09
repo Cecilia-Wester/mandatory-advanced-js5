@@ -2,16 +2,20 @@ import React, { useEffect, useState} from 'react';
 import { BrowserRouter as Router, Route, Link, Redirect } from "react-router-dom";
 import { Helmet} from 'react-helmet-async'
 import { Dropbox } from 'dropbox';
-import {token$, updateToken, searchQuery$} from '../store';
+import {token$, updateToken, searchQuery$, favorites$, toggleFavorite} from '../store';
 import Header from './Header/Header';
 import SideBar from './Sidebar/SideBar';
 import HandleFileDots from './HandleFileDots';
 import DeleteModal from './DeleteModal';
 import {Thumbnail, FileSize, Modified} from './init';
+import { MdStar, MdStarBorder} from "react-icons/md";
+import {UploadStarFiles} from "./Sidebar/UploadStarFiles";
+
 
 export default function Main(props) {
     const [token, setToken] = useState(token$.value);
     const [searchQuery, setSearchQuery] = useState(searchQuery$.value);
+    const [favorites , setFavorites] = useState(favorites$.value);
     const [files, updateFiles] = useState([]);
     const [thumbnails, updateThumbnails] = useState({});
     const [dropdown, setDropdown] = useState(false);
@@ -20,9 +24,7 @@ export default function Main(props) {
     const currentLocation = props.location.pathname.substring(5);
 
     function onUpload(file){
-        if (!files.find(x => x.id === file.id)) {
-            updateFiles([...files, file]);
-        }
+      handleFilesList();
     }
 
     function handleFilesList(files){
@@ -39,8 +41,6 @@ export default function Main(props) {
             path,
         })
         .then(response => {
-            //const files = response.entries; ska denna bort?
-            //console.log(response);
 
             const entries = response.entries.map(file=>(
                 {
@@ -60,6 +60,7 @@ export default function Main(props) {
                 });
                 updateThumbnails(thumbnails);
             })
+
             updateFiles(response.entries.reverse());
         })
         .catch(error => {
@@ -77,22 +78,25 @@ export default function Main(props) {
             .then(() => {
                 updateFiles(files.filter(x => x.id !== file.id));
                 setDeleteModal(false);
+
             })
             .catch((error)=>{
                 console.log(error)
             });
+
     }
 
     function onClickDelete() {
         setDeleteModal(true)
     }
 
-
     useEffect(() => {
-        const subscription = token$.subscribe(setToken);
-        handleFilesList();
-        return () => subscription.unsubscribe();
-    }, [currentLocation]);
+      const subscriptions = [
+        favorites$.subscribe(setFavorites),
+
+      ];
+    }, [favorites]);
+
 
 
     function onCreateFolder(file){
@@ -102,6 +106,9 @@ export default function Main(props) {
     }
 
     function filesSearch(files){
+      if(!searchQuery){
+        return;
+      }
         const dbx = new Dropbox({
             accessToken: token,
             fetch: fetch,
@@ -131,12 +138,13 @@ export default function Main(props) {
     }
 
 
+
     useEffect(() => {
         const subscriptions = [
             token$.subscribe(setToken),
             searchQuery$.subscribe(setSearchQuery),
-        ];
 
+        ];
         handleFilesList();
         return () => subscriptions.forEach((subscription) => subscription.unsubscribe());
     }, [currentLocation, searchQuery]);
@@ -145,10 +153,11 @@ export default function Main(props) {
         if (searchQuery.length === 0) {
             handleFilesList();
         }
+
         filesSearch();
     }, [searchQuery]);
 
-   console.log(files)
+
 
     if (!token) {
         return <Redirect to="/" />
@@ -161,14 +170,15 @@ export default function Main(props) {
             <Header/>
             <SideBar
                 onUpload={onUpload}
-                //onCreateFolder
                 location = {props.location}
-                />
+//                onUpload={onUploadStarFiles}
+            />
             <div className = 'main'>
             <h2><Link to={"/main"}>Hem</Link>{currentLocation}</h2>
                 <table className = 'table'>
                     <thead>
                         <tr>
+                            <th></th>
                             <th></th>
                             <th>Fil Namn</th>
                             <th>Senaste ändring</th>
@@ -182,9 +192,15 @@ export default function Main(props) {
                                 <tr key = {file.id}>
                                     <td><Thumbnail file = {file} thumbnail={thumbnails[file.id]}/></td>
                                     <td>
+                                      <div style={{ cursor: "pointer "}} onClick={() => toggleFavorite(file)}>
+                                        {favorites.find(x => x.id === file.id) ?
+                                      <MdStar size = {25} /> : <MdStarBorder size ={25}/>}
+                                      </div>
+                                    </td>
+                                    <td>
                                         {file[".tag"] === "folder" ? (
                                             <Link to={"/main" + file.path_lower}>{file.name}</Link>
-                                        ) : <a onClick= {onClickFileDownload(file.path_lower)}>{file.name}</a>}
+                                        ) : <a onClick= {() => onClickFileDownload(file.path_lower)}>{file.name}</a>}
                                     </td>
                                     <td><Modified file = {file}/></td>
                                     <td><FileSize file = {file}/></td>
@@ -198,10 +214,12 @@ export default function Main(props) {
                                                 setDropdown(false);
                                             }
                                         }}>...</button>
-                                        {dropdown === file.id && <HandleFileDots onClickDelete={() => {
+                                        {dropdown === file.id && <HandleFileDots file={file} onClickDelete={() => {
                                             setDeleteModal(true);
                                             setFileToDelete(file);
-                                        }} /> }
+                                        }} onClickStar={() => {
+                                          toggleFavorite(file);
+                                        }}/> }
                                     </td>
                                 </tr>
                             )

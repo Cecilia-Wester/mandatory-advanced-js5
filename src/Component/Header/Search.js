@@ -1,5 +1,4 @@
 import React, {useEffect, useState} from 'react';
-import { Dropbox } from 'dropbox';
 import {updateSearchQuery} from '../../store';
 import {DebounceInput} from 'react-debounce-input';
 
@@ -19,9 +18,9 @@ export default function Search() {
   return(
     <div className="search">
       <i className = 'material-icons'>search</i>
-    <DebounceInput
-     minLength={2}
-     debounceTimeout={200}
+      <DebounceInput
+        minLength={2}
+        debounceTimeout={200}
         type= "text"
         value={search}
         onChange={updateSearch}

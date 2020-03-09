@@ -43,11 +43,11 @@ h2 {
   width: 260px;
   margin-top: 120px;
   background-color: #DCDCDC;
-
+  padding-left: 30px;
 }
 .search {
   position: relative;
-  padding-right: 580px;
+
 }
 
 .material-icons{
