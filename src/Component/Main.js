@@ -8,6 +8,7 @@ import SideBar from './Sidebar/SideBar';
 import HandleFileDots from './HandleFileDots';
 import DeleteModal from './DeleteModal';
 import {Thumbnail, FileSize, Modified} from './init';
+import Breadcrumbs from './Breadcrumbs';
 
 export default function Main(props) {
     const [token, setToken] = useState(token$.value);
@@ -20,9 +21,7 @@ export default function Main(props) {
     const currentLocation = props.location.pathname.substring(5);
 
     function onUpload(file){
-        if (!files.find(x => x.id === file.id)) {
-            updateFiles([...files, file]);
-        }
+        handleFilesList();
     }
 
     function handleFilesList(files){
@@ -87,11 +86,11 @@ export default function Main(props) {
         setDeleteModal(true)
     }
 
-    useEffect(() => {
+   /* useEffect(() => {
         const subscription = token$.subscribe(setToken);
         handleFilesList();
         return () => subscription.unsubscribe();
-    }, [currentLocation]);
+    }, [currentLocation]);*/
 
 
     function onCreateFolder(file){
@@ -118,7 +117,10 @@ export default function Main(props) {
     }
 
     const onClickFileDownload = (path) => {
-        let dropbox = new Dropbox({accessToken: token});
+        let dropbox = new Dropbox({
+            accessToken: token,
+            fetch: fetch
+        });
         dropbox
         .filesGetTemporaryLink  ({path: path})
         .then((response)=>{
@@ -149,6 +151,15 @@ export default function Main(props) {
     if (!token) {
         return <Redirect to="/" />
     }
+
+   /* /home/foo/bar/foobar
+    Home > foo > bar > foobar
+
+    /home
+    /home/foo
+    /home/foo/bar
+    /home/foo/bar/foobar*/
+
     return (
         <div>
             <Helmet>
@@ -157,11 +168,10 @@ export default function Main(props) {
             <Header/>
             <SideBar
                 onUpload={onUpload}
-                //onCreateFolder
                 location = {props.location}
-                />
+            />
             <div className = 'main'>
-            <h2><Link to={"/main"}>Hem</Link>{currentLocation}</h2>
+            <Breadcrumbs location = {props.location}/>
                 <table className = 'table'>
                     <thead>
                         <tr>
@@ -187,6 +197,7 @@ export default function Main(props) {
                                     <td></td>
                                     <td>
                                         <button
+                                        className='handleFileDots'
                                         onClick={() => {
                                             if (dropdown !== file.id) {
                                                 setDropdown(file.id)

@@ -16,7 +16,10 @@ export default function Login(){
 
     function onClickConnect(e) {
         e.preventDefault();
-        const dbx = new Dropbox({clientId: CLIENT_ID});
+        const dbx = new Dropbox({
+            clientId: CLIENT_ID,
+            fetch: fetch
+        });
         let dbxUrl = dbx.getAuthenticationUrl('http://localhost:3000/auth');
         window.location.href = dbxUrl; //will open the new URL in your current window.
     }
