@@ -3,7 +3,7 @@ import ReactDOM from "react-dom";
 import { token$} from '../../store';
 import { Dropbox } from 'dropbox';
 import { Redirect } from 'react-router-dom';
-import { FaFolderPlus } from "react-icons/fa";
+import { MdCreateNewFolder } from "react-icons/md";
 
 
 function CreateFolderModal({ onClose, folderName, onChangeFolderName, onSubmit, error }) {
@@ -68,7 +68,7 @@ export default function CreateFolder( {location }, props ) {
         <div className='containerCreateFolder'>
             {/*<button onClick={() => setModal(true)}>Skapa ny mapp</button> */}
             <label htmlFor = 'folder-input' >
-                <FaFolderPlus size = {22} color = {'#F2F2F2'}/>
+                <MdCreateNewFolder size = {22} />
             </label>
             <input 
                 id ='folder-input'

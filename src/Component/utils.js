@@ -1,5 +1,6 @@
-import React from 'react';
-import { FaFileAlt, FaFolder } from "react-icons/fa";
+import React, { useEffect, useRef } from 'react';
+import { MdFolderOpen } from "react-icons/md";
+import {FaRegFileAlt} from 'react-icons/fa';
 
 
 export function Thumbnail(props) {
@@ -13,13 +14,13 @@ export function Thumbnail(props) {
     } else if(file['.tag'] === 'folder') {
         return (
             <div>
-                <FaFolder size = {32}  />
+                <MdFolderOpen size = {32}  />
             </div>
         )
     } else if (file['.tag'] === 'file') {
         return (
             <div>
-                <FaFileAlt size = {32} color = {'#F2F2F2'}/>
+                <FaRegFileAlt size = {32} />
             </div>
         );
     }

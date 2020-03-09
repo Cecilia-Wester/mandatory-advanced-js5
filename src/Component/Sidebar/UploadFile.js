@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Dropbox } from 'dropbox';
 import {token$} from '../../store';
-import { FaFileUpload } from "react-icons/fa";
+import { FaUpload } from "react-icons/fa";
 
 
 export default function UploadFile(props) {
@@ -20,22 +20,21 @@ export default function UploadFile(props) {
 
 
     function handleUploadFile(file) {
-
+        
         const dbx = new Dropbox({
             accessToken: token,
             fetch: fetch
         });
-
-        console.log(currentLocation, file.name);
+       // console.log(currentLocation, file.name);
         dbx.filesUpload({
              path: currentLocation + '/' + file.name,
              contents: file
             }) 
         .then(response => {
-            updateFile([file, response.data]);
+           // updateFile([file, response]); 
             updateFile(0);
             props.onUpload(response);
-        })
+        })    
         .catch (error => {
             console.error(error)
         });
@@ -46,13 +45,11 @@ export default function UploadFile(props) {
         handleUploadFile(e.target.files[0]);
     }
 
-
-
     return(
         <div>
             <form >
                 <label htmlFor = 'file-input'>
-                    <FaFileUpload size = {22} color = {'#F2F2F2'}/>
+                    <FaUpload size = {22} />
                 </label>
                 <input
                     id= 'file-input'
@@ -73,5 +70,3 @@ const styles = {
         cursor: 'pointer',
     }
 }
-
-
