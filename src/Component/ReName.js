@@ -13,8 +13,8 @@ export default function ReName(props, file, setRenameModal) {
                 <input onChange = {(e) => {updateNewName(e.target.value)}}
                    value = {newName}
                    placeholder = 'Nytt namn'/>
-                <button onClick={() => props.onConfirmRename(props.file, newName)}>Ja</button>
-                <button onClick={() => setRenameModal(false)}>Nej</button>
+                <button onClick={() => props.onConfirmRename(props.file, newName)} >Ja</button>
+                <button onClick={() => props.setRenameModal(false)}>Nej</button>
         </div> 
     ), document.body);
 }

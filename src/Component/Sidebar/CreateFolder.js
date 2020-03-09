@@ -5,7 +5,6 @@ import { Dropbox } from 'dropbox';
 import { Redirect } from 'react-router-dom';
 import { MdCreateNewFolder } from "react-icons/md";
 
-
 function CreateFolderModal({ onClose, folderName, onChangeFolderName, onSubmit, error }) {
     return ReactDOM.createPortal((
         <div className='createFolderModal' style={{position: "absolute"}}>
@@ -46,18 +45,20 @@ export default function CreateFolder( {location }, props ) {
 
     function createFolder(e) {
         e.preventDefault();
-        const dbx = new Dropbox({ accessToken: token });
+        const dbx = new Dropbox({ 
+            accessToken: token,
+            fetch: fetch
+        });
         dbx.filesCreateFolder({ path: currentLocation + folderName})
-            .then((response) => {
-                setResponseRedirect("/main" + response.path_lower);
-                //currentLocation=currentLocation + '/'+ response.pathname;
-            })
-            .catch((error2) =>{
-                setError(true);
-                setModal(true);
-                setFolderName('')
-            });
-        setModal(false);
+        .then((response) => {
+            setModal(false);
+            setResponseRedirect("/main" + response.path_lower);                
+        })
+        .catch((error2) =>{
+            setError(true);
+            setModal(true);
+            setFolderName('')
+        });
     }
 
     function onChangeFolderName(e) {
@@ -66,7 +67,6 @@ export default function CreateFolder( {location }, props ) {
 
     return(
         <div className='containerCreateFolder'>
-            {/*<button onClick={() => setModal(true)}>Skapa ny mapp</button> */}
             <label htmlFor = 'folder-input' >
                 <MdCreateNewFolder size = {22} />
             </label>

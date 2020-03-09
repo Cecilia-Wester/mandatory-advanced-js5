@@ -3,21 +3,16 @@ import { Dropbox } from 'dropbox';
 import {token$} from '../../store';
 import { FaUpload } from "react-icons/fa";
 
-
 export default function UploadFile(props) {
-
     const [token, setToken] = useState(token$.value);
     const [file, updateFile] = useState(0);
-
-    const currentLocation = props.location.pathname.substring(5);
-    //console.log(currentLocation);
     
+    const currentLocation = props.location.pathname.substring(5);
     
     useEffect(() => {
         const subscription = token$.subscribe(setToken);
         return () => subscription.unsubscribe();
     },[]);
-
 
     function handleUploadFile(file) {
         
@@ -27,9 +22,9 @@ export default function UploadFile(props) {
         });
        // console.log(currentLocation, file.name);
         dbx.filesUpload({
-             path: currentLocation + '/' + file.name,
-             contents: file
-            }) 
+            path: currentLocation + '/' + file.name,
+            contents: file
+        }) 
         .then(response => {
            // updateFile([file, response]); 
             updateFile(0);
