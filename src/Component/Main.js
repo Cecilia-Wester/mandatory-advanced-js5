@@ -1,4 +1,5 @@
 import React, { useEffect, useState} from 'react';
+import ReactDOM from "react-dom";
 import { Link, Redirect } from "react-router-dom";
 import { Helmet} from 'react-helmet-async'
 import { Dropbox } from 'dropbox';
@@ -14,9 +15,15 @@ import {Thumbnail, FileSize, Modified} from './utils';
          View all stars
          Copy file and folder?
          Polling or WebHook
-         CSS 
-         infoMsg*/
-
+         */
+function Error ({onClose, error}) {
+    return ReactDOM.createPortal((
+        <div className ='Modal' style={{position: "absolute"}}>
+            {error ? <p>Någonting blev fel. Försök igen!</p> : null}
+            <button onClick = {onClose}>Gå tillbaka</button>
+        </div>
+    ), document.body);
+}
 
 export default function Main(props) {
     const [token, setToken] = useState(token$.value);
@@ -29,6 +36,8 @@ export default function Main(props) {
     const [renameModal, setRenameModal] = useState(false);
     const [copyModal, setCopyModal] = useState(false);
     const [fileToRename, setFileToRename] = useState(false);
+    const [error, setError] = useState(false);
+    const [modal, setModal] = useState(false);
     const currentLocation = props.location.pathname.substring(5);
     
 
@@ -43,18 +52,16 @@ export default function Main(props) {
 
     useEffect(() => {
         if (searchQuery.length === 0) {
-            console.log("3 - handleFilesList");
             handleFilesList();
         }
         filesSearch();
     }, [searchQuery]);
 
+
     function onUpload(){
-       /* if (!files.find(x => x.id === file.id)) {
-            updateFiles([...files, file]());
-        }*/
         handleFilesList();
     }
+
 
     function handleFilesList(){
         const dbx = new Dropbox({
@@ -74,7 +81,7 @@ export default function Main(props) {
             const entries = response.entries.map(file=>(
                 {
                     path: file.path_lower,
-                    size: 'w32h32'
+                    size: 'w64h64'
                 }
             )) 
             //console.log("filesGetThumbnailBatch");
@@ -95,10 +102,12 @@ export default function Main(props) {
         })
         .catch(error => {
             console.error(error);
+            setError(true);
+            setModal(true)
         });
     }
 
-    console.log(files);
+    //console.log(files);
     
 
     function onConfirmDelete(file) { 
@@ -115,6 +124,10 @@ export default function Main(props) {
             .catch((error)=>{
                 console.log(error)
             });
+    }
+
+    function onClickDelete() {
+        setDeleteModal(true)
     }
 
     function onConfirmRename(file, newName) {
@@ -136,9 +149,9 @@ export default function Main(props) {
             autorename: true
         })
         .then(response => {
-            console.log("RENAMED!");
+            //console.log("RENAMED!");
 
-            console.log(response);
+            //console.log(response);
 
             const idx = files.findIndex(x => x.id === response.metadata.id);
 
@@ -150,23 +163,20 @@ export default function Main(props) {
             }
         })
         .catch(error => {
-            console.log(error)
+            console.log(error);
+            setModal(true);
+            setError(true);
         });
-    }
-
-    function onClickDelete() {
-        setDeleteModal(true)
     }
     
     function onChangeName() {
         setRenameModal(true)
     }
 
-    function onCreateFolder(file){
-        return(
-            <SideBar file= {props.file} />
-        )
+    function CopyFileFolder() {
+        
     }
+
 
     function filesSearch(files){
         if (!searchQuery) {
@@ -186,6 +196,8 @@ export default function Main(props) {
         })
         .catch(error => {
             console.error(error);
+            setModal(true);
+            setError(true);
         });
     }
 
@@ -198,10 +210,17 @@ export default function Main(props) {
         })
         .catch((error)=>{
             console.log(error)
+            setModal(true);
+            setError(true);
         });
     }
 
-    
+    function onCreateFolder(file){
+        return(
+            <SideBar file= {props.file} />
+        )
+    }
+
     if (!token) {
         return <Redirect to="/" />
     } 
@@ -268,6 +287,7 @@ export default function Main(props) {
                     </tbody>
                     {deleteModal && <DeleteModal file={fileToDelete} setDeleteModal={setDeleteModal} onConfirmDelete={() => onConfirmDelete(fileToDelete)}  />}
                     {renameModal && <ReName file = {fileToRename} location = {props.location} onConfirmRename={onConfirmRename} setRenameModal = {setRenameModal}/>}
+                    {modal && <Error onClose={() => setModal(false)} error={error}/>}
                 </table>
             </div>
         </div>

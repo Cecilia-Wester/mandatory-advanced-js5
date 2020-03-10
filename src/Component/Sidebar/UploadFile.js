@@ -1,13 +1,26 @@
 import React, { useState, useEffect } from 'react';
+import ReactDOM from "react-dom";
 import { Dropbox } from 'dropbox';
 import {token$} from '../../store';
 import { FaUpload } from "react-icons/fa";
 
+function Error ({onClose, error}) {
+    return ReactDOM.createPortal((
+        <div className ='Modal' style={{position: "absolute"}}>
+            {error ? <p>Någonting blev fel, det kan beror  på att filen/mappen redan finns. Försök igen!</p> : null}
+            <button onClick = {onClose}>Gå tillbaka</button>
+        </div>
+    ), document.body);
+}
+
 export default function UploadFile(props) {
     const [token, setToken] = useState(token$.value);
     const [file, updateFile] = useState(0);
+    const [modal, setModal] = useState(false);
+    const [error, setError] = useState(false);
     
     const currentLocation = props.location.pathname.substring(5);
+    
     
     useEffect(() => {
         const subscription = token$.subscribe(setToken);
@@ -32,6 +45,8 @@ export default function UploadFile(props) {
         })    
         .catch (error => {
             console.error(error)
+            setError(true);
+            setModal(true);
         });
     }
 
@@ -55,6 +70,7 @@ export default function UploadFile(props) {
                     onChange = {onChangeUploadFile}
                 /> Upload
             </form>
+            {modal && <Error onClose={() => setModal(false)} error={error}/>}
         </div>
     );
 }

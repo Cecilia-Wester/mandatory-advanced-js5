@@ -5,6 +5,7 @@ import {FaRegFileAlt} from 'react-icons/fa';
 export function Thumbnail(props) {
     const file = props.file;
     const thumbnail = props.thumbnail;
+    
     if(typeof thumbnail !== 'undefined') {
         return <img src={"data:image/png;base64," + thumbnail} alt = {'base64'} />
         //console.log(thumbnail);

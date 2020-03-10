@@ -34,6 +34,7 @@ export default function CreateFolder( {location }, props ) {
     const [responseRedirect, setResponseRedirect] = useState(false)
     
     let currentLocation = location.pathname.substring(5);
+    
     if(currentLocation.charAt(currentLocation.length-1) !== '/'){
         currentLocation = currentLocation + '/';
     }
