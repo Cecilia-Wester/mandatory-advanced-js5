@@ -9,24 +9,59 @@ function CreateFolderModal({ onClose, folderName, onChangeFolderName, onSubmit, 
     return ReactDOM.createPortal((
         <div className='createFolderModal' style={{position: "absolute"}}>
             <form onSubmit={onSubmit}>
-                <div><p>Skapa ny mapp</p></div>
-                <label> Mapp:
+                <div
+                    style={{
+                        marginBottom: '20px'
+                    }}    
+                >
+                    <p>Skapa ny mapp</p>
+                </div>
+                <label style={{margin: '5px'}}> Mapp:
                     <input
                         type='text'
                         onChange={onChangeFolderName}
                         value={folderName}
                         placeholder='Mappnamn'
+                        style={{
+                            borderRadius: '5px',
+                            width: '200px',
+                            height: '30px',
+                            textAlign: 'center',
+                            margin: '10px',
+                            border: 'none',
+                        }}
                     />
-                </label>
-                <button type='Submit'>Skapa mapp</button>
-                <button onClick={onClose}>Avsluta</button>
+                </label><br />
+                <div className='createFolderModalButtons' style={{margin: '10px'}}></div>
+                <button 
+                    type='Submit' 
+                    style={{
+                        margin: '5px', 
+                        borderRadius:'5px', 
+                        width: '150px', 
+                        height: '30px',
+                        backgroundColor: '#DCDCDC',
+                        border: 'none',
+                    }}>Skapa mapp
+                </button>
+                <button 
+                    onClick={onClose} 
+                    style={{
+                        margin:'5px', 
+                        borderRadius:'5px',
+                        width: '150px', 
+                        height: '30px',
+                        backgroundColor: '#DCDCDC',
+                        border: 'none',
+                    }}
+                    >Avsluta</button>
             </form>
             {error ? <p>Någonting blev fel, testa ett annat namn</p> : null}
         </div>
     ), document.body);
 }
 
-export default function CreateFolder( {location }, props ) {
+export default function CreateFolder( {location }) {
     const [token, setToken] = useState(token$.value);
     const [modal, setModal] = useState(false);
     const [folderName, setFolderName] = useState("");
@@ -44,6 +79,9 @@ export default function CreateFolder( {location }, props ) {
     }, []);
 
     function createFolder(e) {
+        if(folderName.length < 1){
+            setError(true);
+        }
         e.preventDefault();
         const dbx = new Dropbox({ 
             accessToken: token,
@@ -65,6 +103,12 @@ export default function CreateFolder( {location }, props ) {
         setFolderName(e.target.value);
     }
 
+    function onClose(){
+        setModal(false);
+        setError(false);
+        setFolderName('')
+    }
+
     return(
         <div className='containerCreateFolder'>
             <label htmlFor = 'folder-input' >
@@ -76,7 +120,7 @@ export default function CreateFolder( {location }, props ) {
                 onClick={() => setModal(true)}
             />
             Skapa ny mapp
-            {modal && <CreateFolderModal folderName={folderName} onChangeFolderName={onChangeFolderName} onSubmit={createFolder} onClose={() => setModal(false)} error={error}/>}
+            {modal && <CreateFolderModal folderName={folderName} onChangeFolderName={onChangeFolderName} onSubmit={createFolder} onClose={onClose} error={error}/>}
             {responseRedirect && <Redirect to={responseRedirect} />}
         </div>
     );

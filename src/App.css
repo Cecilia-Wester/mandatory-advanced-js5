@@ -20,28 +20,35 @@
 }
 
 .table {
-  margin: auto;
+  
   margin-top: 50px;
-  width: 100%;
-  padding-left: 20px;
+
+  margin-left: 40px;
   display: flex;
   flex-wrap: wrap;
   box-sizing: border-box;
   height: 30vw;
   overflow-y: scroll;
+  overflow-x: hidden;
 }
 
 tr,th{
   text-align: left;
-  margin-top: 50px;
+  padding: 0px;
+  margin: 0px;
+  border: none;
 }
 
 tr,td{
-  padding-right: 60px;
+  padding-bottom: 5px;
+  margin: 0px;
+  border: none;
+  display: flex;
+  flex-wrap: wrap;
 }
 
 .table thead{
-  width:
+  width:100%;
 }
 
 .main {
@@ -87,7 +94,7 @@ tr,td{
 
 .files {
   margin-top: 130px;
-  padding-left: 50px;
+  padding-left: 30px;
 }
 
 .header img {
@@ -109,6 +116,11 @@ tr,td{
   background-color: #DCDCDC;
 }
 
+.sidebar label{
+  padding-right: 8px;
+  
+}
+
 a{
   color: #4B4B4B;
 }
@@ -118,7 +130,6 @@ a{
     height: 400px;
     background-color: #DCDCDC;
     margin: auto;
-    
     border-radius: 7px;
     text-align: center;
 }
@@ -157,29 +168,30 @@ a{
 }
 
 .createFolderModal {
-  width: 300px;
-  height: 200px;
-  top: 50%;
-  left: 500px;
-  background-color: aliceblue;
+  width: 500px;
+  height: 300px;
+  top: 40%;
+  left: 650px;
   z-index: 1000;
   display: flex;
   flex-wrap: wrap;
   align-items: center;
   justify-content: center;
+  object-fit: cover;
+  background-color: #F2F2F2;
 }
 
 .Modal{
-  width: 300px;
-  height: 200px;
-  top: 50%;
-  left: 500px;
-  background-color: aliceblue;
+  width: 500px;
+  height: 300px;
+  top: 40%;
+  left: 650px;
   z-index: 1000;
   display: flex;
   flex-wrap: wrap;
   align-items: center;
   justify-content: center;
+  background-color: #F2F2F2;
 }
 
 .breadcrumbs{
@@ -191,6 +203,12 @@ a{
 .breadcrumbs ul li{
   list-style-type: none;
 }
+
+.pathpiece::after{
+  content: (' > ');
+  transition: transform ease-in-out .2s;
+}
+
 
 .handleFileDots{
   border-radius: 50%;

@@ -9,9 +9,21 @@ export default function SideBar(props, onUploadStarFiles) {
     return(
         <div className="sidebar">
             <div className="files">
-                <UploadFile location={props.location} file={props.file} onUpload = {props.onUpload}/>
-                <CreateFolder location={props.location} />
-                <MdStar size={25}/>Stjärnmärkta filer
+                <UploadFile location={props.location} file={props.file} onUpload = {props.onUpload}
+                    style={{
+                        height: '40px'
+                    }}
+                />
+                <CreateFolder location={props.location} 
+                    style={{
+                        height: '40px'
+                    }}
+                />
+                <MdStar size={22}
+                    style={{
+                        height: '40px'
+                    }}
+                />Stjärnmärkta filer
             </div>
         </div>
     );

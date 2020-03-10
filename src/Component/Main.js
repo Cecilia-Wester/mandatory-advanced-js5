@@ -11,7 +11,7 @@ import { MdStar, MdStarBorder} from "react-icons/md";
 import {UploadStarFiles} from "./Sidebar/UploadStarFiles";
 import ReName from './ReName';
 import {Thumbnail, FileSize, Modified} from './utils';
-
+import Breadcrumbs from './Breadcrumbs'
 
 export default function Main(props) {
     const [token, setToken] = useState(token$.value);
@@ -209,35 +209,36 @@ export default function Main(props) {
                 <table className = 'table'>
                 <thead style={{width: '100%', marginBottom: '50px' }}>
                     <tr>
-                        <th style={{width: '95px'}}></th>
-                        <th style={{width: '214px'}}> Fil Namn</th>
-                        <th style={{width: '245px'}}>Senaste ändring</th>
+                        <th style={{width: '60px', overflow: 'hidden'}}></th>
+                        <th style={{width: '60px', overflow: 'hidden'}}></th>
+                        <th style={{width: '214px', overflow: 'hidden'}}> Fil Namn</th>
+                        <th style={{width: '240px'}}>Senaste ändring</th>
                         <th style={{width: '100px'}}>Storlek</th>
-                        <th style={{width: '200px'}}></th>
+                        <th style={{width: '150px'}}></th>
                     </tr>
                 </thead>
                 <tbody>
                     {files.map(file => {
                         return (
                             <tr key = {file.id}>
-                                <td><Thumbnail file = {file} thumbnail={thumbnails[file.id]}/></td>
-                                <td>
+                                <td style={{width: '60px', overflow: 'hidden'}}><Thumbnail file = {file} thumbnail={thumbnails[file.id]}/></td>
+                                <td style={{width: '60px', overflow: 'hidden'}}>
                                     <div style={{ cursor: "pointer "}} onClick={() => toggleFavorite(file)}>
                                     {favorites.find(x => x.id === file.id) ?
                                         <MdStar size = {25} /> : <MdStarBorder size ={25}/>
                                     }
                                     </div>
                                 </td>
-                                <td>
+                                <td style={{width: '214px', overflow: 'hidden', display: 'flex'}}>
                                     {file[".tag"] === "folder" ? (
                                     <Link to={"/main" + file.path_lower}>{file.name}</Link>
                                     ) : <a onClick= {() => onClickFileDownload(file.path_lower)}>{file.name}</a>}
                                 </td>
-                                <td><Modified file = {file}/></td>
-                                <td><FileSize file = {file}/></td>
-                                <td></td>
-                                <td>
+                                <td style={{width: '240px'}}><Modified file = {file}/></td>
+                                <td style={{width: '100px'}}><FileSize file = {file}/></td>
+                                <td style={{width: '150px'}}>
                                     <button
+                                        className='handleFileDots'
                                         onClick={() => {
                                         if (dropdown !== file.id) {
                                             setDropdown(file.id)

@@ -53,7 +53,8 @@ export default function UploadFile(props) {
                     file = {file} 
                     style = {styles.input}           
                     onChange = {onChangeUploadFile}
-                /> Ladda upp ny fil
+                />
+                Ladda upp ny fil
             </form>
         </div>
     );
