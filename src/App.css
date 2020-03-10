@@ -51,11 +51,6 @@ tr,td{
   height: 100vh;
 }
 
-h2 {
-  margin-left: 24px;
-  margin-top: 20px;
-}
-
 .search input {
   border: none;
   border-radius: 10px;
@@ -63,11 +58,12 @@ h2 {
   width: 260px;
   margin-top: 120px;
   background-color: #DCDCDC;
+  padding-left: 30px;
 }
 
 .search {
   position: relative;
-  padding-right: 580px;
+
 }
 
 .material-icons{
@@ -173,7 +169,7 @@ a{
   justify-content: center;
 }
 
-.DeleteModal{
+.Modal{
   width: 300px;
   height: 200px;
   top: 50%;

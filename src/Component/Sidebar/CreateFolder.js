@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from 'react';
 import ReactDOM from "react-dom";
-import { token$, updateToken} from '../../store';
+import { token$} from '../../store';
 import { Dropbox } from 'dropbox';
 import { Redirect } from 'react-router-dom';
-import { FaFileUpload, FaFolderPlus } from "react-icons/fa";
+import { MdCreateNewFolder } from "react-icons/md";
 
 function CreateFolderModal({ onClose, folderName, onChangeFolderName, onSubmit, error }) {
     return ReactDOM.createPortal((
@@ -68,7 +68,7 @@ export default function CreateFolder( {location }, props ) {
     return(
         <div className='containerCreateFolder'>
             <label htmlFor = 'folder-input' >
-                <FaFolderPlus size = {22} color = {'#F2F2F2'}/>
+                <MdCreateNewFolder size = {22} />
             </label>
             <input 
                 id ='folder-input'

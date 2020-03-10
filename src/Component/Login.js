@@ -3,7 +3,7 @@ import { Redirect } from "react-router-dom";
 import { Dropbox } from 'dropbox';
 import { Helmet } from 'react-helmet-async';
 import {CLIENT_ID} from './clientId';
-import {token$, updateToken} from '../store';
+import {token$} from '../store';
 import Header from './Header/Header';
 
 export default function Login(){
@@ -29,17 +29,17 @@ export default function Login(){
     } else {
         return (
             <div>
-                <Helmet>
+            <Helmet>
                 <title>Login</title>
             </Helmet>
-                <Header />
+            <Header />
                 <div className ='login'>
-                    <div className='dialogbox'>
-                        <p>Välkommen! <br /> Detta är en enkel molntjänst som är lätt att använda. Du sparar, förvarar och hanterar lätt dina filer och mappar i en lagringsplats utanför din dator.</p>
-                        <button
-                            onClick = {onClickConnect}>Connect to DropBox
-                        </button>
-                    </div>
+                <div className='dialogbox'>
+                    <p>Välkommen! <br /> Detta är en enkel molntjänst som är lätt att använda. Du sparar, förvarar och hanterar lätt dina filer och mappar i en lagringsplats utanför din dator.</p>
+                    <button
+                        onClick = {onClickConnect}>Connect to DropBox
+                    </button>
+                </div>
                 </div>
             </div>
         )
