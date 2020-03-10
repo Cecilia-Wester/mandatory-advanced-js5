@@ -3,12 +3,15 @@ import ReactDOM from "react-dom";
 import { Link, Redirect } from "react-router-dom";
 import { Helmet} from 'react-helmet-async'
 import { Dropbox } from 'dropbox';
-import {token$, searchQuery$} from '../store';
+import {token$, updateToken, searchQuery$, favorites$, toggleFavorite} from '../store';
 import Header from './Header/Header';
 import SideBar from './Sidebar/SideBar';
 import HandleFileDots from './HandleFileDots';
 import DeleteModal from './DeleteModal';
+import { MdStar, MdStarBorder} from "react-icons/md";
+import {UploadStarFiles} from "./Sidebar/UploadStarFiles";
 import ReName from './ReName';
+import Breadcrumbs from "./Breadcrumbs";
 import {Thumbnail, FileSize, Modified} from './utils';
 
 /* Kvar: Navigation back from folders?
@@ -25,9 +28,11 @@ function Error ({onClose, error}) {
     ), document.body);
 }
 
+
 export default function Main(props) {
     const [token, setToken] = useState(token$.value);
     const [searchQuery, setSearchQuery] = useState(searchQuery$.value);
+    const [favorites , setFavorites] = useState(favorites$.value);
     const [files, updateFiles] = useState([]);
     const [thumbnails, updateThumbnails] = useState({});
     const [dropdown, setDropdown] = useState(false);
@@ -39,7 +44,6 @@ export default function Main(props) {
     const [error, setError] = useState(false);
     const [modal, setModal] = useState(false);
     const currentLocation = props.location.pathname.substring(5);
-    
 
     useEffect(() => {
         const subscriptions = [
@@ -72,32 +76,29 @@ export default function Main(props) {
         if(path === '/') {
             path = '';
         }
-        //console.log("filesListFolder");
         dbx.filesListFolder({
             path,
         })
         .then(response => {
-            //console.log(response);
             const entries = response.entries.map(file=>(
-                {
-                    path: file.path_lower,
-                    size: 'w64h64'
+        {
+            path: file.path_lower,
+            size: 'w64h64'
+        }
+    ))
+
+    dbx.filesGetThumbnailBatch({
+        entries
+        })
+        .then(response => {
+            const thumbnails = {};
+            response.entries.forEach((entry) => {
+                if (entry.metadata) {
+                    thumbnails[entry.metadata.id] = entry.thumbnail;
                 }
-            )) 
-            //console.log("filesGetThumbnailBatch");
-                       
-            dbx.filesGetThumbnailBatch({
-                entries
-            })
-            .then(response => {
-                const thumbnails = {};
-                response.entries.forEach((entry) => {
-                    if (entry.metadata) {
-                        thumbnails[entry.metadata.id] = entry.thumbnail;
-                    }
-                });
+            });
                 updateThumbnails(thumbnails);
-            })
+        })
             updateFiles(response.entries.reverse());
         })
         .catch(error => {
@@ -117,13 +118,13 @@ export default function Main(props) {
         });
 
         dbx.filesDeleteV2({ path: file.path_lower })
-            .then(() => {
-                updateFiles(files.filter(x => x.id !== file.id));
-                setDeleteModal(false);
-            })
-            .catch((error)=>{
-                console.log(error)
-            });
+        .then(() => {
+            updateFiles(files.filter(x => x.id !== file.id));
+            setDeleteModal(false);
+        })
+        .catch((error)=>{
+            console.log(error)
+        });
     }
 
     function onClickDelete() {
@@ -131,18 +132,17 @@ export default function Main(props) {
     }
 
     function onConfirmRename(file, newName) {
-        console.log("newname", newName)
         let beforePath = file.path_lower.split('/');
         beforePath.pop();
         beforePath.push(newName);
 
         let afterPath = beforePath.join('/');
-    
+
         const dbx = new Dropbox({
             accessToken: token,
             fetch: fetch
         });
-        
+
         dbx.filesMoveV2({
             from_path : file.path_lower,
             to_path: afterPath,
@@ -154,7 +154,6 @@ export default function Main(props) {
             //console.log(response);
 
             const idx = files.findIndex(x => x.id === response.metadata.id);
-
             if (idx >= 0) {
                 const newFiles = [...files];
                 newFiles[idx] = response.metadata;
@@ -168,7 +167,11 @@ export default function Main(props) {
             setError(true);
         });
     }
-    
+
+    function onClickDelete() {
+        setDeleteModal(true)
+    }
+
     function onChangeName() {
         setRenameModal(true)
     }
@@ -202,7 +205,10 @@ export default function Main(props) {
     }
 
     const onClickFileDownload = (path) => {
-        let dropbox = new Dropbox({accessToken: token});
+        let dropbox = new Dropbox({
+            accessToken: token,
+            fetch: fetch
+        });
         dropbox
         .filesGetTemporaryLink  ({path: path})
         .then((response)=>{
@@ -223,7 +229,7 @@ export default function Main(props) {
 
     if (!token) {
         return <Redirect to="/" />
-    } 
+    }
 
     return (
         <div>
@@ -233,64 +239,73 @@ export default function Main(props) {
             <Header/>
             <SideBar
                 onUpload={onUpload}
+                location = {props.location}
                 onCreateFolder = {onCreateFolder}
-                location = {props.location} 
-                />
+            />
             <div className = 'main'>
-            <h2><Link to={"/main"}>Hem</Link>{currentLocation}</h2>
+                <Breadcrumbs location = {props.location}/>
                 <table className = 'table'>
-                    <thead>
-                        <tr>
-                            <th></th>
-                            <th>Fil Namn</th> 
-                            <th>Senaste ändring</th>
-                            <th>Storlek</th>
-                            <th></th>
-                        </tr>
-                    </thead>
+                <thead style={{width: '100%', marginBottom: '50px' }}>
+                    <tr>
+                        <th style={{width: '95px'}}></th>
+                        <th style={{width: '214px'}}> Fil Namn</th>
+                        <th style={{width: '245px'}}>Senaste ändring</th>
+                        <th style={{width: '100px'}}>Storlek</th>
+                        <th style={{width: '200px'}}></th>
+                    </tr>
+                </thead>
                 <tbody>
                     {files.map(file => {
                         return (
-                                <tr key = {file.id}>
-                                    <td><Thumbnail file = {file} thumbnail={thumbnails[file.id]}/></td>
-                                    <td>
-                                        {file[".tag"] === "folder" ? (
-                                            <Link to={"/main" + file.path_lower}>{file.name}</Link>
-                                        ) : <a onClick= {() =>onClickFileDownload(file.path_lower)}>{file.name}</a>}
-                                    </td>
-                                    <td><Modified file = {file}/></td>
-                                    <td><FileSize file = {file}/></td>
-                                    <td></td>
-                                    <td>
-                                        <button
+                            <tr key = {file.id}>
+                                <td><Thumbnail file = {file} thumbnail={thumbnails[file.id]}/></td>
+                                <td>
+                                    <div style={{ cursor: "pointer "}} onClick={() => toggleFavorite(file)}>
+                                    {favorites.find(x => x.id === file.id) ?
+                                        <MdStar size = {25} /> : <MdStarBorder size ={25}/>
+                                    }
+                                    </div>
+                                </td>
+                                <td>
+                                    {file[".tag"] === "folder" ? (
+                                    <Link to={"/main" + file.path_lower}>{file.name}</Link>
+                                    ) : <a onClick= {() => onClickFileDownload(file.path_lower)}>{file.name}</a>}
+                                </td>
+                                <td><Modified file = {file}/></td>
+                                <td><FileSize file = {file}/></td>
+                                <td></td>
+                                <td>
+                                    <button className="handleFileDots"
                                         onClick={() => {
-                                            if (dropdown !== file.id) {
-                                                setDropdown(file.id)
-                                            } else {
-                                                setDropdown(false);
-                                            }
-                                        }}>...</button>
-                                        {dropdown === file.id && <HandleFileDots
-                                            onClickDelete={() => {
-                                                setDeleteModal(true);
-                                                setFileToDelete(file);
-                                            }}
-                                            onClickRename={() => {
-                                                setRenameModal(true);
-                                                setFileToRename(file);
-                                            }} /> 
+                                        if (dropdown !== file.id) {
+                                            setDropdown(file.id)
+                                        } else {
+                                            setDropdown(false);
                                         }
-                                    </td>
-                                </tr>
-                            )
-                        })}
-                    </tbody>
-                    {deleteModal && <DeleteModal file={fileToDelete} setDeleteModal={setDeleteModal} onConfirmDelete={() => onConfirmDelete(fileToDelete)}  />}
-                    {renameModal && <ReName file = {fileToRename} location = {props.location} onConfirmRename={onConfirmRename} setRenameModal = {setRenameModal}/>}
-                    {modal && <Error onClose={() => setModal(false)} error={error}/>}
-                </table>
-            </div>
+                                        }}><span className='dots'>...</span>
+                                    </button>
+                                    {dropdown === file.id && <HandleFileDots file={file}
+                                    onClickDelete={() => {
+                                        setDeleteModal(true);
+                                        setFileToDelete(file);
+                                    }}
+                                    onClickRename={() => {
+                                        setRenameModal(true);
+                                        setFileToRename(file);
+                                    }}
+                                        onClickStar={() => {
+                                        toggleFavorite(file);
+                                    }}/> }
+                                </td>
+                            </tr>
+                        )
+                    })}
+                </tbody>
+                {deleteModal && <DeleteModal file={fileToDelete} setDeleteModal={setDeleteModal} onConfirmDelete={() => onConfirmDelete(fileToDelete)}  />}
+                {renameModal && <ReName file = {fileToRename} location = {props.location} onConfirmRename={onConfirmRename} setRenameModal = {setRenameModal}/>}
+                {modal && <Error onClose={() => setModal(false)} error={error}/>}
+            </table>
         </div>
-
+    </div>
     );
 }

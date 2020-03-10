@@ -68,7 +68,7 @@ export default function UploadFile(props) {
                     file = {file} 
                     style = {styles.input}           
                     onChange = {onChangeUploadFile}
-                /> Upload
+                /> Ladda upp ny fil
             </form>
             {modal && <Error onClose={() => setModal(false)} error={error}/>}
         </div>

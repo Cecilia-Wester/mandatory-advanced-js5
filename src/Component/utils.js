@@ -37,7 +37,6 @@ export function Modified(props) {
     } else {
         return null;
     }
-    // varför funkar inte toLocaleSting här? 
 }
 
 export function FileSize(props, decimals){

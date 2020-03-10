@@ -11,8 +11,8 @@ export default function ReName(props, file, setRenameModal) {
         <div className='Modal' style={{position: "absolute", width: '500px', height: '200px'}}>
                 <p>Vill du verkligen byta namn på filen/mappen {file.path_display}</p>
                 <input onChange = {(e) => {updateNewName(e.target.value)}}
-                   value = {newName}
-                   placeholder = 'Nytt namn'/>
+                    value = {newName}
+                    placeholder = 'Nytt namn'/>
                 <button onClick={() => props.onConfirmRename(props.file, newName)} >Ja</button>
                 <button onClick={() => props.setRenameModal(false)}>Nej</button>
         </div> 

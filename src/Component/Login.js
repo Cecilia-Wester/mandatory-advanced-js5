@@ -16,7 +16,10 @@ export default function Login(){
 
     function onClickConnect(e) {
         e.preventDefault();
-        const dbx = new Dropbox({clientId: CLIENT_ID});
+        const dbx = new Dropbox({
+            clientId: CLIENT_ID,
+            fetch: fetch
+        });
         let dbxUrl = dbx.getAuthenticationUrl('http://localhost:3000/auth');
         window.location.href = dbxUrl; //will open the new URL in your current window.
     }
@@ -26,17 +29,17 @@ export default function Login(){
     } else {
         return (
             <div>
-                <Helmet>
-                    <title>Login</title>
-                </Helmet>
-                <Header />
+            <Helmet>
+                <title>Login</title>
+            </Helmet>
+            <Header />
                 <div className ='login'>
-                    <div className='dialogbox'>
-                        <p>Välkommen! <br /> Detta är en enkel molntjänst som är lätt att använda. Du sparar, förvarar och hanterar lätt dina filer och mappar i en lagringsplats utanför din dator.</p>
-                        <button
-                            onClick = {onClickConnect}>Connect to DropBox
-                        </button>
-                    </div>
+                <div className='dialogbox'>
+                    <p>Välkommen! <br /> Detta är en enkel molntjänst som är lätt att använda. Du sparar, förvarar och hanterar lätt dina filer och mappar i en lagringsplats utanför din dator.</p>
+                    <button
+                        onClick = {onClickConnect}>Connect to DropBox
+                    </button>
+                </div>
                 </div>
             </div>
         )

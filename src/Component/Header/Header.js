@@ -16,7 +16,7 @@ export default function Header () {
 
   useEffect(() => {
     if (token) {
-    const dbx = new Dropbox({ accessToken: token });
+    const dbx = new Dropbox({ accessToken: token , fetch: fetch});
 
     dbx.usersGetCurrentAccount(null)
       .then((result) => {
@@ -33,7 +33,6 @@ export default function Header () {
     <div className='header'>
       <div>
         <img src={CloudBerry}  alt="cloudberry" width="175px" />
-
       </div>
       <div className = 'headerDiv'>
       <div className = 'nameCountainer'>
@@ -53,5 +52,5 @@ export default function Header () {
         </div>
         </div>
     </div>
- );
+  );
 }

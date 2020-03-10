@@ -55,7 +55,7 @@ export default function CreateFolder( {location }, props ) {
             setModal(false);
             setResponseRedirect("/main" + response.path_lower);                
         })
-        .catch((error2) =>{
+        .catch((error) =>{
             setError(true);
             setModal(true);
             setFolderName('')
