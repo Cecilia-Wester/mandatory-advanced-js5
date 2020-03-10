@@ -1,10 +1,9 @@
 import React, { useEffect, useState } from 'react';
 import ReactDOM from "react-dom";
-import { token$, updateToken} from '../../store';
+import { token$} from '../../store';
 import { Dropbox } from 'dropbox';
 import { Redirect } from 'react-router-dom';
-import { FaFileUpload, FaFolderPlus } from "react-icons/fa";
-
+import { MdCreateNewFolder } from "react-icons/md";
 
 function CreateFolderModal({ onClose, folderName, onChangeFolderName, onSubmit, error }) {
     return ReactDOM.createPortal((
@@ -46,18 +45,20 @@ export default function CreateFolder( {location }, props ) {
 
     function createFolder(e) {
         e.preventDefault();
-        const dbx = new Dropbox({ accessToken: token });
+        const dbx = new Dropbox({ 
+            accessToken: token,
+            fetch: fetch
+        });
         dbx.filesCreateFolder({ path: currentLocation + folderName})
-            .then((response) => {
-                setResponseRedirect("/main" + response.path_lower);
-                //currentLocation=currentLocation + '/'+ response.pathname;
-            })
-            .catch((error2) =>{
-                setError(true);
-                setModal(true);
-                setFolderName('')
-            });
-        setModal(false);
+        .then((response) => {
+            setModal(false);
+            setResponseRedirect("/main" + response.path_lower);                
+        })
+        .catch((error2) =>{
+            setError(true);
+            setModal(true);
+            setFolderName('')
+        });
     }
 
     function onChangeFolderName(e) {
@@ -66,9 +67,8 @@ export default function CreateFolder( {location }, props ) {
 
     return(
         <div className='containerCreateFolder'>
-            {/*<button onClick={() => setModal(true)}>Skapa ny mapp</button> */}
             <label htmlFor = 'folder-input' >
-                <FaFolderPlus size = {22} color = {'#F2F2F2'}/>
+                <MdCreateNewFolder size = {22} />
             </label>
             <input 
                 id ='folder-input'

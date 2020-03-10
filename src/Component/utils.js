@@ -1,59 +1,51 @@
+
 import React, { useEffect, useRef } from 'react';
 import { MdFolderOpen } from "react-icons/md";
 import {FaRegFileAlt} from 'react-icons/fa';
 
 export function Thumbnail(props) {
-  console.log(props);
-    const file = props.file;
-    const thumbnail = props.thumbnail;
+  const file = props.file;
+  const thumbnail = props.thumbnail;
+
     if(typeof thumbnail !== 'undefined') {
         return <img src={"data:image/png;base64," + thumbnail} alt = {'base64'} />
-        //console.log(thumbnail);
     } else if(file['.tag'] === 'folder') {
-        return (
-            <div>
-                <MdFolderOpen size = {32}  />
-            </div>
-        )
+      return (
+        <div>
+          <MdFolderOpen size = {32}  />
+        </div>
+      )
     } else if (file['.tag'] === 'file') {
-        return (
-            <div>
-                <FaRegFileAlt size = {32} />
-            </div>
-        );
+      return (
+        <div>
+          <FaRegFileAlt size = {32} />
+        </div>
+      );
     }
     else {
-        return null;
+      return null;
     }
 }
 
 export function Modified(props) {
-    const file = props.file;
+  const file = props.file;
     if(file['.tag'] === 'file') {
-<<<<<<< HEAD:src/Component/init.js
     const date = file.client_modified;
 
     let currentDate = new Date(date);
     return currentDate.toString().split(' ', 5).join(' ');
-=======
         const date = file.client_modified;
 
         let currentDate = new Date(date);
         return currentDate.toString().split(' ', 5).join(' ');
->>>>>>> 16ce8b307ca2c819f29e10ecfa4a5ebd35e3bff4:src/Component/utils.js
     } else {
         return null;
     }
-    // varför funkar inte toLocaleSting här?
 }
 
 export function FileSize(props, decimals){
-<<<<<<< HEAD:src/Component/init.js
-
-=======
->>>>>>> 16ce8b307ca2c819f29e10ecfa4a5ebd35e3bff4:src/Component/utils.js
-    const file = props.file;
-    const bytes = file.size;
+  const file = props.file;
+  const bytes = file.size;
 
     if(file['.tag'] === 'file') {
         const sizes = ['Bytes', 'KB', 'MB', 'GB', 'TB', 'PB', 'EB', 'ZB', 'YB'];
@@ -66,8 +58,4 @@ export function FileSize(props, decimals){
     } else {
         return null;
     }
-<<<<<<< HEAD:src/Component/init.js
 }
-=======
-}
->>>>>>> 16ce8b307ca2c819f29e10ecfa4a5ebd35e3bff4:src/Component/utils.js

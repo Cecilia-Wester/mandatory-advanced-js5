@@ -14,7 +14,6 @@ export default function Search() {
     updateSearchQuery(search);
   }, [search]);
 
-
   return(
     <div className="search">
       <i className = 'material-icons'>search</i>
