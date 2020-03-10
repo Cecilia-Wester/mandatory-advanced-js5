@@ -1,4 +1,5 @@
 import React, { useEffect, useState} from 'react';
+
 import { Link, Redirect } from "react-router-dom";
 import { Helmet} from 'react-helmet-async'
 import { Dropbox } from 'dropbox';
@@ -11,7 +12,7 @@ import { MdStar, MdStarBorder} from "react-icons/md";
 import {UploadStarFiles} from "./Sidebar/UploadStarFiles";
 import ReName from './ReName';
 import {Thumbnail, FileSize, Modified} from './utils';
-
+import Breadcrumbs from "./Breadcrumbs";
 
 export default function Main(props) {
     const [token, setToken] = useState(token$.value);
@@ -237,7 +238,7 @@ export default function Main(props) {
                                 <td><FileSize file = {file}/></td>
                                 <td></td>
                                 <td>
-                                    <button
+                                    <button className="handleFileDots"
                                         onClick={() => {
                                         if (dropdown !== file.id) {
                                             setDropdown(file.id)
