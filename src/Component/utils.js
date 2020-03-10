@@ -34,12 +34,8 @@ export function Modified(props) {
 
     let currentDate = new Date(date);
     return currentDate.toString().split(' ', 5).join(' ');
-        const date = file.client_modified;
-
-        let currentDate = new Date(date);
-        return currentDate.toString().split(' ', 5).join(' ');
     } else {
-        return null;
+      return null;
     }
 }
 
