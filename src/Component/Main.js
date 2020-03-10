@@ -1,4 +1,5 @@
 import React, { useEffect, useState} from 'react';
+import ReactDOM from "react-dom";
 import { Link, Redirect } from "react-router-dom";
 import { Helmet} from 'react-helmet-async'
 import { Dropbox } from 'dropbox';
@@ -10,6 +11,7 @@ import DeleteModal from './DeleteModal';
 import { MdStar, MdStarBorder} from "react-icons/md";
 import {UploadStarFiles} from "./Sidebar/UploadStarFiles";
 import ReName from './ReName';
+import Breadcrumbs from "./Breadcrumbs";
 import {Thumbnail, FileSize, Modified} from './utils';
 import Breadcrumbs from './Breadcrumbs'
 
@@ -25,6 +27,8 @@ export default function Main(props) {
     const [renameModal, setRenameModal] = useState(false);
     const [copyModal, setCopyModal] = useState(false);
     const [fileToRename, setFileToRename] = useState(false);
+    const [error, setError] = useState(false);
+    const [modal, setModal] = useState(false);
     const currentLocation = props.location.pathname.substring(5);
 
     useEffect(() => {
@@ -43,15 +47,11 @@ export default function Main(props) {
         filesSearch();
     }, [searchQuery]);
 
-    useEffect(() => {
-        const subscriptions = [
-            favorites$.subscribe(setFavorites),
-        ];
-    }, [favorites]);
 
     function onUpload(){
         handleFilesList();
     }
+
 
     function handleFilesList(){
         const dbx = new Dropbox({
@@ -69,7 +69,7 @@ export default function Main(props) {
             const entries = response.entries.map(file=>(
         {
             path: file.path_lower,
-            size: 'w32h32'
+            size: 'w64h64'
         }
     ))
 
@@ -89,10 +89,15 @@ export default function Main(props) {
         })
         .catch(error => {
             console.error(error);
+            setError(true);
+            setModal(true)
         });
     }
 
-    function onConfirmDelete(file) {
+    //console.log(files);
+    
+
+    function onConfirmDelete(file) { 
         const dbx = new Dropbox({
             accessToken: token,
             fetch: fetch
@@ -106,6 +111,10 @@ export default function Main(props) {
         .catch((error)=>{
             console.log(error)
         });
+    }
+
+    function onClickDelete() {
+        setDeleteModal(true)
     }
 
     function onConfirmRename(file, newName) {
@@ -126,6 +135,10 @@ export default function Main(props) {
             autorename: true
         })
         .then(response => {
+            //console.log("RENAMED!");
+
+            //console.log(response);
+
             const idx = files.findIndex(x => x.id === response.metadata.id);
             if (idx >= 0) {
                 const newFiles = [...files];
@@ -135,23 +148,20 @@ export default function Main(props) {
             }
         })
         .catch(error => {
-            console.log(error)
+            console.log(error);
+            setModal(true);
+            setError(true);
         });
-    }
-
-    function onClickDelete() {
-        setDeleteModal(true)
     }
 
     function onChangeName() {
         setRenameModal(true)
     }
 
-    function onCreateFolder(file){
-        return(
-            <SideBar file= {props.file} />
-        )
+    function CopyFileFolder() {
+        
     }
+
 
     function filesSearch(files){
         if (!searchQuery) {
@@ -171,6 +181,8 @@ export default function Main(props) {
         })
         .catch(error => {
             console.error(error);
+            setModal(true);
+            setError(true);
         });
     }
 
@@ -186,7 +198,15 @@ export default function Main(props) {
         })
         .catch((error)=>{
             console.log(error)
+            setModal(true);
+            setError(true);
         });
+    }
+
+    function onCreateFolder(file){
+        return(
+            <SideBar file= {props.file} />
+        )
     }
 
     if (!token) {
@@ -266,6 +286,7 @@ export default function Main(props) {
                 </tbody>
                 {deleteModal && <DeleteModal file={fileToDelete} setDeleteModal={setDeleteModal} onConfirmDelete={() => onConfirmDelete(fileToDelete)}  />}
                 {renameModal && <ReName file = {fileToRename} location = {props.location} onConfirmRename={onConfirmRename} setRenameModal = {setRenameModal}/>}
+                {modal && <Error onClose={() => setModal(false)} error={error}/>}
             </table>
         </div>
     </div>

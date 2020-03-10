@@ -69,6 +69,7 @@ export default function CreateFolder( {location }) {
     const [responseRedirect, setResponseRedirect] = useState(false)
     
     let currentLocation = location.pathname.substring(5);
+    
     if(currentLocation.charAt(currentLocation.length-1) !== '/'){
         currentLocation = currentLocation + '/';
     }

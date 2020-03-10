@@ -1,7 +1,7 @@
 import React from 'react';
 import ReactDOM from "react-dom";
 
-export default function DeleteModal({ file, onConfirmDelete, setDeleteModal }) {
+export default function DeleteModal({ file, onConfirmDelete, setDeleteModal, error }) {
     return ReactDOM.createPortal((
         <div className='Modal' style={{position: "absolute"}}>
                 <p>Vill du verkligen ta bort {file.path_display}</p>
@@ -14,7 +14,8 @@ export default function DeleteModal({ file, onConfirmDelete, setDeleteModal }) {
                         backgroundColor: '#DCDCDC',
                         border: 'none',
                     }}
-                >Ja</button>
+                    >Ja
+                </button>
                 <button onClick={() => setDeleteModal(false)}
                     style={{
                         margin: '5px', 
@@ -24,7 +25,9 @@ export default function DeleteModal({ file, onConfirmDelete, setDeleteModal }) {
                         backgroundColor: '#DCDCDC',
                         border: 'none',
                     }}
-                >Nej</button>
+                    >Nej
+                </button>
+                {error ? <p>Någonting blev fel. Försök igen!</p> : null}
         </div>
     ), document.body);
 }
