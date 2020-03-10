@@ -7,8 +7,9 @@
   display: flex;
   flex-direction: column;
   background-color: #F2F2F2;
-
+  width: 100vw;
 }
+
 .login{
   width: 100vw;
   background-color:  #FFA300;
@@ -20,7 +21,14 @@
 
 .table {
   margin: auto;
-  margin-top: 90px;
+  margin-top: 50px;
+  width: 100%;
+  padding-left: 20px;
+  display: flex;
+  flex-wrap: wrap;
+  box-sizing: border-box;
+  height: 30vw;
+  overflow-y: scroll;
 }
 
 tr,th{
@@ -32,9 +40,13 @@ tr,td{
   padding-right: 60px;
 }
 
+.table thead{
+  width:
+}
+
 .main {
   float: left;
-  width: 80%;
+  width: 80vw;
   background-color: #FFA300;
   height: 100vh;
 }
@@ -193,4 +205,8 @@ a{
   justify-content: center;
   opacity: 0.5;
   border-style: none;
+}
+
+.dots{
+  margin-top: -7px;
 }

@@ -30,8 +30,8 @@ export default function Login(){
         return (
             <div>
                 <Helmet>
-                    <title>Login</title>
-                </Helmet>
+                <title>Login</title>
+            </Helmet>
                 <Header />
                 <div className ='login'>
                     <div className='dialogbox'>

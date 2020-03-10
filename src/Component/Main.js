@@ -173,13 +173,13 @@ export default function Main(props) {
             <div className = 'main'>
             <Breadcrumbs location = {props.location}/>
                 <table className = 'table'>
-                    <thead>
+                    <thead style={{width: '100%', marginBottom: '50px' }}>
                         <tr>
-                            <th></th>
-                            <th>Fil Namn</th>
-                            <th>Senaste ändring</th>
-                            <th>Storlek</th>
-                            <th></th>
+                            <th style={{width: '95px'}}></th>
+                            <th style={{width: '214px'}}> Fil Namn</th>
+                            <th style={{width: '245px'}}>Senaste ändring</th>
+                            <th style={{width: '100px'}}>Storlek</th>
+                            <th style={{width: '200px'}}></th>
                         </tr>
                     </thead>
                 <tbody>
@@ -204,7 +204,7 @@ export default function Main(props) {
                                             } else {
                                                 setDropdown(false);
                                             }
-                                        }}>...</button>
+                                        }}><span className='dots'>...</span></button>
                                         {dropdown === file.id && <HandleFileDots onClickDelete={() => {
                                             setDeleteModal(true);
                                             setFileToDelete(file);

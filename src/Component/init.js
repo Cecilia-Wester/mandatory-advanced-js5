@@ -28,13 +28,11 @@ export function Modified(props) {
     const file = props.file;
     if(file['.tag'] === 'file') {
         const date = file.client_modified;
-    
         let currentDate = new Date(date);
         return currentDate.toString().split(' ', 5).join(' '); 
     } else {
         return null;
     }
-    // varför funkar inte toLocaleSting här? 
 }
 
 export function FileSize(props, decimals){
