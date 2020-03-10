@@ -29,6 +29,7 @@
   box-sizing: border-box;
   height: 30vw;
   overflow-y: scroll;
+  overflow-x:hidden;
 }
 
 tr,th{
@@ -40,7 +41,7 @@ tr,td{
   padding-right: 60px;
 }
 
-.table thead{
+.table, thead{
   width:
 }
 

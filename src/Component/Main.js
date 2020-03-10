@@ -168,10 +168,6 @@ export default function Main(props) {
         });
     }
 
-    function onClickDelete() {
-        setDeleteModal(true)
-    }
-
     function onChangeName() {
         setRenameModal(true)
     }
