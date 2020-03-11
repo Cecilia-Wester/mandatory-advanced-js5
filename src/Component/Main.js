@@ -16,11 +16,6 @@ import {Thumbnail, FileSize, Modified} from './utils';
 import Copy from './Copy';
 import Move from './Move';
 
-/* Kvar: Navigation back from folders?
-        move file and folder?
-         Polling or WebHook
-         testing?
-         */
 function Error ({onClose, error}) {
     return ReactDOM.createPortal((
         <div className ='Modal' style={{position: "absolute"}}>
@@ -31,7 +26,6 @@ function Error ({onClose, error}) {
         </div>
     ), document.body);
 }
-
 
 export default function Main(props) {
     const [token, setToken] = useState(token$.value);
@@ -121,7 +115,6 @@ export default function Main(props) {
             accessToken: token,
             fetch: fetch
         });
-
         dbx.filesDeleteV2({ path: file.path_lower })
         .then(() => {
             updateFiles(files.filter(x => x.id !== file.id));
@@ -132,7 +125,7 @@ export default function Main(props) {
         });
     }
 
-   /* function onClickDelete() {
+    /*function onClickDelete() {
         setDeleteModal(true)
     }*/
     
@@ -140,7 +133,6 @@ export default function Main(props) {
         let beforePath = file.path_lower.split('/');
         beforePath.pop();
         beforePath.push(newName);
-
         let afterPath = beforePath.join('/');
 
         const dbx = new Dropbox({
@@ -153,7 +145,6 @@ export default function Main(props) {
             autorename: true
         })
         .then(response => {
-            //console.log(response);
             const idx = files.findIndex(x => x.id === response.metadata.id);
             if (idx >= 0) {
                 const newFiles = [...files];
@@ -163,7 +154,6 @@ export default function Main(props) {
             }
         })
         .catch(error => {
-            console.log(error);
             setModal(true);
             //setError(true);
         });
@@ -233,7 +223,6 @@ export default function Main(props) {
             window.location.href = response.link;
         })
         .catch((error)=>{
-            console.log(error)
             setModal(true);
             setError(true);
         });
@@ -261,7 +250,13 @@ export default function Main(props) {
                 onCreateFolder = {onCreateFolder}
             />
             <div className = 'main'>
-                <Breadcrumbs location = {props.location}/>
+            <div className='breadcrumbs'
+                    style={{
+                        width: '100%',
+                        height: '50px',
+                    }}>
+                    <Breadcrumbs location = {props.location}/>
+                </div>
                 <table className = 'table'>
                 <thead style={{width: '100%', marginBottom: '50px' }}>
                     <tr>
@@ -286,9 +281,17 @@ export default function Main(props) {
                                     </div>
                                 </td>
                                 <td style={{width: '214px', overflow: 'hidden', display: 'flex'}}>
+                                <div
+                                                style={{
+                                                    display: 'inline-block',
+                                                    maxWidth: '151px',
+                                                    overflowX: 'hidden',
+                                                    textOverflow: 'ellipsis',
+                                                }}>
                                     {file[".tag"] === "folder" ? (
                                     <Link to={"/main" + file.path_lower}>{file.name}</Link>
                                     ) : <a onClick= {() => onClickFileDownload(file.path_lower)}>{file.name}</a>}
+                                    </div>
                                 </td>
                                 <td style={{width: '240px'}}><Modified file = {file}/></td>
                                 <td style={{width: '100px'}}><FileSize file = {file}/></td>
@@ -323,6 +326,7 @@ export default function Main(props) {
                                         setMoveModal(true);
                                         setFileMove(file);
                                     }} 
+                                    onClose={() => setDropdown(false)}
                                     /> }
                                 </td>
                             </tr>
@@ -335,7 +339,7 @@ export default function Main(props) {
                 {moveModal && <Move files = {fileMove} location = {props.location}/>}
                 {modal && <Error onClose={() => setModal(false)} error={error}/>}
             </table>
+            </div>
         </div>
-    </div>
     );
 }

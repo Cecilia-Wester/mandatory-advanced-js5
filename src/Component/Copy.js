@@ -2,12 +2,8 @@ import React, { useState} from "react";
 import ReactDOM from "react-dom";
 
 export default function Copy(props){
-
     const[newName, updateNewName]= useState('');
-    
     const name = props.file.name;
-    console.log(name);
-    
     
     return ReactDOM.createPortal((
         <div className='Modal' style={{display: 'flex', flexDirection: 'column',position: "absolute", backgroundColor: '#F2F2F2', listStyle: 'none', cursor: 'pointer', width: '500px', height: '300px', borderRadius:'5px'}}>
@@ -43,5 +39,5 @@ export default function Copy(props){
             </div>
             { props.error ? <p>Det gick inte att kopiera filen/mappen. Vänligen försök igen</p> : null}
         </div> 
-), document.body);
+    ), document.body);
 }

@@ -17,13 +17,24 @@ export default function Breadcrumbs({location}){
     
     return(
         <div className='breadcrumbs'>
-        {pathpieces.map((pathpiece, idx) => {
-            return(
-                <ul key = {pathpiece}>
-                    <li className='pathpiece'><Link to={link[idx]}>{pathpiece}</Link></li>
-                </ul>
-            )})
-        }
+            <ul style={{
+                    display: "flex",
+                    flexWrap: 'wrap',
+                    flexDirection: 'row',
+                }}>
+                {pathpieces.map((pathpiece, idx) => {
+                    return( 
+                            <li key = {pathpiece} className='pathpiece' style={{listStyle: 'none'}}>
+                                <Link to={link[idx]}>{pathpiece}</Link>
+                                {
+                                    idx === pathpieces.length - 1
+                                    ? null
+                                    : <span style={{ marginLeft: 10, marginRight: 10 }}>&gt;</span>
+                                }
+                            </li>
+                    )})
+                }
+            </ul>
         </div>
     )
 }
