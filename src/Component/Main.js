@@ -13,16 +13,20 @@ import {UploadStarFiles} from "./Sidebar/UploadStarFiles";
 import ReName from './ReName';
 import Breadcrumbs from "./Breadcrumbs";
 import {Thumbnail, FileSize, Modified} from './utils';
+import Copy from './Copy';
+import Move from './Move';
 
 /* Kvar: Navigation back from folders?
-         View all stars
-         Copy file and folder?
+        move file and folder?
          Polling or WebHook
+         testing?
          */
 function Error ({onClose, error}) {
     return ReactDOM.createPortal((
         <div className ='Modal' style={{position: "absolute"}}>
-            {error ? <p>Någonting blev fel. Försök igen!</p> : null}
+            {<handleFilesList/> && error ? <p>Någonting blev fel med api anropet. Vänligen försök igen!</p> : null}
+            {<filesSearch/> && error ? <p>Det gick inte att söka efter filen/mappen. Vänligen försök igen</p> : null}
+            {<onClickFileDownload/> && error ? <p>Det gick inte att ladda ner efter filen/mappen. Vänligen försök igen</p> : null}
             <button onClick = {onClose}>Gå tillbaka</button>
         </div>
     ), document.body);
@@ -39,10 +43,13 @@ export default function Main(props) {
     const [deleteModal, setDeleteModal] = useState(false);
     const [fileToDelete, setFileToDelete] = useState(null);
     const [renameModal, setRenameModal] = useState(false);
-    const [copyModal, setCopyModal] = useState(false);
     const [fileToRename, setFileToRename] = useState(false);
+    const [copyModal, setCopyModal] = useState(false);
+    const [fileToCopy, setFileToCopy] = useState([]);
     const [error, setError] = useState(false);
     const [modal, setModal] = useState(false);
+    const [fileMove, setFileMove] = useState(false);
+    const [moveModal, setMoveModal] = useState(false);
     const currentLocation = props.location.pathname.substring(5);
 
     useEffect(() => {
@@ -61,11 +68,9 @@ export default function Main(props) {
         filesSearch();
     }, [searchQuery]);
 
-
     function onUpload(){
         handleFilesList();
     }
-
 
     function handleFilesList(){
         const dbx = new Dropbox({
@@ -85,10 +90,9 @@ export default function Main(props) {
             path: file.path_lower,
             size: 'w64h64'
         }
-    ))
-
-    dbx.filesGetThumbnailBatch({
-        entries
+        ))
+        dbx.filesGetThumbnailBatch({
+            entries
         })
         .then(response => {
             const thumbnails = {};
@@ -108,9 +112,6 @@ export default function Main(props) {
         });
     }
 
-    //console.log(files);
-    
-
     function onConfirmDelete(file) { 
         const dbx = new Dropbox({
             accessToken: token,
@@ -127,10 +128,10 @@ export default function Main(props) {
         });
     }
 
-    function onClickDelete() {
+   /* function onClickDelete() {
         setDeleteModal(true)
-    }
-
+    }*/
+    
     function onConfirmRename(file, newName) {
         let beforePath = file.path_lower.split('/');
         beforePath.pop();
@@ -142,17 +143,13 @@ export default function Main(props) {
             accessToken: token,
             fetch: fetch
         });
-
         dbx.filesMoveV2({
             from_path : file.path_lower,
             to_path: afterPath,
             autorename: true
         })
         .then(response => {
-            //console.log("RENAMED!");
-
             //console.log(response);
-
             const idx = files.findIndex(x => x.id === response.metadata.id);
             if (idx >= 0) {
                 const newFiles = [...files];
@@ -164,18 +161,39 @@ export default function Main(props) {
         .catch(error => {
             console.log(error);
             setModal(true);
-            setError(true);
+            //setError(true);
         });
     }
 
-    function onChangeName() {
-        setRenameModal(true)
-    }
-
-    function CopyFileFolder() {
+    function onConfirmCopy(file, fileToCopy) {
+        let currentPath = file.path_lower.split('/');
+        //currentPath.shift();
+        currentPath.pop();
+        currentPath.push(fileToCopy);
+        let copyPath = currentPath.join('/');
+        console.log(copyPath);
         
+        if(copyPath === ''){
+            copyPath ='/';
+        }
+        console.log(copyPath);
+        
+        const dbx = new Dropbox({
+            accessToken: token,
+            fetch: fetch
+        });
+        dbx.filesCopyV2({
+            from_path: file.path_lower,
+            to_path: copyPath,
+            allow_shared_folder: true,
+            autorename: true
+        })
+        .then(response => {
+            console.log(response);
+            handleFilesList();
+            setCopyModal(false); 
+        });
     }
-
 
     function filesSearch(files){
         if (!searchQuery) {
@@ -285,20 +303,31 @@ export default function Main(props) {
                                         setDeleteModal(true);
                                         setFileToDelete(file);
                                     }}
+                                        onClickStar={() => {
+                                        toggleFavorite(file);
+                                    }}
                                     onClickRename={() => {
                                         setRenameModal(true);
                                         setFileToRename(file);
                                     }}
-                                        onClickStar={() => {
-                                        toggleFavorite(file);
-                                    }}/> }
+                                    onClickCopy={() => {
+                                        setCopyModal(true);
+                                        setFileToCopy(file);
+                                    }}
+                                    onClickMove= {()=> {
+                                        setMoveModal(true);
+                                        setFileMove(file);
+                                    }}
+                                    /> }
                                 </td>
                             </tr>
                         )
                     })}
                 </tbody>
                 {deleteModal && <DeleteModal file={fileToDelete} setDeleteModal={setDeleteModal} onConfirmDelete={() => onConfirmDelete(fileToDelete)}  />}
-                {renameModal && <ReName file = {fileToRename} location = {props.location} onConfirmRename={onConfirmRename} setRenameModal = {setRenameModal}/>}
+                {renameModal && <ReName file = {fileToRename} location = {props.location} onConfirmRename={onConfirmRename} setRenameModal = {setRenameModal} error = {error}/>}
+                {copyModal && <Copy file = {fileToCopy} location = {props.location} onConfirmCopy = {onConfirmCopy} setCopyModal = {setCopyModal} error = {error}/>}
+                {moveModal && <Move file = {fileMove} location = {props.lication}/>}
                 {modal && <Error onClose={() => setModal(false)} error={error}/>}
             </table>
         </div>
