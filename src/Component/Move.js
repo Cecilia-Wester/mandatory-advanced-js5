@@ -1,30 +1,30 @@
 import React, { useEffect, useState } from 'react';
 import ReactDOM from "react-dom";
 
-import { Dropbox } from 'dropbox';
-import { Redirect } from 'react-router-dom';
-import { MdCreateNewFolder } from "react-icons/md";
 
-export default function MovieModal(props){
-
-    let file = props.file;
-    const folderList = [];
-    if(file['.tag'] === 'folder') {
-        
-        folderList.push({name: file.name, path:file.path_lower});
-    }
-    console.log(folderList);
-    
-    
+function FolderList(props){
 
     
+    let folders = props.files;
+    console.log(folders);
     
+    const allfolders = folders.map(folder => {
+       return <option key= {folder.path} value = {folder.path}>{folder.name}</option>
+    }); 
+    console.log(allfolders);
+    return allfolders;
     
+}
+
+
+export default function MovieModal(folders){
+    FolderList();
     return ReactDOM.createPortal((
         <div>
             <div className='Modal' style={{position: "absolute"}}>
                 <form>
-                    <h4>{props.name}</h4>
+                    <h4>
+                    </h4>
                     
                 </form>
             </div>

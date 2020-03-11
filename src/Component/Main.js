@@ -13,7 +13,6 @@ import {UploadStarFiles} from "./Sidebar/UploadStarFiles";
 import ReName from './ReName';
 import Breadcrumbs from "./Breadcrumbs";
 import {Thumbnail, FileSize, Modified} from './utils';
-<<<<<<< HEAD
 import Copy from './Copy';
 import Move from './Move';
 
@@ -33,9 +32,6 @@ function Error ({onClose, error}) {
     ), document.body);
 }
 
-=======
-import Breadcrumbs from './Breadcrumbs'
->>>>>>> 0add449259c329bc60e421d71308371a15261512
 
 export default function Main(props) {
     const [token, setToken] = useState(token$.value);
@@ -73,6 +69,9 @@ export default function Main(props) {
     }, [searchQuery]);
 
     function onUpload(){
+        /*(!files.find(x => x.id === file.id)){
+            updateFiles([...files, file]());
+        }*/
         handleFilesList();
     }
 
@@ -87,12 +86,13 @@ export default function Main(props) {
         }
         dbx.filesListFolder({
             path,
+            recursive: true
         })
         .then(response => {
             const entries = response.entries.map(file=>(
         {
             path: file.path_lower,
-            size: 'w64h64'
+            size: 'w32h32'
         }
         ))
         dbx.filesGetThumbnailBatch({
@@ -194,7 +194,7 @@ export default function Main(props) {
         })
         .then(response => {
             console.log(response);
-            handleFilesList();
+            onUpload();
             setCopyModal(false); 
         });
     }
@@ -308,7 +308,7 @@ export default function Main(props) {
                                         setDeleteModal(true);
                                         setFileToDelete(file);
                                     }}
-                                        onClickStar={() => {
+                                    onClickStar={() => {
                                         toggleFavorite(file);
                                     }}
                                     onClickRename={() => {
@@ -322,7 +322,7 @@ export default function Main(props) {
                                     onClickMove= {()=> {
                                         setMoveModal(true);
                                         setFileMove(file);
-                                    }}
+                                    }} 
                                     /> }
                                 </td>
                             </tr>
@@ -332,7 +332,7 @@ export default function Main(props) {
                 {deleteModal && <DeleteModal file={fileToDelete} setDeleteModal={setDeleteModal} onConfirmDelete={() => onConfirmDelete(fileToDelete)}  />}
                 {renameModal && <ReName file = {fileToRename} location = {props.location} onConfirmRename={onConfirmRename} setRenameModal = {setRenameModal} error = {error}/>}
                 {copyModal && <Copy file = {fileToCopy} location = {props.location} onConfirmCopy = {onConfirmCopy} setCopyModal = {setCopyModal} error = {error}/>}
-                {moveModal && <Move file = {fileMove} location = {props.lication}/>}
+                {moveModal && <Move files = {fileMove} location = {props.location}/>}
                 {modal && <Error onClose={() => setModal(false)} error={error}/>}
             </table>
         </div>

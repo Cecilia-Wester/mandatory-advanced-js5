@@ -12,8 +12,8 @@ export default function HandleFileDots({onClickDelete, onClickStar, file, onClic
     });
 
     return(
-        <div className='modalFileDots' style={{position: 'absolute'}}>
-            <ul className='fileDots' style={{backgroundColor: 'white', listStyle: 'none', cursor: 'pointer', width: '150px', height: '100px'}}>
+        <div className='modalFileDots' style={{position: 'absolute', zIndex: '10'}}>
+            <ul className='fileDots' style={{backgroundColor: '#F2F2F2', listStyle: 'none', cursor: 'pointer', width: '140px', height: '125px', borderRadius:'5px' }}>
                 <li onClick={onClickDelete}>Ta bort</li>
                 <li onClick = {onClickRename}>Byt Namn</li>
                 <li onClick = {onClickCopy}>Kopiera</li>
