@@ -20,7 +20,7 @@ export default function Breadcrumbs({location}){
         {pathpieces.map((pathpiece, idx) => {
             return(
                 <ul key = {pathpiece}>
-                    <li><Link to={link[idx]}>{pathpiece}</Link></li>
+                    <li className='pathpiece'><Link to={link[idx]}>{pathpiece}</Link></li>
                 </ul>
             )})
         }
