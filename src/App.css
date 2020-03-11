@@ -20,36 +20,35 @@
 }
 
 .table {
-  margin: auto;
   margin-top: 50px;
-  width: 100%;
-  padding-left: 20px;
-  display: flex;
-  flex-wrap: wrap;
-  box-sizing: border-box;
-  height: 30vw;
+  margin-left: 40px;
   overflow-y: scroll;
   overflow-x: hidden;
 }
 
 tr,th{
   text-align: left;
-  margin-top: 50px;
+  padding: 0px;
+  margin: 0px;
+  border: none;
 }
 
 tr,td{
-  padding-right: 60px;
+  padding-bottom: 5px;
+  margin: 0px;
+  border: none;
 }
 
 .table thead{
-  width:
+  width:100%;
 }
 
 .main {
-  float: left;
   width: 80vw;
   background-color: #FFA300;
-  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
 }
 
 .search input {
@@ -76,7 +75,8 @@ tr,td{
 
 .search {
   position: relative;
-  padding-right: 580px;
+  /*padding-right: 580px;*/
+  padding: 0px;
 }
 
 .material-icons{
@@ -88,17 +88,28 @@ tr,td{
 
 .files {
   margin-top: 130px;
-  padding-left: 50px;
+  padding-left: 30px;
 }
 
 .header img {
   margin-left: 60px;
   margin-top: 10px;
+  margin-right: 70px;
 }
 
 .header {
   height: 21.5vh;
   display: flex;
+  flex-direction: row;
+  justify-content: flex-start;
+  background-color: #F2F2F2;
+}
+
+.headerDiv {
+  width: 100%;
+  height: 21.5vh;
+  display: flex;
+  flex-direction: row;
   justify-content: space-between;
   background-color: #F2F2F2;
 }
@@ -106,8 +117,12 @@ tr,td{
 .sidebar {
   float: left;
   width: 20%;
-  height: 100vh;
   background-color: #DCDCDC;
+  min-height: 100vh;
+}
+
+.sidebar label{
+  padding-right: 8px;
 }
 
 a{
@@ -115,13 +130,12 @@ a{
 }
 
 .dialogbox {
-    width: 600px;
-    height: 400px;
-    background-color: #DCDCDC;
-    margin: auto;
-
-    border-radius: 7px;
-    text-align: center;
+  width: 600px;
+  height: 400px;
+  background-color: #DCDCDC;
+  margin: auto;
+  border-radius: 7px;
+  text-align: center;
 }
 
 .dialogbox p{
@@ -158,35 +172,30 @@ a{
 }
 
 .createFolderModal {
-  width: 300px;
-  height: 200px;
-  top: 50%;
-  left: 500px;
-  background-color: aliceblue;
+  width: 500px;
+  height: 300px;
+  top: 40%;
+  left: 650px;
   z-index: 1000;
   display: flex;
   flex-wrap: wrap;
   align-items: center;
   justify-content: center;
+  object-fit: cover;
+  background-color: #F2F2F2;
 }
 
 .Modal{
-  width: 300px;
-  height: 200px;
-  top: 50%;
-  left: 500px;
-  background-color: aliceblue;
+  width: 500px;
+  height: 300px;
+  top: 40%;
+  left: 650px;
   z-index: 1000;
   display: flex;
   flex-wrap: wrap;
   align-items: center;
   justify-content: center;
-}
-
-.breadcrumbs{
-  display: flex;
-  flex-wrap: wrap;
-  flex-direction: row;
+  background-color: #F2F2F2;
 }
 
 .breadcrumbs ul li{
