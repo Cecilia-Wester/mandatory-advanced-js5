@@ -25,7 +25,7 @@ export default function SideBar(props) {
                     style={{
                         height: '40px'
                     }}
-                />Stjärnmärkta filer
+                /></Link>Stjärnmärkta filer
             </div>
         </div>
     );

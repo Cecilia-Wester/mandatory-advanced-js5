@@ -15,16 +15,7 @@ import {Thumbnail, FileSize, Modified} from './utils';
 import Copy from './Copy';
 import Move from './Move';
 
-function Error ({onClose, error}) {
-    return ReactDOM.createPortal((
-        <div className ='Modal' style={{position: "absolute"}}>
-            {<handleFilesList/> && error ? <p>Någonting blev fel med api anropet. Vänligen försök igen!</p> : null}
-            {<filesSearch/> && error ? <p>Det gick inte att söka efter filen/mappen. Vänligen försök igen</p> : null}
-            {<onClickFileDownload/> && error ? <p>Det gick inte att ladda ner efter filen/mappen. Vänligen försök igen</p> : null}
-            <button onClick = {onClose}>Gå tillbaka</button>
-        </div>
-    ), document.body);
-}
+
 
 export default function Main(props) {
     const [token, setToken] = useState(token$.value);
@@ -54,8 +45,6 @@ export default function Main(props) {
         return () => subscriptions.forEach((subscription) => subscription.unsubscribe());
     }, [currentLocation, searchQuery]);
 
-
-
     useEffect(() => {
         if (searchQuery.length === 0) {
             handleFilesList();
@@ -73,6 +62,10 @@ export default function Main(props) {
     }
 
     function handleFilesList(){
+      if (props.location.pathname === "/favorites") {
+        return;
+      }
+
       const dbx = new Dropbox({
           accessToken: token,
           fetch: fetch
@@ -83,7 +76,6 @@ export default function Main(props) {
       }
       dbx.filesListFolder({
           path,
-          recursive: true
       })
       .then(response => {
           const entries = response.entries.map(file=>(
@@ -107,7 +99,7 @@ export default function Main(props) {
           updateFiles(response.entries.reverse());
       })
       .catch(error => {
-          console.error(error);
+          console.log(error);
           setError(true);
           setModal(true)
       });
@@ -170,7 +162,7 @@ export default function Main(props) {
       return(
           <SideBar file= {props.file} />
     )
-
+  }
     function onConfirmCopy(file, fileToCopy) {
         let currentPath = file.path_lower.split('/');
         currentPath.pop();
@@ -265,9 +257,9 @@ export default function Main(props) {
                     style={{
                         width: '100%',
                         height: '50px',
-                    }}>
-            {props.showFavorites ? <Link to="/main">Tillbaks till alla filer</Link> : <Breadcrumbs location = {props.location}/>}
-                </div>
+              }}>
+                {props.showFavorites ? <Link to="/main">Tillbaka till alla filer</Link> : <Breadcrumbs location = {props.location}/>}
+            </div>
                 <table className = 'table'>
                 <thead style={{width: '100%', marginBottom: '50px' }}>
                     <tr>
@@ -283,11 +275,11 @@ export default function Main(props) {
                   {(props.showFavorites ? favorites : files).map((file) => {
                     return (
                         <tr key = {file.id}>
-                        <td style={{width: '60px', overflow: 'hidden'}}><Thumbnail file = {file} thumbnail={thumbnails[file.id]}/></td>
-                        <td style={{width: '60px', overflow: 'hidden'}}>
+                         <td style={{width: '60px', overflow: 'hidden'}}><Thumbnail file = {file} thumbnail={thumbnails[file.id]}/></td>
+                         <td style={{width: '60px', overflow: 'hidden'}}>
                             <div style={{ cursor: "pointer "}} onClick={() => toggleFavorite(file)}>
                             {favorites.find(x => x.id === file.id) ?
-                                <MdStar size = {25} /> : <MdStarBorder size ={25}/>
+                              <MdStar size = {25} /> : <MdStarBorder size ={25}/>
                             }
                             </div>
                         </td>
@@ -302,7 +294,7 @@ export default function Main(props) {
                             {file[".tag"] === "folder" ? (
                             <Link to={"/main" + file.path_lower}>{file.name}</Link>
                             ) : <a onClick= {() => onClickFileDownload(file.path_lower)}>{file.name}</a>}
-                            </div>
+                        </div>
                         </td>
                         <td style={{width: '240px'}}><Modified file = {file}/></td>
                         <td style={{width: '100px'}}><FileSize file = {file}/></td>
@@ -328,7 +320,8 @@ export default function Main(props) {
                                 }}
                                 onClickStar={() => {
                                     toggleFavorite(file);
-                                }}/> }
+                                }}
+                                />}
 
                             </td>
                         </tr>
@@ -339,7 +332,6 @@ export default function Main(props) {
                 {renameModal && <ReName file = {fileToRename} location = {props.location} onConfirmRename={onConfirmRename} setRenameModal = {setRenameModal} error = {error}/>}
                 {copyModal && <Copy file = {fileToCopy} location = {props.location} onConfirmCopy = {onConfirmCopy} setCopyModal = {setCopyModal} error = {error}/>}
                 {moveModal && <Move files = {fileMove} location = {props.location}/>}
-                {modal && <Error onClose={() => setModal(false)} error={error}/>}
             </table>
           </div>
         </div>
