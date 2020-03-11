@@ -6,10 +6,11 @@ import {favorites$} from '../store';
 export default function HandleFileDots({onClickDelete, onClickStar, file, onClickRename, onClickCopy}){
     const [favorites , setFavorites] = useState(favorites$.value);
 
+
     useEffect(() => {
-    const subscription = favorites$.subscribe(setFavorites);
-    return () => subscription.unsubscribe();
-    });
+      const subscription = favorites$.subscribe(setFavorites);
+      return () => subscription.unsubscribe();
+    },[]);
 
     return(
         <div className='modalFileDots' style={{position: 'absolute'}}>

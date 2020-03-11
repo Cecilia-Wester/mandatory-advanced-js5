@@ -15,6 +15,7 @@ export default function App() {
           <Route exact path= '/' component = {Login}/>
           <Route path = '/auth' component = {Auth} />
           <Route path = '/main' component = {Main}/>
+          <Route path = '/favorites' render= {(props) => <Main showFavorites={true} {...props} />}/>
         </div>
       </Router>
     </HelmetProvider>

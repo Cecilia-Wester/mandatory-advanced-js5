@@ -1,5 +1,4 @@
 import React, { useEffect, useState} from 'react';
-
 import { Link, Redirect } from "react-router-dom";
 import { Helmet} from 'react-helmet-async'
 import { Dropbox } from 'dropbox';
@@ -9,7 +8,6 @@ import SideBar from './Sidebar/SideBar';
 import HandleFileDots from './HandleFileDots';
 import DeleteModal from './DeleteModal';
 import { MdStar, MdStarBorder} from "react-icons/md";
-import {UploadStarFiles} from "./Sidebar/UploadStarFiles";
 import ReName from './ReName';
 import {Thumbnail, FileSize, Modified} from './utils';
 import Breadcrumbs from "./Breadcrumbs";
@@ -37,6 +35,8 @@ export default function Main(props) {
         return () => subscriptions.forEach((subscription) => subscription.unsubscribe());
     }, [currentLocation, searchQuery]);
 
+
+
     useEffect(() => {
         if (searchQuery.length === 0) {
             handleFilesList();
@@ -45,16 +45,15 @@ export default function Main(props) {
     }, [searchQuery]);
 
     useEffect(() => {
-        const subscriptions = [
-            favorites$.subscribe(setFavorites),
-        ];
-    }, [favorites]);
+      const subscription = favorites$.subscribe(setFavorites);
+      return () => subscription.unsubscribe();
+    },[]);
 
     function onUpload(){
         handleFilesList();
     }
 
-    function handleFilesList(){
+      function handleFilesList(){
         const dbx = new Dropbox({
             accessToken: token,
             fetch: fetch
@@ -148,6 +147,8 @@ export default function Main(props) {
         setRenameModal(true)
     }
 
+
+
     function onCreateFolder(file){
         return(
             <SideBar file= {props.file} />
@@ -194,6 +195,8 @@ export default function Main(props) {
         return <Redirect to="/" />
     }
 
+    console.log(favorites);
+    console.log(files);
     return (
         <div>
             <Helmet>
@@ -206,10 +209,13 @@ export default function Main(props) {
                 onCreateFolder = {onCreateFolder}
             />
             <div className = 'main'>
-                <Breadcrumbs location = {props.location}/>
+                {props.showFavorites ? <Link to="/main">Tillbaks till alla filer</Link> : <Breadcrumbs location = {props.location}/>}
+
+
                 <table className = 'table'>
                 <thead style={{width: '100%', marginBottom: '50px' }}>
                     <tr>
+                        <th style={{width: '95px'}}></th>
                         <th style={{width: '95px'}}></th>
                         <th style={{width: '214px'}}> Fil Namn</th>
                         <th style={{width: '245px'}}>Senaste ändring</th>
@@ -218,55 +224,58 @@ export default function Main(props) {
                     </tr>
                 </thead>
                 <tbody>
-                    {files.map(file => {
-                        return (
-                            <tr key = {file.id}>
-                                <td><Thumbnail file = {file} thumbnail={thumbnails[file.id]}/></td>
-                                <td>
-                                    <div style={{ cursor: "pointer "}} onClick={() => toggleFavorite(file)}>
-                                    {favorites.find(x => x.id === file.id) ?
-                                        <MdStar size = {25} /> : <MdStarBorder size ={25}/>
+                  {(props.showFavorites ? favorites : files).map((file) => {
+                    return (
+                        <tr key = {file.id}>
+                            <td><Thumbnail file = {file} thumbnail={thumbnails[file.id]}/></td>
+                            <td>
+                                <div style={{ cursor: "pointer "}} onClick={() => toggleFavorite(file)}>
+                                {favorites.find(x => x.id === file.id) ?
+                                    <MdStar size = {25} /> : <MdStarBorder size ={25}/>
+                                }
+                                </div>
+                            </td>
+                            <td>
+                                {file[".tag"] === "folder" ? (
+                                <Link to={"/main" + file.path_lower}>{file.name}</Link>
+                                ) : <a onClick= {() => onClickFileDownload(file.path_lower)}>{file.name}</a>}
+                            </td>
+                            <td><Modified file = {file}/></td>
+                            <td><FileSize file = {file}/></td>
+                            <td></td>
+                            <td>
+                                <button className="handleFileDots"
+                                    onClick={() => {
+                                    if (dropdown !== file.id) {
+                                        setDropdown(file.id)
+                                    } else {
+                                        setDropdown(false);
                                     }
-                                    </div>
-                                </td>
-                                <td>
-                                    {file[".tag"] === "folder" ? (
-                                    <Link to={"/main" + file.path_lower}>{file.name}</Link>
-                                    ) : <a onClick= {() => onClickFileDownload(file.path_lower)}>{file.name}</a>}
-                                </td>
-                                <td><Modified file = {file}/></td>
-                                <td><FileSize file = {file}/></td>
-                                <td></td>
-                                <td>
-                                    <button className="handleFileDots"
-                                        onClick={() => {
-                                        if (dropdown !== file.id) {
-                                            setDropdown(file.id)
-                                        } else {
-                                            setDropdown(false);
-                                        }
-                                        }}><span className='dots'>...</span>
-                                    </button>
-                                    {dropdown === file.id && <HandleFileDots file={file}
-                                    onClickDelete={() => {
-                                        setDeleteModal(true);
-                                        setFileToDelete(file);
-                                    }}
-                                    onClickRename={() => {
-                                        setRenameModal(true);
-                                        setFileToRename(file);
-                                    }}
-                                        onClickStar={() => {
-                                        toggleFavorite(file);
-                                    }}/> }
-                                </td>
-                            </tr>
-                        )
+                                    }}><span className='dots'>...</span>
+                                </button>
+                                {dropdown === file.id && <HandleFileDots file={file}
+                                onClickDelete={() => {
+                                    setDeleteModal(true);
+                                    setFileToDelete(file);
+                                }}
+                                onClickRename={() => {
+                                    setRenameModal(true);
+                                    setFileToRename(file);
+                                }}
+                                onClickStar={() => {
+                                    toggleFavorite(file);
+                                }}/> }
+
+                            </td>
+                        </tr>
+                      )
                     })}
-                </tbody>
+                  </tbody>
+
                 {deleteModal && <DeleteModal file={fileToDelete} setDeleteModal={setDeleteModal} onConfirmDelete={() => onConfirmDelete(fileToDelete)}  />}
                 {renameModal && <ReName file = {fileToRename} location = {props.location} onConfirmRename={onConfirmRename} setRenameModal = {setRenameModal}/>}
             </table>
+
         </div>
     </div>
     );
