@@ -3,7 +3,7 @@ import React, { useEffect, useState } from 'react';
 import {favorites$} from '../store';
 
 
-export default function HandleFileDots({onClickDelete, onClickStar, file, onClickRename, onClickCopy, onClose}){
+export default function HandleFileDots({onClickDelete, onClickStar, file, onClickRename, onClickCopy, onClickMove, onClose}){
     const [favorites , setFavorites] = useState(favorites$.value);
 
     useEffect(() => {
@@ -22,6 +22,14 @@ export default function HandleFileDots({onClickDelete, onClickStar, file, onClic
                     onClickRename(e);
                     onClose();
                 }}>Byt Namn</li>
+                <li onClick = {(e) => {
+                    onClickCopy(e);
+                    onClose();
+                }}>Kopiera</li>
+                <li onClick = {(e) => {
+                    onClickMove(e)
+                    onClose();
+                }}>Flytta</li>
                 {!favorites.find(x => x.id === file.id) ?
                     <li onClick={(e) => {
                         onClickStar(e);

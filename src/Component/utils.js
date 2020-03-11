@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from 'react';
+import React from 'react';
 import { MdFolderOpen } from "react-icons/md";
 import {FaRegFileAlt} from 'react-icons/fa';
 
