@@ -50,6 +50,11 @@ export default function Main(props) {
         filesSearch();
     }, [searchQuery]);
 
+    useEffect(() => {
+        const subscription = favorites$.subscribe(setFavorites);
+        return () => subscription.unsubscribe();
+    },[]);
+
     function onUpload(){
         handleFilesList();
     }
@@ -70,7 +75,7 @@ export default function Main(props) {
             const entries = response.entries.map(file=>(
         {
             path: file.path_lower,
-            size: 'w64h64'
+            size: 'w32h32'
         }
         ))
         dbx.filesGetThumbnailBatch({
@@ -89,11 +94,11 @@ export default function Main(props) {
         })
         .catch(error => {
             setError(true);
-            setModal(true);
+            setModal(true)
         });
     }
 
-    function onConfirmDelete(file) { 
+    function onConfirmDelete(file) {
         const dbx = new Dropbox({
             accessToken: token,
             fetch: fetch,
@@ -143,18 +148,30 @@ export default function Main(props) {
         });
     }
 
+    function onClickDelete() {
+    setDeleteModal(true)
+    }
+
+    function onChangeName() {
+        setRenameModal(true)
+    }
+
+    function onCreateFolder(file){
+    return(
+        <SideBar file= {props.file} />
+    )
+}
     function onConfirmCopy(file, fileToCopy) {
         let currentPath = file.path_lower.split('/');
         currentPath.pop();
         currentPath.push(fileToCopy);
         let copyPath = currentPath.join('/');
-        console.log(copyPath);
-        
+
         if(copyPath === ''){
             copyPath ='/';
         }
         console.log(copyPath);
-        
+
         const dbx = new Dropbox({
             accessToken: token,
             fetch: fetch
@@ -166,9 +183,8 @@ export default function Main(props) {
             autorename: true
         })
         .then(response => {
-            console.log(response);
-            handleFilesList();
-            setCopyModal(false); 
+            onUpload();
+            setCopyModal(false);
         });
     }
 
@@ -189,7 +205,6 @@ export default function Main(props) {
             updateFiles(response.matches.map(x => x.metadata));
         })
         .catch(error => {
-            console.error(error);
             setModal(true);
             setError(true);
         });
@@ -238,7 +253,7 @@ export default function Main(props) {
                         width: '100%',
                         height: '50px',
                     }}>
-                    <Breadcrumbs location = {props.location}/>
+                    {props.showFavorites ? <Link to="/main">Tillbaka till alla filer</Link> : <Breadcrumbs location = {props.location}/>}
                 </div>
                     <table className = 'table'>
                         <thead style={{width: '100%' }}>

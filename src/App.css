@@ -130,12 +130,12 @@ a{
 }
 
 .dialogbox {
-    width: 600px;
-    height: 400px;
-    background-color: #DCDCDC;
-    margin: auto;
-    border-radius: 7px;
-    text-align: center;
+  width: 600px;
+  height: 400px;
+  background-color: #DCDCDC;
+  margin: auto;
+  border-radius: 7px;
+  text-align: center;
 }
 
 .dialogbox p{

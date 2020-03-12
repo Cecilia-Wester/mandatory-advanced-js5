@@ -1,11 +1,13 @@
 import React from 'react';
+import { Link } from "react-router-dom";
 import UploadFile from './UploadFile';
 import CreateFolder from './CreateFolder';
-import { MdStar} from "react-icons/md";
-import UploadStarFiles from "./UploadStarFiles";
+import {MdStar} from "react-icons/md";
+import Main from "../Main";
+
 import { updateToken } from '../../store';
 
-export default function SideBar(props, onUploadStarFiles) {
+export default function SideBar(props) {
     return(
         <div className="sidebar">
             <div className="files">
@@ -14,16 +16,16 @@ export default function SideBar(props, onUploadStarFiles) {
                         height: '40px'
                     }}
                 />
-                <CreateFolder location={props.location} 
+                <CreateFolder location={props.location}
                     style={{
                         height: '40px'
                     }}
                 />
-                <MdStar size={22}
+                <Link to="/favorites"><MdStar size={25}
                     style={{
                         height: '40px'
                     }}
-                />Stjärnmärkta filer
+                /></Link>Stjärnmärkta filer
             </div>
         </div>
     );
