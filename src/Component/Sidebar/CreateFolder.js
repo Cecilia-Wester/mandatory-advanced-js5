@@ -12,7 +12,7 @@ function CreateFolderModal({ onClose, folderName, onChangeFolderName, onSubmit, 
                 <div
                     style={{
                         marginBottom: '20px'
-                    }}    
+                    }}
                 >
                     <p>Skapa ny mapp</p>
                 </div>
@@ -33,23 +33,23 @@ function CreateFolderModal({ onClose, folderName, onChangeFolderName, onSubmit, 
                     />
                 </label><br />
                 <div className='createFolderModalButtons' style={{margin: '10px'}}></div>
-                <button 
-                    type='Submit' 
+                <button
+                    type='Submit'
                     style={{
-                        margin: '5px', 
-                        borderRadius:'5px', 
-                        width: '150px', 
+                        margin: '5px',
+                        borderRadius:'5px',
+                        width: '150px',
                         height: '30px',
                         backgroundColor: '#DCDCDC',
                         border: 'none',
                     }}>Skapa mapp
                 </button>
-                <button 
-                    onClick={onClose} 
+                <button
+                    onClick={onClose}
                     style={{
-                        margin:'5px', 
+                        margin:'5px',
                         borderRadius:'5px',
-                        width: '150px', 
+                        width: '150px',
                         height: '30px',
                         backgroundColor: '#DCDCDC',
                         border: 'none',
@@ -67,9 +67,9 @@ export default function CreateFolder( {location }) {
     const [folderName, setFolderName] = useState("");
     const [error, setError] = useState(false);
     const [responseRedirect, setResponseRedirect] = useState(false)
-    
+
     let currentLocation = location.pathname.substring(5);
-    
+
     if(currentLocation.charAt(currentLocation.length-1) !== '/'){
         currentLocation = currentLocation + '/';
     }
@@ -84,14 +84,15 @@ export default function CreateFolder( {location }) {
             setError(true);
         }
         e.preventDefault();
-        const dbx = new Dropbox({ 
+        const dbx = new Dropbox({
             accessToken: token,
             fetch: fetch
         });
         dbx.filesCreateFolder({ path: currentLocation + folderName})
         .then((response) => {
             setModal(false);
-            setResponseRedirect("/main" + response.path_lower);                
+            setResponseRedirect("/main" + response.path_lower);
+
         })
         .catch((error) =>{
             setError(true);
@@ -111,16 +112,18 @@ export default function CreateFolder( {location }) {
     }
 
     return(
-        <div className='containerCreateFolder'>
+        <div className='containerCreateFolder' style={{padding:"10px"}}>
+
             <label htmlFor = 'folder-input' >
                 <MdCreateNewFolder size = {22} />
             </label>
-            <input 
+            <input
                 id ='folder-input'
                 style = {styles.folder}
                 onClick={() => setModal(true)}
             />
             Skapa ny mapp
+
             {modal && <CreateFolderModal folderName={folderName} onChangeFolderName={onChangeFolderName} onSubmit={createFolder} onClose={onClose} error={error}/>}
             {responseRedirect && <Redirect to={responseRedirect} />}
         </div>

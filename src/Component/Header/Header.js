@@ -1,6 +1,6 @@
 import React, {useEffect, useState} from 'react';
 import { Dropbox } from 'dropbox';
-import {token$, updateToken} from '../../store';
+import {token$, updateToken, toggleFavorite} from '../../store';
 import CloudBerry from '../../CloudBerry.jpg';
 import Search from "./Search";
 
@@ -27,6 +27,7 @@ export default function Header () {
 
   function logout(){
     updateToken(null);
+    toggleFavorite(null);
   }
 
   return(

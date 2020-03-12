@@ -28,6 +28,12 @@ export function toggleFavorite(file) {
     newFavorites = [...newFavorites, file];
   }
 
-  window.localStorage.setItem("favorites", JSON.stringify(newFavorites));
+  if (newFavorites) {
+    window.localStorage.setItem("favorites", JSON.stringify(newFavorites));
+
+  } else {
+      window.localStorage.removeItem('favorites');
+  }
+
   favorites$.next(newFavorites);
 }

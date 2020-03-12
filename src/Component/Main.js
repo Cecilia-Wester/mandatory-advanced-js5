@@ -33,7 +33,6 @@ export default function Main(props) {
     const [fileMove, setFileMove] = useState(false);
     const [moveModal, setMoveModal] = useState(false);
     const currentLocation = props.location.pathname.substring(5);
-    let favoritesCurrentLocation = props.location.pathname.substring(10);
 
     useEffect(() => {
         const subscriptions = [
@@ -57,20 +56,19 @@ export default function Main(props) {
     }
 
     function handleFilesList(){
-
+      if(props.location.pathname === "/favorites"){
+        return;
+      }
+      
       const dbx = new Dropbox({
           accessToken: token,
           fetch: fetch
       });
       let path = currentLocation
-      if(path === '/'|| favoritesCurrentLocation === '/') {
-          favoritesCurrentLocation = '';
-          path = '';
+      if(path === '/') {
+            path = '';
       }
 
-      if (favoritesCurrentLocation === ''){
-            path = favoritesCurrentLocation;
-      }
       dbx.filesListFolder({
         path,
 
@@ -104,6 +102,7 @@ export default function Main(props) {
 
 
     function onConfirmDelete(file) {
+      console.log(file);
         const dbx = new Dropbox({
             accessToken: token,
             fetch: fetch,
@@ -305,7 +304,7 @@ export default function Main(props) {
                                         }}>
                             {file[".tag"] === "folder" ? (
                             <Link to={"/main" + file.path_lower}>{file.name}</Link>
-                            ) : <a onClick= {() => onClickFileDownload(file.path_lower)}>{file.name}</a>}
+                          ) : <a onClick= {() => onClickFileDownload(file.path_lower)}className="onClickFileDownload">{ file.name}</a>}
                         </div>
                         </td>
                         <td style={{width: '240px'}}><Modified file = {file}/></td>

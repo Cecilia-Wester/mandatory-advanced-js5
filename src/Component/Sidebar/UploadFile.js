@@ -60,7 +60,7 @@ export default function UploadFile(props) {
     }
 
     return(
-        <div>
+        <div className="UploadFile" style={{padding:"10px"}}>
             <form >
                 <label htmlFor = 'file-input'>
                     <FaUpload size = {22} />
