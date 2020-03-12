@@ -14,12 +14,10 @@ function Error ({onClose, error}) {
 }
 
 export default function UploadFile(props) {
-
     const [token, setToken] = useState(token$.value);
     const [file, updateFile] = useState(0);
     const [modal, setModal] = useState(false);
     const [error, setError] = useState(false);
-
     const currentLocation = props.location.pathname.substring(5);
 
     useEffect(() => {
