@@ -7,13 +7,13 @@ export default function HandleFileDots({onClickDelete, onClickStar, file, onClic
     const [favorites , setFavorites] = useState(favorites$.value);
 
     useEffect(() => {
-      const subscription = favorites$.subscribe(setFavorites);
-      return () => subscription.unsubscribe();
+        const subscription = favorites$.subscribe(setFavorites);
+        return () => subscription.unsubscribe();
     },[]);
 
     return(
-        <div className='modalFileDots' style={{position: 'absolute',zIndex: '10'}}>
-            <ul className='fileDots' style={{backgroundColor: '#F2F2F2', listStyle: 'none', cursor: 'pointer', width: '140px', height: '125px', borderRadius: '5px'}}>
+        <div className='modalFileDots' style={{position: 'absolute', zIndex: '10'}}>
+            <ul className='fileDots' style={{backgroundColor: '#F2F2F2', listStyle: 'none', cursor: 'pointer', width: '140px', height: '125px', borderRadius: '5px'}}>                
                 <li onClick= {(e) => {
                     onClickDelete(e);
                     onClose();
