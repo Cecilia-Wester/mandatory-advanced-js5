@@ -22,13 +22,13 @@ export default function SideBar(props) {
                     }}
                 />
                 <div className="favorites"style={{
-                    marginBottom: '20px'
-                }} >
-                  <Link to="/favorites"><MdStar size={25}
-                      style={{
-                          height: '40px'
-                      }}
-                  /></Link>Stjärnmärkta filer
+                        margin: '10px'
+                    }} >
+                    <Link to="/favorites"><MdStar size={25}
+                        style={{
+                            height: '22px',
+                        }}
+                    /></Link>Stjärnmärkta filer
                 </div>
             </div>
         </div>
