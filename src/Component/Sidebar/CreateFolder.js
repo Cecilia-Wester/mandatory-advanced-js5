@@ -91,12 +91,13 @@ export default function CreateFolder( {location }) {
         dbx.filesCreateFolder({ path: currentLocation + folderName})
         .then((response) => {
             setModal(false);
-            setResponseRedirect("/main" + response.path_lower);                
+            setResponseRedirect("/main" + response.path_lower); 
+            setFolderName('');               
         })
         .catch((error) =>{
             setError(true);
             setModal(true);
-            setFolderName('')
+            setFolderName('');
         });
     }
 
