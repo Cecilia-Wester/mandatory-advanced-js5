@@ -15,8 +15,6 @@ import {Thumbnail, FileSize, Modified} from './utils';
 import Copy from './Copy';
 import Move from './Move';
 
-
-
 export default function Main(props) {
     const [token, setToken] = useState(token$.value);
     const [searchQuery, setSearchQuery] = useState(searchQuery$.value);
@@ -35,15 +33,17 @@ export default function Main(props) {
     const [fileMove, setFileMove] = useState(false);
     const [moveModal, setMoveModal] = useState(false);
     const currentLocation = props.location.pathname.substring(5);
+    let favoritesCurrentLocation = props.location.pathname.substring(10);
 
     useEffect(() => {
         const subscriptions = [
             token$.subscribe(setToken),
             searchQuery$.subscribe(setSearchQuery),
+            favorites$.subscribe(setFavorites)
         ];
         handleFilesList();
         return () => subscriptions.forEach((subscription) => subscription.unsubscribe());
-    }, [currentLocation, searchQuery]);
+    }, [currentLocation, searchQuery, setFavorites]);
 
     useEffect(() => {
         if (searchQuery.length === 0) {
@@ -52,30 +52,30 @@ export default function Main(props) {
         filesSearch();
     }, [searchQuery]);
 
-    useEffect(() => {
-      const subscription = favorites$.subscribe(setFavorites);
-      return () => subscription.unsubscribe();
-    },[]);
+
 
     function onUpload(){
       handleFilesList();
     }
 
     function handleFilesList(){
-      if (props.location.pathname === "/favorites") {
-        return;
-      }
 
       const dbx = new Dropbox({
           accessToken: token,
           fetch: fetch
       });
-      let path = currentLocation;
-      if(path === '/') {
+      let path = currentLocation
+      if(path === '/'|| favoritesCurrentLocation === '/') {
+          favoritesCurrentLocation = '';
           path = '';
       }
+
+      if (favoritesCurrentLocation === ''){
+            path = favoritesCurrentLocation;
+      }
       dbx.filesListFolder({
-          path,
+        path,
+
       })
       .then(response => {
           const entries = response.entries.map(file=>(
@@ -99,7 +99,6 @@ export default function Main(props) {
           updateFiles(response.entries.reverse());
       })
       .catch(error => {
-          console.log(error);
           setError(true);
           setModal(true)
       });
@@ -191,28 +190,33 @@ export default function Main(props) {
         });
     }
 
-    function filesSearch(files){
-        if (!searchQuery) {
-            return;
-        }
-
-        const dbx = new Dropbox({
-            accessToken: token,
-            fetch: fetch,
-        });
-        dbx.filesSearch({
-            path: "",
-            query: searchQuery,
-        })
-        .then(response => {
-            updateFiles(response.matches.map(x => x.metadata));
-        })
-        .catch(error => {
-            console.error(error);
-            setModal(true);
-            setError(true);
-        });
+  function filesSearch(files){
+    if (!searchQuery) {
+        return;
     }
+
+    const dbx = new Dropbox({
+        accessToken: token,
+        fetch: fetch,
+    });
+    dbx.filesSearch({
+        path: "",
+        query: searchQuery,
+    })
+    .then(response => {
+      if (props.location.pathname === "/favorites"){
+        setFavorites(response.matches.map(x => x.metadata));
+      }
+      else {
+        updateFiles(response.matches.map(x => x.metadata));
+      }
+    })
+    .catch(error => {
+      console.log(error);
+        setModal(true);
+        setError(true);
+    });
+  }
 
     const onClickFileDownload = (path) => {
         let dropbox = new Dropbox({
@@ -243,7 +247,7 @@ export default function Main(props) {
     return (
         <div>
             <Helmet>
-                <title>Main</title>
+                <title>CloudBerry</title>
             </Helmet>
             <Header/>
             <SideBar
@@ -258,8 +262,13 @@ export default function Main(props) {
                         width: '100%',
                         height: '50px',
               }}>
-                {props.showFavorites ? <Link to="/main">Tillbaka till alla filer</Link> : <Breadcrumbs location = {props.location}/>}
-            </div>
+              {props.showFavorites ? <Link to="/main"><p style={{
+                  display: "flex",
+                  flexWrap: 'wrap',
+                  flexDirection: 'row',
+                  paddingLeft: "40px",
+              }}> Tillbaka till alla filer</p></Link> : <Breadcrumbs location = {props.location}/>}
+           </div>
                 <table className = 'table'>
                 <thead style={{width: '100%', marginBottom: '50px' }}>
                     <tr>
@@ -299,17 +308,16 @@ export default function Main(props) {
                         <td style={{width: '240px'}}><Modified file = {file}/></td>
                         <td style={{width: '100px'}}><FileSize file = {file}/></td>
                         <td style={{width: '150px'}}>
-
-                                <button className="handleFileDots"
-                                    onClick={() => {
-                                    if (dropdown !== file.id) {
-                                        setDropdown(file.id)
-                                    } else {
-                                        setDropdown(false);
-                                    }
-                                    }}><span className='dots'>...</span>
-                                </button>
-                                {dropdown === file.id && <HandleFileDots file={file}
+                          <button className="handleFileDots"
+                              onClick={() => {
+                              if (dropdown !== file.id) {
+                                  setDropdown(file.id)
+                              } else {
+                                  setDropdown(false);
+                              }
+                              }}><span className='dots'>...</span>
+                          </button>
+                            {dropdown === file.id && <HandleFileDots file={file}
                                 onClickDelete={() => {
                                     setDeleteModal(true);
                                     setFileToDelete(file);
@@ -321,9 +329,21 @@ export default function Main(props) {
                                 onClickStar={() => {
                                     toggleFavorite(file);
                                 }}
-                                />}
-
-                            </td>
+                                onClickRename={() => {
+                                    setRenameModal(true);
+                                    setFileToRename(file);
+                                }}
+                                onClickCopy={() => {
+                                    setCopyModal(true);
+                                    setFileToCopy(file);
+                                }}
+                                onClickMove= {()=> {
+                                    setMoveModal(true);
+                                    setFileMove(file);
+                                }}
+                                onClose={() => setDropdown(false)}
+                                /> }
+                              </td>
                         </tr>
                       )
                   })}
