@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { Link, Redirect } from "react-router-dom";
 import { Helmet } from 'react-helmet-async'
 import { Dropbox } from 'dropbox';
-import { token$, updateToken, searchQuery$, favorites$, toggleFavorite } from '../store';
+import { token$, searchQuery$, favorites$, toggleFavorite } from '../store';
 import Header from './Header/Header';
 import SideBar from './Sidebar/SideBar';
 import HandleFileDots from './HandleFileDots';
