@@ -21,11 +21,15 @@ export default function SideBar(props) {
                         height: '40px'
                     }}
                 />
-                <Link to="/favorites"><MdStar size={25}
-                    style={{
-                        height: '40px'
-                    }}
-                /></Link>Stjärnmärkta filer
+                <div className="favorites"style={{
+                    marginBottom: '20px'
+                }} >
+                  <Link to="/favorites"><MdStar size={25}
+                      style={{
+                          height: '40px'
+                      }}
+                  /></Link>Stjärnmärkta filer
+                </div>
             </div>
         </div>
     );

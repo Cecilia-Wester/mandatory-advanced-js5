@@ -27,7 +27,7 @@ export function toggleFavorite(file) {
   } else {
     newFavorites = [...newFavorites, file];
   }
-
+  
   window.localStorage.setItem("favorites", JSON.stringify(newFavorites));
   favorites$.next(newFavorites);
 }

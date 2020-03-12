@@ -6,11 +6,12 @@ import ReactDOM from "react-dom";
 export default function ReName(props, file) {
     
     const [newName, updateNewName] = useState('');
+    const name = props.file.name;
     
     
     return ReactDOM.createPortal((
         <div className='Modal' style={{display: 'flex', flexDirection: 'column',position: "absolute", backgroundColor: '#F2F2F2', listStyle: 'none', cursor: 'pointer', width: '500px', height: '300px', borderRadius:'5px'}}>
-                <p>Vill du byta namn på filen/mappen {file.path_display}</p>
+                <p>Vill du byta namn på {name}</p>
                 <input onChange = {(e) => {updateNewName(e.target.value)}}
                        value = {newName}
                        placeholder = 'Byt namn...'
@@ -46,21 +47,3 @@ export default function ReName(props, file) {
     ), document.body);
 }
  
-/*export default function ReName(props, file) {
-    
-    const [newName, updateNewName] = useState('');
-    
-    return ReactDOM.createPortal((
-        <div className='Modal' style={{position: "absolute", width: '500px', height: '200px'}}>
-            <form onSubmit = {(e) => props.onConfirmRename(props.file, newName)}>
-                <p>Vill du verkligen byta namn på filen/mappen {file.path_display}</p>
-                <input onChange = {(e) => {updateNewName(e.target.value)}}
-                    value = {newName}
-                    placeholder = 'Nytt namn'/>
-                <button type ='Submit' >Ja</button>
-                <button onClick={() => props.setRenameModal(false)}>Nej</button>
-            </form>
-            { error ? <p>Det gick inte att döpa om filen/mappen. Vänligen försök igen!</p> : null}
-        </div> 
-    ), document.body);
-}*/
