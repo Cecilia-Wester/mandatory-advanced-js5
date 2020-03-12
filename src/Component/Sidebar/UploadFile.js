@@ -21,7 +21,6 @@ export default function UploadFile(props) {
     const [error, setError] = useState(false);
 
     const currentLocation = props.location.pathname.substring(5);
-    let favoritesCurrentLocation = props.location.pathname.substring(10);
 
     useEffect(() => {
         const subscription = token$.subscribe(setToken);
@@ -35,9 +34,7 @@ export default function UploadFile(props) {
             fetch: fetch
         });
 
-        if (favoritesCurrentLocation === "/"){
-            currentLocation = favoritesCurrentLocation;
-        }
+      
         dbx.filesUpload({
             path: currentLocation + '/' + file.name,
             contents: file
