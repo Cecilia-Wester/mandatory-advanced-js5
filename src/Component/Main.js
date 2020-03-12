@@ -1,31 +1,19 @@
-import React, { useEffect, useState} from 'react';
-import ReactDOM from "react-dom";
+import React, { useEffect, useState } from 'react';
 import { Link, Redirect } from "react-router-dom";
-import { Helmet} from 'react-helmet-async'
+import { Helmet } from 'react-helmet-async'
 import { Dropbox } from 'dropbox';
-import {token$, updateToken, searchQuery$, favorites$, toggleFavorite} from '../store';
+import { token$, updateToken, searchQuery$, favorites$, toggleFavorite } from '../store';
 import Header from './Header/Header';
 import SideBar from './Sidebar/SideBar';
 import HandleFileDots from './HandleFileDots';
 import DeleteModal from './DeleteModal';
-import { MdStar, MdStarBorder} from "react-icons/md";
-import {UploadStarFiles} from "./Sidebar/UploadStarFiles";
+import { MdStar, MdStarBorder } from "react-icons/md";
 import ReName from './ReName';
 import Breadcrumbs from "./Breadcrumbs";
 import {Thumbnail, FileSize, Modified} from './utils';
 import Copy from './Copy';
 import Move from './Move';
-
-function Error ({onClose, error}) {
-    return ReactDOM.createPortal((
-        <div className ='Modal' style={{position: "absolute"}}>
-            {<handleFilesList/> && error ? <p>Någonting blev fel med api anropet. Vänligen försök igen!</p> : null}
-            {<filesSearch/> && error ? <p>Det gick inte att söka efter filen/mappen. Vänligen försök igen</p> : null}
-            {<onClickFileDownload/> && error ? <p>Det gick inte att ladda ner efter filen/mappen. Vänligen försök igen</p> : null}
-            <button onClick = {onClose}>Gå tillbaka</button>
-        </div>
-    ), document.body);
-}
+import Error from './ErrorModal'
 
 export default function Main(props) {
     const [token, setToken] = useState(token$.value);
@@ -100,16 +88,15 @@ export default function Main(props) {
             updateFiles(response.entries.reverse());
         })
         .catch(error => {
-            console.error(error);
             setError(true);
-            setModal(true)
+            setModal(true);
         });
     }
 
     function onConfirmDelete(file) { 
         const dbx = new Dropbox({
             accessToken: token,
-            fetch: fetch
+            fetch: fetch,
         });
         dbx.filesDeleteV2({ path: file.path_lower })
         .then(() => {
@@ -117,13 +104,14 @@ export default function Main(props) {
             setDeleteModal(false);
         })
         .catch((error)=>{
-            console.log(error)
+            if(error.status === 409){
+                updateFiles(files.filter(x => x.id !== file.id));
+                setDeleteModal(false);
+            } else {
+                setError('Det gick inte att ta bort filen, var god försök igen!');
+            }
         });
-    }
-
-   /* function onClickDelete() {
-        setDeleteModal(true)
-    }*/
+    }   
     
     function onConfirmRename(file, newName) {
         let beforePath = file.path_lower.split('/');
@@ -157,7 +145,6 @@ export default function Main(props) {
 
     function onConfirmCopy(file, fileToCopy) {
         let currentPath = file.path_lower.split('/');
-        //currentPath.shift();
         currentPath.pop();
         currentPath.push(fileToCopy);
         let copyPath = currentPath.join('/');
@@ -271,9 +258,9 @@ export default function Main(props) {
                                         <td style={{width: '60px', overflow: 'hidden'}}><Thumbnail file = {file} thumbnail={thumbnails[file.id]}/></td>
                                         <td style={{width: '60px', overflow: 'hidden'}}>
                                             <div style={{ cursor: "pointer "}} onClick={() => toggleFavorite(file)}>
-                                            {favorites.find(x => x.id === file.id) ?
-                                                <MdStar size = {25} /> : <MdStarBorder size ={25}/>
-                                            }
+                                                {favorites.find(x => x.id === file.id) ?
+                                                    <MdStar size = {25} /> : <MdStarBorder size ={25}/>
+                                                }
                                             </div>
                                         </td>
                                         <td style={{width: '214px', overflow: 'hidden'}}>
@@ -284,9 +271,9 @@ export default function Main(props) {
                                                     overflowX: 'hidden',
                                                     textOverflow: 'ellipsis',
                                                 }}>
-                                            {file[".tag"] === "folder" ? (
-                                                <Link to={"/main" + file.path_lower}>{file.name}</Link>
-                                                ) : <a onClick= {() => onClickFileDownload(file.path_lower)}>{file.name}</a>}
+                                                {file[".tag"] === "folder" ? (
+                                                    <Link to={"/main" + file.path_lower}>{file.name}</Link>
+                                                    ) : <a onClick= {() => onClickFileDownload(file.path_lower)} className='onClickFileDownload'>{file.name}</a>}
                                             </div>
                                         </td>
                                         <td style={{width: '240px'}}><Modified file = {file}/></td>
@@ -327,7 +314,6 @@ export default function Main(props) {
                                                 setFileMove(file);
                                             }}
                                             onClose={() => setDropdown(false)}
-                                            
                                             /> }
                                         </td>
                                     </tr>
