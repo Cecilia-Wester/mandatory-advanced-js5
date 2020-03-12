@@ -1,7 +1,8 @@
 import React, {useEffect, useState} from 'react';
 import { Dropbox } from 'dropbox';
-import {token$, updateToken} from '../../store';
+import {token$, updateToken, toggleFavorite} from '../../store';
 import CloudBerry from '../../CloudBerry.jpg';
+import Search from "./Search";
 
 
 export default function Header () {
@@ -15,7 +16,7 @@ export default function Header () {
 
   useEffect(() => {
     if (token) {
-    const dbx = new Dropbox({ accessToken: token });
+    const dbx = new Dropbox({ accessToken: token , fetch: fetch});
 
     dbx.usersGetCurrentAccount(null)
       .then((result) => {
@@ -26,6 +27,7 @@ export default function Header () {
 
   function logout(){
     updateToken(null);
+    
   }
 
   return(
@@ -33,15 +35,23 @@ export default function Header () {
       <div>
         <img src={CloudBerry}  alt="cloudberry" width="175px" />
       </div>
-
-
+      <div className = 'headerDiv'>
+      <div className = 'searchContainer'>
+        <div>
+          {token? <Search /> :null}
+        </div>
+      </div>
 
       <div className="nameContainer">
-        <div className="name">
-      {token ? `Välkommen ${name}` : null}
-       </div>
-      {!token?<button style={{display:"none"}}></button> : <button className="logOutButton" style={{display:"block"}} onClick={logout}>Logga ut</button>}
-      </div>
+
+
+          {token ? `Välkommen ${name}`: null}
+
+{!token?<button style={{display:"none"}}></button> : <button className="logOutButton" style={{display:"block"}} onClick={logout}>Logga ut</button>}
+
+
+        </div>
+        </div>
     </div>
- );
+  );
 }

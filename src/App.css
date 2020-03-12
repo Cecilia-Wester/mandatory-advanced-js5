@@ -1,92 +1,228 @@
+* {
+  font-family: 'Merriweather Sans', sans-serif;
+  color: #4B4B4B;
+}
+
 .App {
   display: flex;
   flex-direction: column;
-  height: 100vh;
   background-color: #F2F2F2;
+  width: 100vw;
+}
 
+.login{
+  width: 100vw;
+  background-color:  #FFA300;
+  height: 78.6vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.table {
+  margin-top: 50px;
+  margin-left: 40px;
+  overflow-y: scroll;
+  overflow-x: hidden;
+}
+
+tr,th{
+  text-align: left;
+  padding: 0px;
+  margin: 0px;
+  border: none;
+}
+
+tr,td{
+  padding-bottom: 5px;
+  margin: 0px;
+  border: none;
+}
+
+.table thead{
+  width:100%;
 }
 
 .main {
-   float: left;
-   width: 80%;
-   background-color: #FFA300;
-   opacity: 0.7;
-   height: 100vh;
+  width: 80vw;
+  background-color: #FFA300;
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
 }
 
-z
-
-.login{
-
+.search input {
+  border: none;
+  border-radius: 10px;
+  height: 28px;
+  width: 260px;
+  margin-top: 120px;
+  background-color: #DCDCDC;
+  padding-left: 30px;
 }
 
+
+
+.material-icons{
+  position: absolute;
+  left: 4px;
+  bottom: -1px;
+  user-select: none;
+}
+
+.search {
+  position: relative;
+  padding: 0px;
+}
+
+.material-icons{
+  position: absolute;
+  left: 5px;
+  bottom: 1px;
+  user-select: none;
+}
+
+.files {
+  margin-top: 130px;
+  padding-left: 30px;
+}
 
 .header img {
   margin-left: 60px;
-
+  margin-top: 10px;
+  margin-right: 70px;
 }
 
 .header {
-  height: 160px;
+  height: 21.5vh;
   display: flex;
+  flex-direction: row;
+  justify-content: flex-start;
+  background-color: #F2F2F2;
+}
+
+.headerDiv {
+  width: 100%;
+  height: 21.5vh;
+  display: flex;
+  flex-direction: row;
   justify-content: space-between;
   background-color: #F2F2F2;
-
-
 }
 
 .sidebar {
   float: left;
   width: 20%;
-  height: 100vh;
   background-color: #DCDCDC;
-
+  min-height: 100vh;
 }
 
-.dialogbox{
-    width: 600px;
-    height: 400px;
-    background-color: #DCDCDC;
-    margin: auto;
-    border-radius: 7px;
-    margin-top: 20px;
-    text-align: center;
-
+.sidebar label{
+  padding-right: 8px;
 }
+
+a{
+  color: #4B4B4B;
+}
+
+.dialogbox {
+  width: 600px;
+  height: 400px;
+  background-color: #DCDCDC;
+  margin: auto;
+  border-radius: 7px;
+  text-align: center;
+}
+
 .dialogbox p{
   padding-top: 50px;
   margin: 20px;
 }
+
 .dialogbox button {
   cursor:pointer;
-  border: 1px solid #eee;
+  border: none;
   border-radius: 20px;
-  transition: border-color .5s ease-out;
   height: 50px;
   width: 300px;
-  background-color: #FFA300;
-  opacity: 0.7;
-  margin-top: 180px;
+  margin-top: 100px;
   font-size: 16px;
+  background-color:  #FFA300;
 }
 
 .logOutButton {
   cursor:pointer;
-  border: 1px solid #eee;
-  border-radius: 20px;
-  transition: border-color .5s ease-out;
+  border: none;
+  border-radius: 10px;
   height: 30px;
-  width: 300px;
+  width: 260px;
   background-color: #DCDCDC;
   font-size: 16px;
 }
 
 .nameContainer {
-  margin-right: 60px;
-  margin-top: 75px;
+  margin-right: 20px;
+  margin-top: 100px;
+  font-size: 16px;
+  text-align: center;
 }
 
-.name{
-  font-size: 20px;
-  text-align: center;
+.createFolderModal {
+  width: 500px;
+  height: 300px;
+  top: 40%;
+  left: 650px;
+  z-index: 1000;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  object-fit: cover;
+  background-color: #F2F2F2;
+}
+
+.Modal{
+  width: 500px;
+  height: 300px;
+  top: 40%;
+  left: 650px;
+  z-index: 1000;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  background-color: #F2F2F2;
+}
+
+.breadcrumbs ul li{
+  list-style-type: none;
+}
+
+.handleFileDots{
+  border-radius: 50%;
+  width: 2rem;
+  height: 2rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0.5;
+  border-style: none;
+  position: relative;
+}
+
+.dots{
+  margin-top: -7px;
+}
+
+.fileDots li:hover{
+  background-color:#DCDCDC;
+}
+
+.onClickFileDownload:hover{
+  cursor: pointer;
+}
+
+.onClickFileDownload:hover::after{
+  content: ' - Klicka på filen för att ladda ner';
+  font-size: 12px;
 }
