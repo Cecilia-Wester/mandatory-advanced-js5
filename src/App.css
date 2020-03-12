@@ -211,6 +211,7 @@ a{
   justify-content: center;
   opacity: 0.5;
   border-style: none;
+  position: relative;
 }
 
 .dots{

@@ -7,7 +7,7 @@ import { MdCreateNewFolder } from "react-icons/md";
 
 function CreateFolderModal({ onClose, folderName, onChangeFolderName, onSubmit, error }) {
     return ReactDOM.createPortal((
-        <div className='createFolderModal' style={{position: "absolute"}}>
+        <div className='createFolderModal' style={{display: 'flex', flexDirection: 'column',position: "absolute", backgroundColor: '#F2F2F2', listStyle: 'none', cursor: 'pointer', width: '500px', height: '300px', borderRadius:'5px'}}>
             <form onSubmit={onSubmit}>
                 <div
                     style={{
@@ -27,6 +27,7 @@ function CreateFolderModal({ onClose, folderName, onChangeFolderName, onSubmit, 
                             width: '200px',
                             height: '30px',
                             textAlign: 'center',
+                            backgroundColor: '#DCDCDC',
                             margin: '10px',
                             border: 'none',
                         }}

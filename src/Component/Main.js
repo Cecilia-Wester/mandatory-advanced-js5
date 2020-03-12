@@ -14,15 +14,24 @@ import ReName from './ReName';
 import Breadcrumbs from "./Breadcrumbs";
 import {Thumbnail, FileSize, Modified} from './utils';
 import Copy from './Copy';
-import Move from './Move';
 
 function Error ({onClose, error}) {
     return ReactDOM.createPortal((
-        <div className ='Modal' style={{position: "absolute"}}>
-            {<handleFilesList/> && error ? <p>Någonting blev fel med api anropet. Vänligen försök igen!</p> : null}
-            {<filesSearch/> && error ? <p>Det gick inte att söka efter filen/mappen. Vänligen försök igen</p> : null}
-            {<onClickFileDownload/> && error ? <p>Det gick inte att ladda ner efter filen/mappen. Vänligen försök igen</p> : null}
-            <button onClick = {onClose}>Gå tillbaka</button>
+        <div className ='Modal' style={{display: 'flex', flexDirection: 'column',position: "absolute", backgroundColor: '#F2F2F2', listStyle: 'none', cursor: 'pointer', width: '500px', height: '300px', borderRadius:'5px'}}>
+            <p>{error}</p>
+            <button 
+            onClick = {onClose}
+            style={{
+                margin: '5px', 
+                borderRadius:'5px', 
+                width: '150px', 
+                height: '30px',
+                backgroundColor: '#DCDCDC',
+                border: 'none',
+                }}
+            >
+                Gå tillbaka
+            </button>
         </div>
     ), document.body);
 }
@@ -42,8 +51,6 @@ export default function Main(props) {
     const [fileToCopy, setFileToCopy] = useState([]);
     const [error, setError] = useState(false);
     const [modal, setModal] = useState(false);
-    const [fileMove, setFileMove] = useState(false);
-    const [moveModal, setMoveModal] = useState(false);
     const currentLocation = props.location.pathname.substring(5);
 
     useEffect(() => {
@@ -63,9 +70,6 @@ export default function Main(props) {
     }, [searchQuery]);
 
     function onUpload(){
-        /*(!files.find(x => x.id === file.id)){
-            updateFiles([...files, file]());
-        }*/
         handleFilesList();
     }
 
@@ -79,8 +83,7 @@ export default function Main(props) {
             path = '';
         }
         dbx.filesListFolder({
-            path,
-            recursive: true
+            path
         })
         .then(response => {
             const entries = response.entries.map(file=>(
@@ -105,8 +108,8 @@ export default function Main(props) {
         })
         .catch(error => {
             console.error(error);
-            setError(true);
-            setModal(true)
+            setError("Fel inträffad vid api anrop. Vänligen försök igen!");
+            setModal(true);
         });
     }
 
@@ -122,12 +125,9 @@ export default function Main(props) {
         })
         .catch((error)=>{
             console.log(error)
+            
         });
     }
-
-    /*function onClickDelete() {
-        setDeleteModal(true)
-    }*/
     
     function onConfirmRename(file, newName) {
         let beforePath = file.path_lower.split('/');
@@ -155,7 +155,7 @@ export default function Main(props) {
         })
         .catch(error => {
             setModal(true);
-            //setError(true);
+            
         });
     }
 
@@ -189,6 +189,8 @@ export default function Main(props) {
         });
     }
 
+   
+
     function filesSearch(files){
         if (!searchQuery) {
             return;
@@ -208,7 +210,7 @@ export default function Main(props) {
         .catch(error => {
             console.error(error);
             setModal(true);
-            setError(true);
+            setError('Det gick inte att söka efter filen/mappen. Vänligen försök igen');
         });
     }
 
@@ -224,7 +226,7 @@ export default function Main(props) {
         })
         .catch((error)=>{
             setModal(true);
-            setError(true);
+            setError('Det gick inte att ladda ner filen. Vänligen försök igen.');
         });
     }
 
@@ -322,10 +324,6 @@ export default function Main(props) {
                                         setCopyModal(true);
                                         setFileToCopy(file);
                                     }}
-                                    onClickMove= {()=> {
-                                        setMoveModal(true);
-                                        setFileMove(file);
-                                    }} 
                                     onClose={() => setDropdown(false)}
                                     /> }
                                 </td>
@@ -336,7 +334,6 @@ export default function Main(props) {
                 {deleteModal && <DeleteModal file={fileToDelete} setDeleteModal={setDeleteModal} onConfirmDelete={() => onConfirmDelete(fileToDelete)}  />}
                 {renameModal && <ReName file = {fileToRename} location = {props.location} onConfirmRename={onConfirmRename} setRenameModal = {setRenameModal} error = {error}/>}
                 {copyModal && <Copy file = {fileToCopy} location = {props.location} onConfirmCopy = {onConfirmCopy} setCopyModal = {setCopyModal} error = {error}/>}
-                {moveModal && <Move files = {fileMove} location = {props.location}/>}
                 {modal && <Error onClose={() => setModal(false)} error={error}/>}
             </table>
             </div>
