@@ -212,3 +212,16 @@ a{
 .dots{
   margin-top: -7px;
 }
+
+.fileDots li:hover{
+  background-color:#DCDCDC;
+}
+
+.onClickFileDownload:hover{
+  cursor: pointer;
+}
+
+.onClickFileDownload:hover::after{
+  content: ' - Klicka på filen för att ladda ner';
+  font-size: 12px;
+}

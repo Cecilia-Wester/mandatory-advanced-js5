@@ -1,19 +1,19 @@
-import React, { useEffect, useState} from 'react';
-import ReactDOM from "react-dom";
+import React, { useEffect, useState } from 'react';
 import { Link, Redirect } from "react-router-dom";
-import { Helmet} from 'react-helmet-async'
+import { Helmet } from 'react-helmet-async'
 import { Dropbox } from 'dropbox';
-import {token$, updateToken, searchQuery$, favorites$, toggleFavorite} from '../store';
+import { token$, updateToken, searchQuery$, favorites$, toggleFavorite } from '../store';
 import Header from './Header/Header';
 import SideBar from './Sidebar/SideBar';
 import HandleFileDots from './HandleFileDots';
 import DeleteModal from './DeleteModal';
-import { MdStar, MdStarBorder} from "react-icons/md";
+import { MdStar, MdStarBorder } from "react-icons/md";
 import ReName from './ReName';
 import Breadcrumbs from "./Breadcrumbs";
 import {Thumbnail, FileSize, Modified} from './utils';
 import Copy from './Copy';
 import Move from './Move';
+import Error from './ErrorModal'
 
 export default function Main(props) {
     const [token, setToken] = useState(token$.value);
@@ -52,10 +52,8 @@ export default function Main(props) {
         filesSearch();
     }, [searchQuery]);
 
-
-
     function onUpload(){
-      handleFilesList();
+        handleFilesList();
     }
 
     function handleFilesList(){
@@ -104,10 +102,11 @@ export default function Main(props) {
       });
   }
 
+
     function onConfirmDelete(file) {
         const dbx = new Dropbox({
             accessToken: token,
-            fetch: fetch
+            fetch: fetch,
         });
         dbx.filesDeleteV2({ path: file.path_lower })
         .then(() => {
@@ -115,7 +114,12 @@ export default function Main(props) {
             setDeleteModal(false);
         })
         .catch((error)=>{
-            console.log(error)
+            if(error.status === 409){
+                updateFiles(files.filter(x => x.id !== file.id));
+                setDeleteModal(false);
+            } else {
+                setError('Det gick inte att ta bort filen, var god försök igen!');
+            }
         });
     }
 
@@ -150,7 +154,7 @@ export default function Main(props) {
     }
 
     function onClickDelete() {
-      setDeleteModal(true)
+    setDeleteModal(true)
     }
 
     function onChangeName() {
@@ -158,10 +162,10 @@ export default function Main(props) {
     }
 
     function onCreateFolder(file){
-      return(
-          <SideBar file= {props.file} />
+    return(
+        <SideBar file= {props.file} />
     )
-  }
+}
     function onConfirmCopy(file, fileToCopy) {
         let currentPath = file.path_lower.split('/');
         currentPath.pop();
@@ -184,16 +188,16 @@ export default function Main(props) {
             autorename: true
         })
         .then(response => {
-            console.log(response);
             onUpload();
             setCopyModal(false);
         });
     }
 
-  function filesSearch(files){
-    if (!searchQuery) {
-        return;
-    }
+
+    function filesSearch(files){
+        if (!searchQuery) {
+            return;
+        }
 
     const dbx = new Dropbox({
         accessToken: token,
@@ -256,8 +260,7 @@ export default function Main(props) {
                 onCreateFolder = {onCreateFolder}
             />
             <div className = 'main'>
-
-             <div className='breadcrumbs'
+                <div className='breadcrumbs'
                     style={{
                         width: '100%',
                         height: '50px',
@@ -352,6 +355,8 @@ export default function Main(props) {
                 {renameModal && <ReName file = {fileToRename} location = {props.location} onConfirmRename={onConfirmRename} setRenameModal = {setRenameModal} error = {error}/>}
                 {copyModal && <Copy file = {fileToCopy} location = {props.location} onConfirmCopy = {onConfirmCopy} setCopyModal = {setCopyModal} error = {error}/>}
                 {moveModal && <Move files = {fileMove} location = {props.location}/>}
+                {modal && <Error onClose={() => setModal(false)} error={error}/>}
+
             </table>
           </div>
         </div>

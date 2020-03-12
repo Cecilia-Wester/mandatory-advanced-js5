@@ -20,7 +20,7 @@ export default function Login(){
             clientId: CLIENT_ID,
             fetch: fetch
         });
-        let dbxUrl = dbx.getAuthenticationUrl('http://localhost:3000/auth');
+        let dbxUrl = dbx.getAuthenticationUrl('https://cloudberry.surge.sh/auth');
         window.location.href = dbxUrl; //will open the new URL in your current window.
     }
 
