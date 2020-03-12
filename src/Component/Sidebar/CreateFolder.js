@@ -93,7 +93,7 @@ export default function CreateFolder( {location }) {
         .then((response) => {
             setModal(false);
             setResponseRedirect("/main" + response.path_lower);
-
+              setFolderName('')
         })
         .catch((error) =>{
             setError(true);

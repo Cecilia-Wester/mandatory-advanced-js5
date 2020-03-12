@@ -14,7 +14,6 @@ import {Thumbnail, FileSize, Modified} from './utils';
 import Copy from './Copy';
 import Error from './ErrorModal'
 
-
 export default function Main(props) {
     const [token, setToken] = useState(token$.value);
     const [searchQuery, setSearchQuery] = useState(searchQuery$.value);
@@ -32,7 +31,6 @@ export default function Main(props) {
     const [modal, setModal] = useState(false);
     const currentLocation = props.location.pathname.substring(5);
 
-    import CreateFolder from './CreateFolder';
 
     useEffect(() => {
         const subscriptions = [
@@ -101,18 +99,20 @@ export default function Main(props) {
 
 
     function onConfirmDelete(file) {
-      console.log(file);
+
         const dbx = new Dropbox({
             accessToken: token,
             fetch: fetch,
         });
         dbx.filesDeleteV2({ path: file.path_lower })
         .then(() => {
-            updateFiles(files.filter(x => x.id !== file.id));
-            setDeleteModal(false);
+          updateFiles(files.filter(x => x.id !== file.id));
+          toggleFavorite(file);
+          setDeleteModal(false);
         })
         .catch((error)=>{
             if(error.status === 409){
+
                 updateFiles(files.filter(x => x.id !== file.id));
                 setDeleteModal(false);
             } else {
@@ -304,7 +304,7 @@ export default function Main(props) {
                             {file[".tag"] === "folder" ? (
                             <Link to={"/main" + file.path_lower}>{file.name}</Link>
 
-                          ) : <a onClick= {() => onClickFileDownload(file.path_lower)}className="onClickFileDownload">{ file.name}</a>}>
+                          ) : <a onClick= {() => onClickFileDownload(file.path_lower)}className="onClickFileDownload">{ file.name}</a>}
 
 
 
@@ -317,7 +317,7 @@ export default function Main(props) {
                               onClick={() => {
                               if (dropdown !== file.id) {
                                   setDropdown(file.id)
-                              } else {z
+                              } else {
                                   setDropdown(false);
                               }
                               }}><span className='dots'>...</span>

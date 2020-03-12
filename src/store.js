@@ -27,13 +27,7 @@ export function toggleFavorite(file) {
   } else {
     newFavorites = [...newFavorites, file];
   }
-
-  if (newFavorites) {
-    window.localStorage.setItem("favorites", JSON.stringify(newFavorites));
-
-  } else {
-      window.localStorage.removeItem('favorites');
-  }
-
+  
+  window.localStorage.setItem("favorites", JSON.stringify(newFavorites));
   favorites$.next(newFavorites);
 }

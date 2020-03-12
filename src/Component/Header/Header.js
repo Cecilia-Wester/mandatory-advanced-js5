@@ -27,7 +27,7 @@ export default function Header () {
 
   function logout(){
     updateToken(null);
-    toggleFavorite(null);
+    
   }
 
   return(
