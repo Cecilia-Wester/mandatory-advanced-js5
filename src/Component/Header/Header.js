@@ -35,7 +35,7 @@ export default function Header () {
         <img src={CloudBerry}  alt="cloudberry" width="175px" />
       </div>
       <div className = 'headerDiv'>
-      <div className = 'nameCountainer'>
+      <div className = 'searchContainer'>
         <div>
           {token? <Search /> :null}
         </div>

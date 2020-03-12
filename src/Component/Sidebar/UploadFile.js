@@ -14,35 +14,39 @@ function Error ({onClose, error}) {
 }
 
 export default function UploadFile(props) {
+
     const [token, setToken] = useState(token$.value);
     const [file, updateFile] = useState(0);
     const [modal, setModal] = useState(false);
     const [error, setError] = useState(false);
-    
+
     const currentLocation = props.location.pathname.substring(5);
-    
-    
+    let favoritesCurrentLocation = props.location.pathname.substring(10);
+
     useEffect(() => {
         const subscription = token$.subscribe(setToken);
         return () => subscription.unsubscribe();
     },[]);
 
     function handleUploadFile(file) {
-        
+
         const dbx = new Dropbox({
             accessToken: token,
             fetch: fetch
         });
-       // console.log(currentLocation, file.name);
+
+        if (favoritesCurrentLocation === "/"){
+            currentLocation = favoritesCurrentLocation;
+        }
         dbx.filesUpload({
             path: currentLocation + '/' + file.name,
             contents: file
-        }) 
+        })
         .then(response => {
-           // updateFile([file, response]); 
+           // updateFile([file, response]);
             updateFile(0);
             props.onUpload(response);
-        })    
+        })
         .catch (error => {
             console.error(error)
             setError(true);
@@ -64,9 +68,9 @@ export default function UploadFile(props) {
                 <input
                     id= 'file-input'
                     type = 'file'
-                    name = 'file' 
-                    file = {file} 
-                    style = {styles.input}           
+                    name = 'file'
+                    file = {file}
+                    style = {styles.input}
                     onChange = {onChangeUploadFile}
                 />
                 Ladda upp ny fil

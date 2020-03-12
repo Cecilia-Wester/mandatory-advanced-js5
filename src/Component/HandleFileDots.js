@@ -7,9 +7,9 @@ export default function HandleFileDots({onClickDelete, onClickStar, file, onClic
     const [favorites , setFavorites] = useState(favorites$.value);
     
     useEffect(() => {
-    const subscription = favorites$.subscribe(setFavorites);
-    return () => subscription.unsubscribe();
-    });
+      const subscription = favorites$.subscribe(setFavorites);
+      return () => subscription.unsubscribe();
+    },[]);
 
     return(
         <div className='modalFileDots' style={{position: 'absolute',zIndex: '10'}}>

@@ -1,40 +1,18 @@
-import React, { useEffect, useState} from 'react';
-import ReactDOM from "react-dom";
+import React, { useEffect, useState } from 'react';
 import { Link, Redirect } from "react-router-dom";
-import { Helmet} from 'react-helmet-async'
+import { Helmet } from 'react-helmet-async'
 import { Dropbox } from 'dropbox';
-import {token$, updateToken, searchQuery$, favorites$, toggleFavorite} from '../store';
+import { token$, updateToken, searchQuery$, favorites$, toggleFavorite } from '../store';
 import Header from './Header/Header';
 import SideBar from './Sidebar/SideBar';
 import HandleFileDots from './HandleFileDots';
 import DeleteModal from './DeleteModal';
-import { MdStar, MdStarBorder} from "react-icons/md";
-import {UploadStarFiles} from "./Sidebar/UploadStarFiles";
+import { MdStar, MdStarBorder } from "react-icons/md";
 import ReName from './ReName';
 import Breadcrumbs from "./Breadcrumbs";
 import {Thumbnail, FileSize, Modified} from './utils';
 import Copy from './Copy';
-
-function Error ({onClose, error}) {
-    return ReactDOM.createPortal((
-        <div className ='Modal' style={{display: 'flex', flexDirection: 'column',position: "absolute", backgroundColor: '#F2F2F2', listStyle: 'none', cursor: 'pointer', width: '500px', height: '300px', borderRadius:'5px'}}>
-            <p>{error}</p>
-            <button 
-            onClick = {onClose}
-            style={{
-                margin: '5px', 
-                borderRadius:'5px', 
-                width: '150px', 
-                height: '30px',
-                backgroundColor: '#DCDCDC',
-                border: 'none',
-                }}
-            >
-                Gå tillbaka
-            </button>
-        </div>
-    ), document.body);
-}
+import Error from './ErrorModal'
 
 export default function Main(props) {
     const [token, setToken] = useState(token$.value);
@@ -52,15 +30,17 @@ export default function Main(props) {
     const [error, setError] = useState(false);
     const [modal, setModal] = useState(false);
     const currentLocation = props.location.pathname.substring(5);
+    let favoritesCurrentLocation = props.location.pathname.substring(10);
 
     useEffect(() => {
         const subscriptions = [
             token$.subscribe(setToken),
             searchQuery$.subscribe(setSearchQuery),
+            favorites$.subscribe(setFavorites)
         ];
         handleFilesList();
         return () => subscriptions.forEach((subscription) => subscription.unsubscribe());
-    }, [currentLocation, searchQuery]);
+    }, [currentLocation, searchQuery, setFavorites]);
 
     useEffect(() => {
         if (searchQuery.length === 0) {
@@ -74,49 +54,55 @@ export default function Main(props) {
     }
 
     function handleFilesList(){
-        const dbx = new Dropbox({
-            accessToken: token,
-            fetch: fetch
-        });
-        let path = currentLocation;
-        if(path === '/') {
-            path = '';
-        }
-        dbx.filesListFolder({
-            path
-        })
-        .then(response => {
-            const entries = response.entries.map(file=>(
-        {
-            path: file.path_lower,
-            size: 'w32h32'
-        }
-        ))
-        dbx.filesGetThumbnailBatch({
-            entries
-        })
-        .then(response => {
-            const thumbnails = {};
-            response.entries.forEach((entry) => {
-                if (entry.metadata) {
-                    thumbnails[entry.metadata.id] = entry.thumbnail;
-                }
-            });
-                updateThumbnails(thumbnails);
-        })
-            updateFiles(response.entries.reverse());
-        })
-        .catch(error => {
-            console.error(error);
-            setError("Fel inträffad vid api anrop. Vänligen försök igen!");
-            setModal(true);
-        });
-    }
 
-    function onConfirmDelete(file) { 
+      const dbx = new Dropbox({
+          accessToken: token,
+          fetch: fetch
+      });
+      let path = currentLocation
+      if(path === '/'|| favoritesCurrentLocation === '/') {
+          favoritesCurrentLocation = '';
+          path = '';
+      }
+
+      if (favoritesCurrentLocation === ''){
+            path = favoritesCurrentLocation;
+      }
+      dbx.filesListFolder({
+        path,
+      })
+      .then(response => {
+          const entries = response.entries.map(file=>(
+      {
+          path: file.path_lower,
+          size: 'w32h32'
+      }
+      ))
+      dbx.filesGetThumbnailBatch({
+          entries
+      })
+      .then(response => {
+          const thumbnails = {};
+          response.entries.forEach((entry) => {
+              if (entry.metadata) {
+                  thumbnails[entry.metadata.id] = entry.thumbnail;
+              }
+          });
+              updateThumbnails(thumbnails);
+      })
+          updateFiles(response.entries.reverse());
+      })
+      .catch(error => {
+          setError("Fel inträffad vid api anrop. Vänligen försök igen!");
+          setModal(true)
+      });
+  }
+
+
+    function onConfirmDelete(file) {
         const dbx = new Dropbox({
             accessToken: token,
-            fetch: fetch
+            fetch: fetch,
         });
         dbx.filesDeleteV2({ path: file.path_lower })
         .then(() => {
@@ -124,11 +110,15 @@ export default function Main(props) {
             setDeleteModal(false);
         })
         .catch((error)=>{
-            console.log(error)
-            
+            if(error.status === 409){
+                updateFiles(files.filter(x => x.id !== file.id));
+                setDeleteModal(false);
+            } else {
+                setError('Det gick inte att ta bort filen, var god försök igen!');
+            }
         });
     }
-    
+
     function onConfirmRename(file, newName) {
         let beforePath = file.path_lower.split('/');
         beforePath.pop();
@@ -159,19 +149,30 @@ export default function Main(props) {
         });
     }
 
+    function onClickDelete() {
+    setDeleteModal(true)
+    }
+
+    function onChangeName() {
+        setRenameModal(true)
+    }
+
+    function onCreateFolder(file){
+    return(
+        <SideBar file= {props.file} />
+    )
+}
     function onConfirmCopy(file, fileToCopy) {
         let currentPath = file.path_lower.split('/');
-        //currentPath.shift();
         currentPath.pop();
         currentPath.push(fileToCopy);
         let copyPath = currentPath.join('/');
-        console.log(copyPath);
-        
+
         if(copyPath === ''){
             copyPath ='/';
         }
         console.log(copyPath);
-        
+
         const dbx = new Dropbox({
             accessToken: token,
             fetch: fetch
@@ -183,36 +184,39 @@ export default function Main(props) {
             autorename: true
         })
         .then(response => {
-            console.log(response);
             onUpload();
-            setCopyModal(false); 
+            setCopyModal(false);
         });
     }
 
    
-
     function filesSearch(files){
         if (!searchQuery) {
             return;
         }
 
-        const dbx = new Dropbox({
-            accessToken: token,
-            fetch: fetch,
-        });
-        dbx.filesSearch({
-            path: "",
-            query: searchQuery,
-        })
-        .then(response => {
-            updateFiles(response.matches.map(x => x.metadata));
-        })
-        .catch(error => {
-            console.error(error);
-            setModal(true);
-            setError('Det gick inte att söka efter filen/mappen. Vänligen försök igen');
-        });
-    }
+    const dbx = new Dropbox({
+        accessToken: token,
+        fetch: fetch,
+    });
+    dbx.filesSearch({
+        path: "",
+        query: searchQuery,
+    })
+    .then(response => {
+      if (props.location.pathname === "/favorites"){
+        setFavorites(response.matches.map(x => x.metadata));
+      }
+      else {
+        updateFiles(response.matches.map(x => x.metadata));
+      }
+    })
+    .catch(error => {
+      console.log(error);
+        setModal(true);
+        setError('Det gick inte att söka efter filen/mappen. Vänligen försök igen');
+    });
+  }
 
     const onClickFileDownload = (path) => {
         let dropbox = new Dropbox({
@@ -243,7 +247,7 @@ export default function Main(props) {
     return (
         <div>
             <Helmet>
-                <title>Main</title>
+                <title>CloudBerry</title>
             </Helmet>
             <Header/>
             <SideBar
@@ -252,13 +256,18 @@ export default function Main(props) {
                 onCreateFolder = {onCreateFolder}
             />
             <div className = 'main'>
-            <div className='breadcrumbs'
+                <div className='breadcrumbs'
                     style={{
                         width: '100%',
                         height: '50px',
-                    }}>
-                    <Breadcrumbs location = {props.location}/>
-                </div>
+              }}>
+              {props.showFavorites ? <Link to="/main"><p style={{
+                  display: "flex",
+                  flexWrap: 'wrap',
+                  flexDirection: 'row',
+                  paddingLeft: "40px",
+              }}> Tillbaka till alla filer</p></Link> : <Breadcrumbs location = {props.location}/>}
+           </div>
                 <table className = 'table'>
                 <thead style={{width: '100%', marginBottom: '50px' }}>
                     <tr>
@@ -271,72 +280,76 @@ export default function Main(props) {
                     </tr>
                 </thead>
                 <tbody>
-                    {files.map(file => {
-                        return (
-                            <tr key = {file.id}>
-                                <td style={{width: '60px', overflow: 'hidden'}}><Thumbnail file = {file} thumbnail={thumbnails[file.id]}/></td>
-                                <td style={{width: '60px', overflow: 'hidden'}}>
-                                    <div style={{ cursor: "pointer "}} onClick={() => toggleFavorite(file)}>
-                                    {favorites.find(x => x.id === file.id) ?
-                                        <MdStar size = {25} /> : <MdStarBorder size ={25}/>
-                                    }
-                                    </div>
-                                </td>
-                                <td style={{width: '214px', overflow: 'hidden', display: 'flex'}}>
-                                <div
-                                                style={{
-                                                    display: 'inline-block',
-                                                    maxWidth: '151px',
-                                                    overflowX: 'hidden',
-                                                    textOverflow: 'ellipsis',
-                                                }}>
-                                    {file[".tag"] === "folder" ? (
-                                    <Link to={"/main" + file.path_lower}>{file.name}</Link>
-                                    ) : <a onClick= {() => onClickFileDownload(file.path_lower)}>{file.name}</a>}
-                                    </div>
-                                </td>
-                                <td style={{width: '240px'}}><Modified file = {file}/></td>
-                                <td style={{width: '100px'}}><FileSize file = {file}/></td>
-                                <td style={{width: '150px'}}>
-                                    <button
-                                        className='handleFileDots'
-                                        onClick={() => {
-                                        if (dropdown !== file.id) {
-                                            setDropdown(file.id)
-                                        } else {
-                                            setDropdown(false);
-                                        }
-                                        }}><span className='dots'>...</span>
-                                    </button>
-                                    {dropdown === file.id && <HandleFileDots file={file}
-                                    onClickDelete={() => {
-                                        setDeleteModal(true);
-                                        setFileToDelete(file);
-                                    }}
-                                    onClickStar={() => {
-                                        toggleFavorite(file);
-                                    }}
-                                    onClickRename={() => {
-                                        setRenameModal(true);
-                                        setFileToRename(file);
-                                    }}
-                                    onClickCopy={() => {
-                                        setCopyModal(true);
-                                        setFileToCopy(file);
-                                    }}
-                                    onClose={() => setDropdown(false)}
-                                    /> }
-                                </td>
-                            </tr>
-                        )
-                    })}
+                  {(props.showFavorites ? favorites : files).map((file) => {
+                    return (
+                        <tr key = {file.id}>
+                         <td style={{width: '60px', overflow: 'hidden'}}><Thumbnail file = {file} thumbnail={thumbnails[file.id]}/></td>
+                         <td style={{width: '60px', overflow: 'hidden'}}>
+                            <div style={{ cursor: "pointer "}} onClick={() => toggleFavorite(file)}>
+                            {favorites.find(x => x.id === file.id) ?
+                              <MdStar size = {25} /> : <MdStarBorder size ={25}/>
+                            }
+                            </div>
+                        </td>
+                        <td style={{width: '214px', overflow: 'hidden', display: 'flex'}}>
+                        <div
+                                        style={{
+                                            display: 'inline-block',
+                                            maxWidth: '151px',
+                                            overflowX: 'hidden',
+                                            textOverflow: 'ellipsis',
+                                        }}>
+                            {file[".tag"] === "folder" ? (
+                            <Link to={"/main" + file.path_lower}>{file.name}</Link>
+                            ) : <a onClick= {() => onClickFileDownload(file.path_lower)} className='onClickFileDownload'>{file.name}</a>}
+                        </div>
+                        </td>
+                        <td style={{width: '240px'}}><Modified file = {file}/></td>
+                        <td style={{width: '100px'}}><FileSize file = {file}/></td>
+                        <td style={{width: '150px'}}>
+                          <button className="handleFileDots"
+                              onClick={() => {
+                              if (dropdown !== file.id) {
+                                  setDropdown(file.id)
+                              } else {
+                                  setDropdown(false);
+                              }
+                              }}><span className='dots'>...</span>
+                          </button>
+                            {dropdown === file.id && <HandleFileDots file={file}
+                                onClickDelete={() => {
+                                    setDeleteModal(true);
+                                    setFileToDelete(file);
+                                }}
+                                onClickRename={() => {
+                                    setRenameModal(true);
+                                    setFileToRename(file);
+                                }}
+                                onClickStar={() => {
+                                    toggleFavorite(file);
+                                }}
+                                onClickRename={() => {
+                                    setRenameModal(true);
+                                    setFileToRename(file);
+                                }}
+                                onClickCopy={() => {
+                                    setCopyModal(true);
+                                    setFileToCopy(file);
+                                }}
+                                onClose={() => setDropdown(false)}
+                                /> }
+                              </td>
+                        </tr>
+                      )
+                  })}
                 </tbody>
                 {deleteModal && <DeleteModal file={fileToDelete} setDeleteModal={setDeleteModal} onConfirmDelete={() => onConfirmDelete(fileToDelete)}  />}
                 {renameModal && <ReName file = {fileToRename} location = {props.location} onConfirmRename={onConfirmRename} setRenameModal = {setRenameModal} error = {error}/>}
                 {copyModal && <Copy file = {fileToCopy} location = {props.location} onConfirmCopy = {onConfirmCopy} setCopyModal = {setCopyModal} error = {error}/>}
                 {modal && <Error onClose={() => setModal(false)} error={error}/>}
+
             </table>
-            </div>
+          </div>
         </div>
     );
 }
