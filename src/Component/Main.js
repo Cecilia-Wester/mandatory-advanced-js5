@@ -36,7 +36,7 @@ export default function Main(props) {
         const subscriptions = [
             token$.subscribe(setToken),
             searchQuery$.subscribe(setSearchQuery),
-            favorites$.subscribe(setFavorites)
+            favorites$.subscribe(setFavorites),
         ];
         handleFilesList();
         return () => subscriptions.forEach((subscription) => subscription.unsubscribe());

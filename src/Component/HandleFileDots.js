@@ -5,7 +5,7 @@ import {favorites$} from '../store';
 
 export default function HandleFileDots({onClickDelete, onClickStar, file, onClickRename, onClickCopy, onClickMove, onClose}){
     const [favorites , setFavorites] = useState(favorites$.value);
-    
+
     useEffect(() => {
       const subscription = favorites$.subscribe(setFavorites);
       return () => subscription.unsubscribe();
@@ -30,7 +30,7 @@ export default function HandleFileDots({onClickDelete, onClickStar, file, onClic
                     <li onClick={(e) => {
                         onClickStar(e);
                         onClose();
-                        }}>Stjärnmarkera</li> : 
+                        }}>Stjärnmarkera</li> :
                     <li onClick={ (e) => {
                         onClickStar(e);
                         onClose();
