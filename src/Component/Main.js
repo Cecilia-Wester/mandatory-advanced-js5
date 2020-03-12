@@ -14,6 +14,7 @@ import {Thumbnail, FileSize, Modified} from './utils';
 import Copy from './Copy';
 import Error from './ErrorModal'
 
+
 export default function Main(props) {
     const [token, setToken] = useState(token$.value);
     const [searchQuery, setSearchQuery] = useState(searchQuery$.value);
@@ -31,6 +32,8 @@ export default function Main(props) {
     const [modal, setModal] = useState(false);
     const currentLocation = props.location.pathname.substring(5);
     let favoritesCurrentLocation = props.location.pathname.substring(10);
+
+    import CreateFolder from './CreateFolder';
 
     useEffect(() => {
         const subscriptions = [
