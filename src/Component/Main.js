@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { Link, Redirect } from "react-router-dom";
 import { Helmet } from 'react-helmet-async'
 import { Dropbox } from 'dropbox';
-import { token$, updateToken, searchQuery$, favorites$, toggleFavorite } from '../store';
+import { token$, searchQuery$, favorites$, toggleFavorite } from '../store';
 import Header from './Header/Header';
 import SideBar from './Sidebar/SideBar';
 import HandleFileDots from './HandleFileDots';
@@ -12,8 +12,8 @@ import ReName from './ReName';
 import Breadcrumbs from "./Breadcrumbs";
 import {Thumbnail, FileSize, Modified} from './utils';
 import Copy from './Copy';
-import Move from './Move';
 import Error from './ErrorModal'
+
 
 export default function Main(props) {
     const [token, setToken] = useState(token$.value);
@@ -30,9 +30,9 @@ export default function Main(props) {
     const [fileToCopy, setFileToCopy] = useState([]);
     const [error, setError] = useState(false);
     const [modal, setModal] = useState(false);
-    const [fileMove, setFileMove] = useState(false);
-    const [moveModal, setMoveModal] = useState(false);
     const currentLocation = props.location.pathname.substring(5);
+
+    import CreateFolder from './CreateFolder';
 
     useEffect(() => {
         const subscriptions = [
@@ -59,7 +59,7 @@ export default function Main(props) {
       if(props.location.pathname === "/favorites"){
         return;
       }
-      
+
       const dbx = new Dropbox({
           accessToken: token,
           fetch: fetch
@@ -71,7 +71,6 @@ export default function Main(props) {
 
       dbx.filesListFolder({
         path,
-
       })
       .then(response => {
           const entries = response.entries.map(file=>(
@@ -95,7 +94,7 @@ export default function Main(props) {
           updateFiles(response.entries.reverse());
       })
       .catch(error => {
-          setError(true);
+          setError("Fel inträffad vid api anrop. Vänligen försök igen!");
           setModal(true)
       });
   }
@@ -148,7 +147,7 @@ export default function Main(props) {
         })
         .catch(error => {
             setModal(true);
-            //setError(true);
+
         });
     }
 
@@ -217,7 +216,7 @@ export default function Main(props) {
     .catch(error => {
       console.log(error);
         setModal(true);
-        setError(true);
+        setError('Det gick inte att söka efter filen/mappen. Vänligen försök igen');
     });
   }
 
@@ -233,7 +232,7 @@ export default function Main(props) {
         })
         .catch((error)=>{
             setModal(true);
-            setError(true);
+            setError('Det gick inte att ladda ner filen. Vänligen försök igen.');
         });
     }
 
@@ -304,7 +303,11 @@ export default function Main(props) {
                                         }}>
                             {file[".tag"] === "folder" ? (
                             <Link to={"/main" + file.path_lower}>{file.name}</Link>
-                          ) : <a onClick= {() => onClickFileDownload(file.path_lower)}className="onClickFileDownload">{ file.name}</a>}
+
+                          ) : <a onClick= {() => onClickFileDownload(file.path_lower)}className="onClickFileDownload">{ file.name}</a>}>
+
+
+
                         </div>
                         </td>
                         <td style={{width: '240px'}}><Modified file = {file}/></td>
@@ -314,7 +317,7 @@ export default function Main(props) {
                               onClick={() => {
                               if (dropdown !== file.id) {
                                   setDropdown(file.id)
-                              } else {
+                              } else {z
                                   setDropdown(false);
                               }
                               }}><span className='dots'>...</span>
@@ -339,10 +342,6 @@ export default function Main(props) {
                                     setCopyModal(true);
                                     setFileToCopy(file);
                                 }}
-                                onClickMove= {()=> {
-                                    setMoveModal(true);
-                                    setFileMove(file);
-                                }}
                                 onClose={() => setDropdown(false)}
                                 /> }
                               </td>
@@ -353,7 +352,6 @@ export default function Main(props) {
                 {deleteModal && <DeleteModal file={fileToDelete} setDeleteModal={setDeleteModal} onConfirmDelete={() => onConfirmDelete(fileToDelete)}  />}
                 {renameModal && <ReName file = {fileToRename} location = {props.location} onConfirmRename={onConfirmRename} setRenameModal = {setRenameModal} error = {error}/>}
                 {copyModal && <Copy file = {fileToCopy} location = {props.location} onConfirmCopy = {onConfirmCopy} setCopyModal = {setCopyModal} error = {error}/>}
-                {moveModal && <Move files = {fileMove} location = {props.location}/>}
                 {modal && <Error onClose={() => setModal(false)} error={error}/>}
 
             </table>

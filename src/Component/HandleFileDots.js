@@ -5,8 +5,7 @@ import {favorites$} from '../store';
 
 export default function HandleFileDots({onClickDelete, onClickStar, file, onClickRename, onClickCopy, onClickMove, onClose}){
     const [favorites , setFavorites] = useState(favorites$.value);
-
-
+    
     useEffect(() => {
       const subscription = favorites$.subscribe(setFavorites);
       return () => subscription.unsubscribe();
@@ -27,10 +26,6 @@ export default function HandleFileDots({onClickDelete, onClickStar, file, onClic
                     onClickCopy(e);
                     onClose();
                 }}>Kopiera</li>
-                <li onClick = {(e) => {
-                    onClickMove(e)
-                    onClose();
-                }}>Flytta</li>
                 {!favorites.find(x => x.id === file.id) ?
                     <li onClick={(e) => {
                         onClickStar(e);
