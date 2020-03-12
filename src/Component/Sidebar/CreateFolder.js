@@ -5,6 +5,63 @@ import { Dropbox } from 'dropbox';
 import { Redirect } from 'react-router-dom';
 import { MdCreateNewFolder } from "react-icons/md";
 
+function CreateFolderModal({ onClose, folderName, onChangeFolderName, onSubmit, error }) {
+    return ReactDOM.createPortal((
+        <div className='createFolderModal' style={{display: 'flex', flexDirection: 'column',position: "absolute", backgroundColor: '#F2F2F2', listStyle: 'none', cursor: 'pointer', width: '500px', height: '300px', borderRadius:'5px'}}>
+            <form onSubmit={onSubmit}>
+                <div
+                    style={{
+                        marginBottom: '20px'
+                    }}    
+                >
+                    <p>Skapa ny mapp</p>
+                </div>
+                <label style={{margin: '5px'}}> Mapp:
+                    <input
+                        type='text'
+                        onChange={onChangeFolderName}
+                        value={folderName}
+                        placeholder='Mappnamn'
+                        style={{
+                            borderRadius: '5px',
+                            width: '200px',
+                            height: '30px',
+                            textAlign: 'center',
+                            backgroundColor: '#DCDCDC',
+                            margin: '10px',
+                            border: 'none',
+                        }}
+                    />
+                </label><br />
+                <div className='createFolderModalButtons' style={{margin: '10px'}}></div>
+                <button 
+                    type='Submit' 
+                    style={{
+                        margin: '5px', 
+                        borderRadius:'5px', 
+                        width: '150px', 
+                        height: '30px',
+                        backgroundColor: '#DCDCDC',
+                        border: 'none',
+                    }}>Skapa mapp
+                </button>
+                <button 
+                    onClick={onClose} 
+                    style={{
+                        margin:'5px', 
+                        borderRadius:'5px',
+                        width: '150px', 
+                        height: '30px',
+                        backgroundColor: '#DCDCDC',
+                        border: 'none',
+                    }}
+                    >Avsluta</button>
+            </form>
+            {error ? <p>Någonting blev fel, testa ett annat namn</p> : null}
+        </div>
+    ), document.body);
+}
+
 export default function CreateFolder( {location }) {
     const [token, setToken] = useState(token$.value);
     const [modal, setModal] = useState(false);
@@ -77,62 +134,3 @@ const styles = {
         cursor: 'pointer',
     }
 }
-
-
-function CreateFolderModal({ onClose, folderName, onChangeFolderName, onSubmit, error }) {
-    return ReactDOM.createPortal((
-        <div className='createFolderModal' style={{display: 'flex', flexDirection: 'column',position: "absolute", backgroundColor: '#F2F2F2', listStyle: 'none', cursor: 'pointer', width: '500px', height: '300px', borderRadius:'5px'}}>
-            <form onSubmit={onSubmit}>
-                <div
-                    style={{
-                        marginBottom: '20px'
-                    }}    
-                >
-                    <p>Skapa ny mapp</p>
-                </div>
-                <label style={{margin: '5px'}}> Mapp:
-                    <input
-                        type='text'
-                        onChange={onChangeFolderName}
-                        value={folderName}
-                        placeholder='Mappnamn'
-                        style={{
-                            borderRadius: '5px',
-                            width: '200px',
-                            height: '30px',
-                            textAlign: 'center',
-                            backgroundColor: '#DCDCDC',
-                            margin: '10px',
-                            border: 'none',
-                        }}
-                    />
-                </label><br />
-                <div className='createFolderModalButtons' style={{margin: '10px'}}></div>
-                <button 
-                    type='Submit' 
-                    style={{
-                        margin: '5px', 
-                        borderRadius:'5px', 
-                        width: '150px', 
-                        height: '30px',
-                        backgroundColor: '#DCDCDC',
-                        border: 'none',
-                    }}>Skapa mapp
-                </button>
-                <button 
-                    onClick={onClose} 
-                    style={{
-                        margin:'5px', 
-                        borderRadius:'5px',
-                        width: '150px', 
-                        height: '30px',
-                        backgroundColor: '#DCDCDC',
-                        border: 'none',
-                    }}
-                    >Avsluta</button>
-            </form>
-            {error ? <p>Någonting blev fel, testa ett annat namn</p> : null}
-        </div>
-    ), document.body);
-}
-
